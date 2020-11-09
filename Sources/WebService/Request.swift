@@ -301,6 +301,19 @@ public extension Request {
         self.queryParameterEncoder = encoder
         return self
     }
+
+    @discardableResult
+    mutating func setQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+        self.queryItems = queryItems
+        return self
+    }
+
+    @discardableResult
+    mutating func appendQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+        var existingItems = self.queryItems ?? []
+        existingItems.append(contentsOf: queryItems)
+        return setQueryItems(existingItems)
+    }
     
     @discardableResult
     mutating func setFormParameters(_ parameters: [String: Any]) -> Self {

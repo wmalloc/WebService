@@ -129,7 +129,19 @@ public extension URLSession.ServicePublisher {
         request.queryParameterEncoder = encoder
         return self
     }
-    
+
+    @discardableResult
+    func setQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+        request.setQueryItems(queryItems)
+        return self
+    }
+
+    @discardableResult
+    func appendQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+        request.appendQueryItems(queryItems)
+        return self
+    }
+
     @discardableResult
     func setFormParameters(_ parameters: [String: Any]) -> Self {
         request.formParameters = parameters

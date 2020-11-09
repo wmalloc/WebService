@@ -72,7 +72,19 @@ final class WebServiceTests: XCTestCase {
         XCTAssertNil(request.userAgent)
         XCTAssertEqual(request.urlRequest, URLRequest(url: baseURL!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
     }
-    
+
+    func testQueryItems() {
+        let baseURLString = webService.baseURLString
+        var request = Request(.GET, urlString: baseURLString)
+        request = request.setQueryItems([URLQueryItem(name: "test1", value: "test1"), URLQueryItem(name: "test2", value: "test2")])
+        XCTAssertNotNil(request.queryItems)
+        XCTAssertEqual(request.queryItems?.count ?? 0, 2)
+        request = request.appendQueryItems([URLQueryItem(name: "test3", value: "test3")])
+        XCTAssertEqual(request.queryItems?.count ?? 0, 3)
+        request = request.setQueryItems([])
+        XCTAssertEqual(request.queryItems?.count ?? 0, 0)
+   }
+
     func testDefaultRequestConfigurations() {
         let baseURLString = webService.baseURLString
         var request = Request(.GET, urlString: baseURLString)
