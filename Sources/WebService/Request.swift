@@ -172,11 +172,13 @@ public struct Request {
 extension Request: URLRequestEncodable {
     public var urlRequest: URLRequest {
         var urlComponents = URLComponents(string: urlString)
-        if var queryItems = queryItems {
-            queryItems.append(contentsOf: urlComponents?.queryItems ?? [])
-            urlComponents?.queryItems = queryItems
+        if var items = queryItems {
+            items.append(contentsOf: urlComponents?.queryItems ?? [])
+            if !items.isEmpty {
+                urlComponents?.queryItems = items
+            }
         }
-        var urlRequest = URLRequest(url: URL(string: urlString)!)
+        var urlRequest = URLRequest(url: urlComponents?.url ?? URL(string: urlString)!)
         urlRequest.httpMethod = method.rawValue
         urlRequest.cachePolicy = cachePolicy
         urlRequest.timeoutInterval = timeoutInterval

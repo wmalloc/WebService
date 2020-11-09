@@ -79,10 +79,17 @@ final class WebServiceTests: XCTestCase {
         request = request.setQueryItems([URLQueryItem(name: "test1", value: "test1"), URLQueryItem(name: "test2", value: "test2")])
         XCTAssertNotNil(request.queryItems)
         XCTAssertEqual(request.queryItems?.count ?? 0, 2)
+        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2")
         request = request.appendQueryItems([URLQueryItem(name: "test3", value: "test3")])
         XCTAssertEqual(request.queryItems?.count ?? 0, 3)
+        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2&test3=test3")
         request = request.setQueryItems([])
         XCTAssertEqual(request.queryItems?.count ?? 0, 0)
+        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080")
+        request = request.setQueryItems([URLQueryItem(name: "test 3", value: "test 3")])
+        XCTAssertEqual(request.queryItems?.count ?? 0, 1)
+        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080?test%203=test%203")
+
    }
 
     func testDefaultRequestConfigurations() {
