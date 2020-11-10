@@ -9,17 +9,6 @@
 import Combine
 import Foundation
 
-public enum WebServiceError: Error {
-    case invalidBody
-    case invalidEndpoint
-    case invalidURL
-    case emptyData
-    case invalidJSON
-    case invalidResponse
-    case invalidContentType
-    case statusCode(Int)
-}
-
 @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public final class WebService {
     public let baseURL: URL?
