@@ -7,31 +7,48 @@
 //
 
 import Foundation
+import XCTest
 
 class URLProtocolMock: URLProtocol {
     static var testData: [URL: Data] = [:]
     static var response: URLResponse?
     static var error: Error?
-    
+
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canInit(with task: URLSessionTask) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
-    
+
     override func startLoading() {
-        if let url = request.url, let data = Self.testData[url] {
-            self.client?.urlProtocol(self, didLoad: data)
+        guard let client = self.client else {
+            XCTFail("missing client")
+            return
         }
-        
+
+        guard let url = request.url else {
+            XCTFail("Request URL missing")
+            client.urlProtocol(self, didFailWithError: URLError(.badURL))
+            client.urlProtocolDidFinishLoading(self)
+            return
+        }
+
+        guard let data = URLProtocolMock.testData[url] else {
+            XCTFail("No data for URL \(url.absoluteString)")
+            client.urlProtocol(self, didFailWithError: URLError(.zeroByteResource))
+            client.urlProtocolDidFinishLoading(self)
+            return
+        }
+
+        client.urlProtocol(self, didLoad: data)
         if let response = Self.response {
-            self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         }
-        
+
         if let error = Self.error {
-            self.client?.urlProtocol(self, didFailWithError: error)
+            client.urlProtocol(self, didFailWithError: error)
         }
-        
-        self.client?.urlProtocolDidFinishLoading(self)
+
+        client.urlProtocolDidFinishLoading(self)
     }
-    
+
     override func stopLoading() {}
 }

@@ -65,16 +65,16 @@ public extension WebService {
 }
 
 @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-extension WebService {
-    public func absoluteURL(_ string: String) -> URL {
+public extension WebService {
+    func absoluteURL(_ string: String) -> URL {
         constructURL(string, relativeToURL: baseURL)!
     }
 
-    public func absoluteURLString(_ string: String) -> String {
+    func absoluteURLString(_ string: String) -> String {
         absoluteURL(string).absoluteString
     }
 
-    func constructURL(_ string: String, relativeToURL: URL?) -> URL? {
+    internal func constructURL(_ string: String, relativeToURL: URL?) -> URL? {
         guard !string.isEmpty else { // if string is empty then just return the baseURL
             return baseURL
         }

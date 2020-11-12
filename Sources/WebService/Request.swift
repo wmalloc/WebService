@@ -56,7 +56,7 @@ public struct Request {
                 return try? JSONSerialization.data(withJSONObject: parameters, options: [])
             }
         }
-        
+
         public var description: String {
             switch self {
             case .json:
@@ -65,7 +65,7 @@ public struct Request {
                 return "PERCENT"
             }
         }
-        
+
         public var debugDescription: String {
             description
         }
@@ -118,7 +118,7 @@ public struct Request {
         }
     }
 
-    public var queryParameterEncoder: QueryParameterEncoder = { (url, parameters) -> URL? in
+    public var queryParameterEncoder: QueryParameterEncoder = { url, parameters -> URL? in
         url?.ws_URLByAppendingQueryItems(parameters.ws_queryItems)
     }
 
@@ -222,85 +222,85 @@ public extension Request {
         self.contentType = contentType
         return self
     }
-    
+
     @discardableResult
     mutating func setShouldHandleCookies(_ handle: Bool) -> Self {
-        self.shouldHandleCookies = handle
+        shouldHandleCookies = handle
         return self
     }
-    
+
     @discardableResult
     mutating func setParameters(_ parameters: [String: Any], encoding: Request.ParameterEncoding? = nil) -> Self {
         self.parameters = parameters
-        self.parameterEncoding = encoding ?? .percent
+        parameterEncoding = encoding ?? .percent
         return self
     }
-    
+
     @discardableResult
     mutating func setBody(_ data: Data) -> Self {
-        self.body = data
+        body = data
         return self
     }
-    
+
     @discardableResult
     mutating func setBody(_ data: Data, contentType: String) -> Self {
-        self.body = data
+        body = data
         self.contentType = contentType
         return self
     }
-    
+
     @discardableResult
     mutating func setJSON(_ json: Any) -> Self {
-        self.contentType = Request.ContentType.json
-        self.body = try? JSONSerialization.data(withJSONObject: json, options: [])
+        contentType = Request.ContentType.json
+        body = try? JSONSerialization.data(withJSONObject: json, options: [])
         return self
     }
-    
+
     @discardableResult
     mutating func setJSONData(_ json: Data) -> Self {
         return setBody(json, contentType: Request.ContentType.json)
     }
-    
+
     @discardableResult
     mutating func setHeaders(_ headers: [String: String]) -> Self {
         self.headers = headers
         return self
     }
-    
+
     @discardableResult
     mutating func setHeaderValue(_ value: String, forName name: String) -> Self {
-        self.headers[name] = value
+        headers[name] = value
         return self
     }
-    
+
     @discardableResult
     mutating func setCachePolicy(_ cachePolicy: NSURLRequest.CachePolicy) -> Self {
         self.cachePolicy = cachePolicy
         return self
     }
-    
+
     @discardableResult
     mutating func setTimeoutInterval(_ timeoutInterval: TimeInterval) -> Self {
         self.timeoutInterval = timeoutInterval
         return self
     }
-    
+
     @discardableResult
     mutating func setParameterEncoding(_ encoding: Request.ParameterEncoding) -> Self {
-        self.parameterEncoding = encoding
+        parameterEncoding = encoding
         return self
     }
-    
+
     @discardableResult
     mutating func setQueryParameters(_ parameters: [String: Any]) -> Self {
-        self.queryParameters = parameters
+        queryParameters = parameters
         return self
     }
-    
+
     @discardableResult
     mutating func setQueryParameters(_ parameters: [String: Any], encoder: @escaping QueryParameterEncoder) -> Self {
         setQueryParameters(parameters)
-        self.queryParameterEncoder = encoder
+        queryParameterEncoder = encoder
         return self
     }
 
@@ -316,25 +316,25 @@ public extension Request {
         existingItems.append(contentsOf: queryItems)
         return setQueryItems(existingItems)
     }
-    
+
     @discardableResult
     mutating func setFormParameters(_ parameters: [String: Any]) -> Self {
-        self.formParameters = parameters
+        formParameters = parameters
         return self
     }
-    
+
     @discardableResult
     mutating func setFormParametersAllowedCharacters(_ allowedCharacters: CharacterSet) -> Self {
-        self.formParametersAllowedCharacters = allowedCharacters
+        formParametersAllowedCharacters = allowedCharacters
         return self
     }
-    
+
     @discardableResult
     mutating func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) -> Self {
         do {
             let data = try encoder.encode(body)
             self.body = data
-            self.contentType = Request.ContentType.json
+            contentType = Request.ContentType.json
         } catch {
             os_log(.error, "Unable to encode body %@", error.localizedDescription)
         }
@@ -354,7 +354,7 @@ extension Request: CustomStringConvertible {
             "\nqueryItems = \(String(describing: queryItems))" +
             "\nformParameters = \(String(describing: formParameters))" +
             "\nuserAgent = \(String(describing: userAgent))" +
-        "\n}"
+            "\n}"
     }
 }
 
@@ -374,6 +374,6 @@ extension Request: CustomDebugStringConvertible {
             "\nformParametersAllowedCharacters = \(String(describing: formParametersAllowedCharacters))" +
             "\ncachePolicy = \(cachePolicy)" +
             "\nparameterEncoding = \(parameterEncoding)" +
-        "\n}"
+            "\n}"
     }
 }
