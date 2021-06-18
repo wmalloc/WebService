@@ -34,8 +34,7 @@ public extension Data {
             throw URLError(.badServerResponse)
         }
         
-        guard let contentType = httpResponse.allHeaderFields[Request.Header.contentType] as? String,
-            acceptableContentTypes.contains(contentType) else {
+        guard let contentType = httpResponse.allHeaderFields[Request.Header.contentType] as? String, acceptableContentTypes.contains(contentType) else {
             throw URLError(.cannotDecodeContentData)
         }
         

@@ -89,8 +89,7 @@ final class WebServiceTests: XCTestCase {
         request = request.setQueryItems([URLQueryItem(name: "test 3", value: "test 3")])
         XCTAssertEqual(request.queryItems?.count ?? 0, 1)
         XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080?test%203=test%203")
-
-   }
+    }
 
     func testDefaultRequestConfigurations() {
         let baseURLString = webService.baseURLString
@@ -104,7 +103,7 @@ final class WebServiceTests: XCTestCase {
     
     func testExample() {
         // XCTAssertEqual(WebService().text, "Hello, World!")
-     }
+    }
 
     func testValidResponse() {
         URLProtocolMock.response = Response.valid

@@ -10,7 +10,7 @@ import Foundation
 
 extension Dictionary {
     var ws_queryItems: [URLQueryItem] {
-        let items = map { (item) -> URLQueryItem in
+        let items = map { item -> URLQueryItem in
             URLQueryItem(name: "\(item.key)", value: "\(item.value)")
         }
         return items

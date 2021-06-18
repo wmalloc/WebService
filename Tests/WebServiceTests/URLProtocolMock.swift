@@ -13,11 +13,11 @@ class URLProtocolMock: URLProtocol {
     static var testData: [URL: Data] = [:]
     static var response: URLResponse?
     static var error: Error?
-    
+
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canInit(with task: URLSessionTask) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
-    
+
     override func startLoading() {
         guard let client = self.client else {
             XCTFail("missing client")
@@ -49,6 +49,6 @@ class URLProtocolMock: URLProtocol {
 
         client.urlProtocolDidFinishLoading(self)
     }
-    
+
     override func stopLoading() {}
 }

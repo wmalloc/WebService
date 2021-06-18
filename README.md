@@ -70,3 +70,14 @@ func search<ObjectType: Decodable>(query: String, limit: UInt) -> AnyPublisher<S
     .eraseToAnyPublisher()
 }
 ```
+
+## async/await
+
+```
+func search<ObjectType: Decodable>(query: String, limit: UInt) async throws -> SearchResponse {
+    var request = Request(.GET, url: webService.baseURLString + "/search")
+        .setQueryParameters(query)
+        .setHeaders([Request.Header.contentType: Request.ContentType.json])
+    return try await webService.decodable(request)
+}
+```
