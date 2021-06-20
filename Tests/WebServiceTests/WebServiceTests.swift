@@ -16,7 +16,7 @@ final class WebServiceTests: XCTestCase {
     let testTimeout: TimeInterval = 1
     var webService: WebService!
     
-    enum Response {
+     enum Response {
         static let invalid = URLResponse(url: URL(string: "http://localhost:8080")!, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
         static let valid = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         static let invalid300 = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 300, httpVersion: nil, headerFields: nil)
@@ -35,7 +35,7 @@ final class WebServiceTests: XCTestCase {
     
     override func tearDownWithError() throws {
         URLProtocolMock.error = nil
-        URLProtocolMock.response = nil
+        URLProtocolMock.responses = [:]
         URLProtocolMock.testData = [:]
         webService = nil
     }
@@ -105,38 +105,41 @@ final class WebServiceTests: XCTestCase {
         // XCTAssertEqual(WebService().text, "Hello, World!")
     }
 
-    func testValidResponse() {
-        URLProtocolMock.response = Response.valid
-        let publisher = webService.servicePublisher(request: Request(.GET, urlString: webService.baseURLString))
+    func testValidResponse() throws {
+        let request = Request(.GET, urlString: webService.baseURLString)
+        URLProtocolMock.responses[try request.url()] = Response.valid
+        let publisher = webService.servicePublisher(request: request)
         let validTest = evalValidResponseTest(publisher: publisher)
         wait(for: validTest.expectations, timeout: testTimeout)
         validTest.cancellable?.cancel()
     }
     
-    func testInvalidResponse() {
-        URLProtocolMock.response = Response.invalid
-        let publisher = webService.servicePublisher(request: Request(.GET, urlString: webService.baseURLString))
+    func testInvalidResponse() throws {
+        let request = Request(.GET, urlString: webService.baseURLString)
+        URLProtocolMock.responses[try request.url()] = Response.invalid
+        let publisher = webService.servicePublisher(request: request)
         let invalidTest = evalInvalidResponseTest(publisher: publisher)
         wait(for: invalidTest.expectations, timeout: testTimeout)
         invalidTest.cancellable?.cancel()
     }
     
-    func testValidDataResponse() {
+    func testValidDataResponse() throws {
+        let request = Request(.GET, urlString: webService.baseURLString)
         let testURL = webService.baseURL!
         URLProtocolMock.testData[testURL] = Data("{{}".utf8)
-        URLProtocolMock.response = Response.valid
-        
-        let publisher = webService.servicePublisher(request: Request(.GET, urlString: webService.baseURLString))
+        URLProtocolMock.responses[try request.url()] = Response.valid
+        let publisher = webService.servicePublisher(request: request)
         let invalidTest = evalInvalidResponseTest(publisher: publisher)
         wait(for: invalidTest.expectations, timeout: testTimeout)
         invalidTest.cancellable?.cancel()
     }
     
-    func testNetworkFailure() {
-        URLProtocolMock.response = Response.valid
+    func testNetworkFailure() throws {
+        let request = Request(.GET, urlString: webService.baseURLString)
+        URLProtocolMock.responses[try request.url()] = Response.valid
         URLProtocolMock.error = networkError
         
-        let publisher = webService.servicePublisher(request: Request(.GET, urlString: webService.baseURLString))
+        let publisher = webService.servicePublisher(request: request)
         let invalidTest = evalInvalidResponseTest(publisher: publisher)
         wait(for: invalidTest.expectations, timeout: testTimeout)
         invalidTest.cancellable?.cancel()
