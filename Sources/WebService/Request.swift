@@ -170,6 +170,20 @@ public struct Request {
 }
 
 extension Request: URLRequestEncodable {
+    public func url() throws -> URL {
+        var urlComponents = URLComponents(string: urlString)
+        if var items = queryItems {
+            items.append(contentsOf: urlComponents?.queryItems ?? [])
+            if !items.isEmpty {
+                urlComponents?.queryItems = items
+            }
+        }
+        guard let url = urlComponents?.url else {
+            throw URLError(.badURL)
+        }
+        return url
+    }
+    
     public var urlRequest: URLRequest {
         var urlComponents = URLComponents(string: urlString)
         if var items = queryItems {

@@ -51,8 +51,6 @@ class URLProtocolMock: URLProtocol {
             return
         }
 
-        
-
         if let error = Self.error {
             client.urlProtocol(self, didFailWithError: error)
         }
