@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+@available(OSX 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
 public extension WebService {
     func data(request: Request) -> AnyPublisher<Data, Error> {
         session.servicePublisher(for: request)
@@ -42,7 +42,7 @@ public extension WebService {
 }
 
 @available(swift 5.5)
-@available(OSX 12, iOS 15, tvOS 15, watchOS 8, *)
+@available(OSX 12, iOS 15, tvOS 15, macCatalyst 15.0, watchOS 8, *)
 public extension WebService {
     func data(request: Request) async throws -> Data {
         let (data, response) = try await session.data(for: request.urlRequest, delegate: nil)
