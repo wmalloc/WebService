@@ -9,7 +9,7 @@
 import Combine
 import Foundation
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
 public final class WebService {
     public let baseURL: URL?
     public var baseURLString: String {
@@ -29,7 +29,7 @@ public final class WebService {
     }
 }
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
 public extension WebService {
     func GET(_ path: String) -> URLSession.ServicePublisher {
         request(.GET, path: path)
@@ -64,7 +64,7 @@ public extension WebService {
     }
 }
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
 public extension WebService {
     func absoluteURL(_ string: String) -> URL {
         constructURL(string, relativeToURL: baseURL)!

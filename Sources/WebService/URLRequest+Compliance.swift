@@ -9,7 +9,7 @@
 import Foundation
 
 extension URLRequest: URLRequestEncodable {
-    public var urlRequest: URLRequest {
+    public func urlRequest() throws -> URLRequest {
         self
     }
 }

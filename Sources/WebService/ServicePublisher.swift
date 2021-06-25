@@ -10,7 +10,7 @@ import Combine
 import Foundation
 import os.log
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
 public extension URLSession {
     func servicePublisher(for url: URL) -> URLSession.ServicePublisher {
         servicePublisher(for: .init(.GET, url: url))
@@ -35,13 +35,16 @@ public extension URLSession {
         
         public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == URLSession.ServicePublisher.Failure, S.Input == URLSession.ServicePublisher.Output {
             let theSession = session
-            dataTaskPublisher = DataTaskPublisher(request: request.urlRequest, session: theSession)
+            guard let urlRequest = try? request.urlRequest() else {
+                return
+            }
+            dataTaskPublisher = DataTaskPublisher(request: urlRequest, session: theSession)
             dataTaskPublisher?.receive(subscriber: subscriber)
         }
     }
 }
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
 public extension URLSession.ServicePublisher {
     @discardableResult
     func setContentType(_ contentType: String) -> Self {

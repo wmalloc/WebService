@@ -40,7 +40,7 @@ final class WebServiceTests: XCTestCase {
         webService = nil
     }
     
-    func testBaseURL() {
+    func testBaseURL() throws {
         let baseURLString = "https://localhost:8080"
         let baseURL = URL(string: baseURLString)
         XCTAssertEqual(webService.baseURLString, baseURLString)
@@ -48,7 +48,7 @@ final class WebServiceTests: XCTestCase {
         XCTAssertEqual(webService.baseURL, baseURL)
     }
 
-    func testDefaultRequest() {
+    func testDefaultRequest() throws {
         let baseURLString = webService.baseURLString
         let baseURL = webService.baseURL
         let request = Request(.GET, urlString: baseURLString)
@@ -70,28 +70,28 @@ final class WebServiceTests: XCTestCase {
     
         XCTAssertNil(request.contentType)
         XCTAssertNil(request.userAgent)
-        XCTAssertEqual(request.urlRequest, URLRequest(url: baseURL!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
+        XCTAssertEqual(try request.urlRequest(), URLRequest(url: baseURL!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
     }
 
-    func testQueryItems() {
+    func testQueryItems() throws {
         let baseURLString = webService.baseURLString
         var request = Request(.GET, urlString: baseURLString)
         request = request.setQueryItems([URLQueryItem(name: "test1", value: "test1"), URLQueryItem(name: "test2", value: "test2")])
         XCTAssertNotNil(request.queryItems)
         XCTAssertEqual(request.queryItems?.count ?? 0, 2)
-        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2")
+        XCTAssertEqual(try request.urlRequest().url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2")
         request = request.appendQueryItems([URLQueryItem(name: "test3", value: "test3")])
         XCTAssertEqual(request.queryItems?.count ?? 0, 3)
-        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2&test3=test3")
+        XCTAssertEqual(try request.urlRequest().url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2&test3=test3")
         request = request.setQueryItems([])
         XCTAssertEqual(request.queryItems?.count ?? 0, 0)
-        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080")
+        XCTAssertEqual(try request.urlRequest().url?.absoluteString, "https://localhost:8080")
         request = request.setQueryItems([URLQueryItem(name: "test 3", value: "test 3")])
         XCTAssertEqual(request.queryItems?.count ?? 0, 1)
-        XCTAssertEqual(request.urlRequest.url?.absoluteString, "https://localhost:8080?test%203=test%203")
+        XCTAssertEqual(try request.urlRequest().url?.absoluteString, "https://localhost:8080?test%203=test%203")
     }
 
-    func testDefaultRequestConfigurations() {
+    func testDefaultRequestConfigurations() throws {
         let baseURLString = webService.baseURLString
         var request = Request(.GET, urlString: baseURLString)
         request.setCachePolicy(.reloadIgnoringLocalCacheData)
@@ -101,7 +101,7 @@ final class WebServiceTests: XCTestCase {
         XCTAssertEqual(request.headers.count, 1)
     }
     
-    func testExample() {
+    func testExample() throws {
         // XCTAssertEqual(WebService().text, "Hello, World!")
     }
 

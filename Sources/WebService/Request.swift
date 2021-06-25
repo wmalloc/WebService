@@ -10,7 +10,7 @@ import Foundation
 import os.log
 
 public protocol URLRequestEncodable {
-    var urlRequest: URLRequest { get }
+    func urlRequest() throws -> URLRequest
 }
 
 public typealias QueryParameterEncoder = (_ url: URL?, _ parameters: [String: Any]) -> URL?
@@ -184,15 +184,9 @@ extension Request: URLRequestEncodable {
         return url
     }
     
-    public var urlRequest: URLRequest {
-        var urlComponents = URLComponents(string: urlString)
-        if var items = queryItems {
-            items.append(contentsOf: urlComponents?.queryItems ?? [])
-            if !items.isEmpty {
-                urlComponents?.queryItems = items
-            }
-        }
-        var urlRequest = URLRequest(url: urlComponents?.url ?? URL(string: urlString)!)
+    public func urlRequest() throws -> URLRequest {
+        let url = try url()
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
         urlRequest.cachePolicy = cachePolicy
         urlRequest.timeoutInterval = timeoutInterval
