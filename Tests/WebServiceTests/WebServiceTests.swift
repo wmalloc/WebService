@@ -18,9 +18,9 @@ final class WebServiceTests: XCTestCase {
     
      enum Response {
         static let invalid = URLResponse(url: URL(string: "http://localhost:8080")!, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
-        static let valid = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-        static let invalid300 = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 300, httpVersion: nil, headerFields: nil)
-        static let invalid401 = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 401, httpVersion: nil, headerFields: nil)
+        static let valid = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        static let invalid300 = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 300, httpVersion: nil, headerFields: nil)!
+        static let invalid401 = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 401, httpVersion: nil, headerFields: nil)!
     }
         
     let networkError = NSError(domain: "NSURLErrorDomain", code: -1004, /* kCFURLErrorCannotConnectToHost*/ userInfo: nil)
@@ -34,9 +34,6 @@ final class WebServiceTests: XCTestCase {
     }
     
     override func tearDownWithError() throws {
-        URLProtocolMock.error = nil
-        URLProtocolMock.responses = [:]
-        URLProtocolMock.testData = [:]
         webService = nil
     }
     
@@ -107,7 +104,15 @@ final class WebServiceTests: XCTestCase {
 
     func testValidResponse() throws {
         let request = Request(.GET, urlString: webService.baseURLString)
-        URLProtocolMock.responses[try request.url()] = Response.valid
+        let requestURL = try request.url()
+        URLProtocolMock.requestHandler = { request in
+            guard let url = request.url, url == requestURL else {
+                throw URLError(.badURL)
+            }
+            
+            return (Response.valid, Data())
+        }
+
         let publisher = webService.servicePublisher(request: request)
         let validTest = evalValidResponseTest(publisher: publisher)
         wait(for: validTest.expectations, timeout: testTimeout)
@@ -116,7 +121,15 @@ final class WebServiceTests: XCTestCase {
     
     func testInvalidResponse() throws {
         let request = Request(.GET, urlString: webService.baseURLString)
-        URLProtocolMock.responses[try request.url()] = Response.invalid
+        let requestURL = try request.url()
+        URLProtocolMock.requestHandler = { request in
+            guard let url = request.url, url == requestURL else {
+                throw URLError(.badURL)
+            }
+            
+            return (Response.invalid401, Data())
+        }
+
         let publisher = webService.servicePublisher(request: request)
         let invalidTest = evalInvalidResponseTest(publisher: publisher)
         wait(for: invalidTest.expectations, timeout: testTimeout)
@@ -125,79 +138,75 @@ final class WebServiceTests: XCTestCase {
     
     func testValidDataResponse() throws {
         let request = Request(.GET, urlString: webService.baseURLString)
-        let testURL = webService.baseURL!
-        URLProtocolMock.testData[testURL] = Data("{{}".utf8)
-        URLProtocolMock.responses[try request.url()] = Response.valid
+        let requestURL = try request.url()
+        URLProtocolMock.requestHandler = { request in
+            guard let url = request.url, url == requestURL else {
+                throw URLError(.badURL)
+            }
+            
+            let data = Data("{}".utf8)
+            return (Response.valid, data)
+        }
+        
         let publisher = webService.servicePublisher(request: request)
-        let invalidTest = evalInvalidResponseTest(publisher: publisher)
+        let invalidTest = evalValidResponseTest(publisher: publisher)
         wait(for: invalidTest.expectations, timeout: testTimeout)
         invalidTest.cancellable?.cancel()
     }
     
     func testNetworkFailure() throws {
         let request = Request(.GET, urlString: webService.baseURLString)
-        URLProtocolMock.responses[try request.url()] = Response.valid
-        URLProtocolMock.error = networkError
-        
+        let requestURL = try request.url()
+        URLProtocolMock.requestHandler = { request in
+            guard let url = request.url, url == requestURL else {
+                throw URLError(.badURL)
+            }
+            
+            let data = Data("{}".utf8)
+            return (Response.invalid401, data)
+        }
         let publisher = webService.servicePublisher(request: request)
         let invalidTest = evalInvalidResponseTest(publisher: publisher)
         wait(for: invalidTest.expectations, timeout: testTimeout)
         invalidTest.cancellable?.cancel()
     }
-    
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
+
     func evalValidResponseTest<P: Publisher>(publisher: P?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
         XCTAssertNotNil(publisher)
         
-        let expectationFinished = expectation(description: "finished")
-        let expectationReceive = expectation(description: "receiveValue")
-        let expectationFailure = expectation(description: "failure")
-        expectationFailure.isInverted = true
+        let finished = expectation(description: "Finished")
         
         let cancellable = publisher?.sink(receiveCompletion: { completion in
-            switch completion {
-            case .failure(let error):
+            if case .failure(let error) = completion {
                 os_log(.error, log: OSLog.tests, "TEST ERROR %@", error.localizedDescription)
-                expectationFailure.fulfill()
-            case .finished:
-                expectationFinished.fulfill()
+                XCTFail(error.localizedDescription)
             }
+            finished.fulfill()
         }, receiveValue: { response in
             XCTAssertNotNil(response)
             os_log(.info, log: OSLog.tests, "%@", "\(response)")
-            expectationReceive.fulfill()
         })
-        return (expectations: [expectationFinished, expectationReceive, expectationFailure], cancellable: cancellable)
+        return (expectations: [finished], cancellable: cancellable)
     }
     
     func evalInvalidResponseTest<P: Publisher>(publisher: P?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
         XCTAssertNotNil(publisher)
         
-        let expectationFinished = expectation(description: "Invalid.finished")
-        expectationFinished.isInverted = true
-        let expectationReceive = expectation(description: "Invalid.receiveValue")
-        expectationReceive.isInverted = true
-        let expectationFailure = expectation(description: "Invalid.failure")
+        let expectation = expectation(description: "Finsihed")
         
         let cancellable = publisher?.sink(receiveCompletion: { completion in
             switch completion {
             case .failure(let error):
                 os_log(.error, log: OSLog.tests, "TEST FULFILLED %@", error.localizedDescription)
-                expectationFailure.fulfill()
             case .finished:
-                expectationFinished.fulfill()
+                XCTFail("Result should be error")
+                break
             }
+            expectation.fulfill()
         }, receiveValue: { response in
             XCTAssertNotNil(response)
             os_log(.info, log: OSLog.tests, "%@", "\(response)")
-            expectationReceive.fulfill()
         })
-        return (expectations: [expectationFinished, expectationReceive, expectationFailure], cancellable: cancellable)
+        return (expectations: [expectation], cancellable: cancellable)
     }
 }

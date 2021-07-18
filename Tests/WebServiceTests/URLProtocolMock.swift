@@ -10,53 +10,47 @@ import Foundation
 import XCTest
 
 class URLProtocolMock: URLProtocol {
-    static var testData: [URL: Data] = [:]
-    static var responses: [URL: URLResponse] = [:]
-    static var error: Error?
-
+    static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data?))?
+    
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canInit(with task: URLSessionTask) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
-    static func loadTestData(name: String, withExtension: String) throws {
+    static func loadTestData(name: String, withExtension: String) throws -> Data {
         let bundle = Bundle(for: URLProtocolMock.self)
         guard let url = bundle.url(forResource: name, withExtension: withExtension) else {
             throw URLError(.unsupportedURL)
         }
         let data = try Data(contentsOf: url, options: [])
-        testData[url] = data
+        return data
     }
 
     override func startLoading() {
         guard let client = self.client else {
-            XCTFail("missing client")
-            return
+            fatalError("missing client")
         }
 
-        guard let url = request.url else {
-            XCTFail("Request URL missing")
-            client.urlProtocol(self, didFailWithError: URLError(.badURL))
-            client.urlProtocolDidFinishLoading(self)
-            return
+        guard let handler = Self.requestHandler else {
+            fatalError("Handler is unavailable.")
         }
-        
-        if let data = URLProtocolMock.testData[url] {
-            client.urlProtocol(self, didLoad: data)
-        } else if let response = Self.responses[url] {
+
+        let validCodes = Set(200..<300)
+        do {
+            let (response, data) = try handler(request)
+            if !validCodes.contains(response.statusCode) {
+                throw URLError(URLError.Code(rawValue: response.statusCode))
+            }
+            
             client.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-        } else {
-            XCTFail("No data for URL \(url.absoluteString)")
-            client.urlProtocol(self, didFailWithError: URLError(.zeroByteResource))
+            
+            if let data = data {
+                client.urlProtocol(self, didLoad: data)
+            }
+            
             client.urlProtocolDidFinishLoading(self)
-            return
-        }
-
-        if let error = Self.error {
+        } catch {
             client.urlProtocol(self, didFailWithError: error)
         }
-
-        client.urlProtocolDidFinishLoading(self)
     }
-
     override func stopLoading() {}
 }
