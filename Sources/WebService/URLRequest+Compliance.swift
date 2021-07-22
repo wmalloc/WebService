@@ -9,6 +9,13 @@
 import Foundation
 
 extension URLRequest: URLRequestEncodable {
+    public func url() throws -> URL {
+        guard let url = self.url else {
+            throw URLError(.badURL)
+        }
+        return url
+    }
+
     public func urlRequest() throws -> URLRequest {
         self
     }

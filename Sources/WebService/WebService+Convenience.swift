@@ -13,29 +13,21 @@ public extension WebService {
     func data(request: Request) -> AnyPublisher<Data, Error> {
         session.servicePublisher(for: request)
             .tryMap { result -> Data in
-                try result.data.ws_validate(result.response).ws_validate()
+                try result.data.ws_validate(result.response).ws_validateNotEmptyData()
             }
             .eraseToAnyPublisher()
     }
 
     func decodable<T: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
-        session.servicePublisher(for: request)
-            .tryMap { result -> Data in
-                let data = try result.data.ws_validate(result.response).ws_validate()
-                return data
-            }
+        data(request: request)
             .decode(type: T.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 
     func serializable(request: Request, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
-        session.servicePublisher(for: request)
-            .tryMap { result -> Data in
-                let data = try result.data.ws_validate(result.response).ws_validate()
-                return data
-            }
+        data(request: request)
             .tryMap { data -> Any in
-                try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                try JSONSerialization.jsonObject(with: data, options: options)
             }
             .eraseToAnyPublisher()
     }
