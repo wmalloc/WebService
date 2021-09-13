@@ -192,7 +192,7 @@ final class WebServiceTests: XCTestCase {
     func evalInvalidResponseTest<P: Publisher>(publisher: P?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
         XCTAssertNotNil(publisher)
         
-        let expectation = expectation(description: "Finsihed")
+        let finished = expectation(description: "Finsihed")
         
         let cancellable = publisher?.sink(receiveCompletion: { completion in
             switch completion {
@@ -202,11 +202,11 @@ final class WebServiceTests: XCTestCase {
                 XCTFail("Result should be error")
                 break
             }
-            expectation.fulfill()
+            finished.fulfill()
         }, receiveValue: { response in
             XCTAssertNotNil(response)
             os_log(.info, log: OSLog.tests, "%@", "\(response)")
         })
-        return (expectations: [expectation], cancellable: cancellable)
+        return (expectations: [finished], cancellable: cancellable)
     }
 }
