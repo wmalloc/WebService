@@ -190,8 +190,8 @@ extension Request: URLRequestEncodable {
     }
 
     public func urlRequest() throws -> URLRequest {
-        let url = try url()
-        var urlRequest = URLRequest(url: url)
+        let requestURL = try url()
+        var urlRequest = URLRequest(url: requestURL)
         urlRequest.httpMethod = method.rawValue
         urlRequest.cachePolicy = cachePolicy
         urlRequest.timeoutInterval = timeoutInterval
