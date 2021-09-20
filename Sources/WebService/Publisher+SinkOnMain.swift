@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 extension Publisher {
     public func sinkOnMain(receiveCompletion: @escaping ((Subscribers.Completion<Self.Failure>) -> Void), receiveValue: @escaping ((Self.Output) -> Void)) -> AnyCancellable {
         receive(on: RunLoop.main).sink(receiveCompletion: receiveCompletion, receiveValue: receiveValue)

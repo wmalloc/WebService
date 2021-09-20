@@ -212,7 +212,7 @@ final class WebServiceTests: XCTestCase {
     }
 }
 
-@available(macOS 12, iOS 15, tvOS 15, macCatalyst 15.0, watchOS 8, *)
+@available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
 extension WebServiceTests {
     func testAsync() throws {
         let request = Request(.GET, urlString: webService.baseURLString)
