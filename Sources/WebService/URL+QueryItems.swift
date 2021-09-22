@@ -1,5 +1,5 @@
 //
-//  URL+WebService.swift
+//  URL+QueryItems.swift
 //  WebService
 //
 //  Created by Waqar Malik on 5/28/20.

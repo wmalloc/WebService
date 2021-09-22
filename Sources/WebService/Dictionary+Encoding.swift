@@ -1,5 +1,5 @@
 //
-//  Dictionary+WebService.swift
+//  Dictionary+Encoding.swift
 //  WebService
 //
 //  Created by Waqar Malik on 5/28/20.

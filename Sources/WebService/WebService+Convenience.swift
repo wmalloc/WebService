@@ -1,6 +1,6 @@
 //
 //  WebService+Convenience.swift
-//
+//  WebService
 //
 //  Created by Waqar Malik on 6/16/21.
 //
@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, macCatalyst 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
     func data(request: Request) -> AnyPublisher<Data, Error> {
         session.servicePublisher(for: request)

@@ -7,6 +7,7 @@
 //
 
 import Combine
+import Foundation
 import os.log
 @testable import WebService
 import XCTest
@@ -208,5 +209,25 @@ final class WebServiceTests: XCTestCase {
             os_log(.info, log: OSLog.tests, "%@", "\(response)")
         })
         return (expectations: [finished], cancellable: cancellable)
+    }
+}
+
+@available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
+extension WebServiceTests {
+    func testAsync() throws {
+        let request = Request(.GET, urlString: webService.baseURLString)
+        let requestURL = try request.url()
+        URLProtocolMock.requestHandler = { request in
+            guard let url = request.url, url == requestURL else {
+                throw URLError(.badURL)
+            }
+            
+            return (Response.valid, Data())
+        }
+        
+        Task {
+            let data = try await webService?.data(request: request)
+            XCTAssertEqual(data, Data())
+        }
     }
 }
