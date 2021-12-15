@@ -8,7 +8,6 @@
 import Foundation
 import Combine
 
-@available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
 public extension WebService {
     func data(request: Request) async throws -> Data {
         let urlRequest = try request.urlRequest()
