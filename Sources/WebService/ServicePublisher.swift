@@ -10,7 +10,6 @@ import Combine
 import Foundation
 import os.log
 
-@available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension URLSession {
     func servicePublisher(for url: URL) -> URLSession.ServicePublisher {
         servicePublisher(for: .init(.GET, url: url))
@@ -44,7 +43,6 @@ public extension URLSession {
     }
 }
 
-@available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension URLSession.ServicePublisher {
     @discardableResult
     func setContentType(_ contentType: String) -> Self {

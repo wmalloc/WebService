@@ -8,12 +8,18 @@
 import Foundation
 import Combine
 
-@available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
+@available(swift 5.5)
 public extension WebService {
     func data(request: Request) async throws -> Data {
         let urlRequest = try request.urlRequest()
-        let (data, response) = try await session.data(for: urlRequest)
-        let validData = try data.ws_validate(response).ws_validateNotEmptyData()
+        let result: (Data, URLResponse)
+        if #available(iOS 15, tvOS 15, watchOS 8, macCatalyst 15, macOS 12, *) {
+            result = try await session.data(for: urlRequest, delegate: nil)
+        } else {
+            result = try await session.data(for: urlRequest)
+        }
+        
+        let validData = try result.0.ws_validate(result.1).ws_validateNotEmptyData()
         return validData
     }
 
