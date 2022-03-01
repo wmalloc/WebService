@@ -10,10 +10,12 @@ import Combine
 import Foundation
 import os.log
 @testable import WebService
+@testable import WebServiceCombine
+@testable import WebServiceConcurrency
 import XCTest
 
 final class WebServiceTests: XCTestCase {
-    static var allTests = [("testExample", testExample)]
+    static var allTests = [("testBaseURL", testBaseURL), ("testDefaultRequest", testDefaultRequest), ("testQueryItems", testQueryItems)]
     let testTimeout: TimeInterval = 1
     var webService: WebService!
     

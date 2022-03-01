@@ -7,19 +7,19 @@
 
 import Foundation
 import Combine
+import WebService
 
-@available(swift 5.5)
+@available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
     func data(request: Request) async throws -> Data {
         let urlRequest = try request.urlRequest()
-        let result: (Data, URLResponse)
-        if #available(iOS 15, tvOS 15, watchOS 8, macCatalyst 15, macOS 12, *) {
-            result = try await session.data(for: urlRequest, delegate: nil)
+        let dataResponse: (data: Data, response: URLResponse)
+        if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
+            dataResponse = try await session.data(for: urlRequest, delegate: nil)
         } else {
-            result = try await session.data(for: urlRequest)
+            dataResponse = try await session.data(for: urlRequest)
         }
-        
-        let validData = try result.0.ws_validate(result.1).ws_validateNotEmptyData()
+        let validData = try dataResponse.data.ws_validate(dataResponse.response).ws_validateNotEmptyData()
         return validData
     }
 
