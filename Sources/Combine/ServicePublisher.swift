@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import WebService
 import os.log
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)

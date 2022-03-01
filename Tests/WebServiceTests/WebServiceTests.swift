@@ -10,10 +10,12 @@ import Combine
 import Foundation
 import os.log
 @testable import WebService
+@testable import WebServiceCombine
+@testable import WebServiceConcurrency
 import XCTest
 
 final class WebServiceTests: XCTestCase {
-    static var allTests = [("testExample", testExample)]
+    static var allTests = [("testBaseURL", testBaseURL), ("testDefaultRequest", testDefaultRequest), ("testQueryItems", testQueryItems)]
     let testTimeout: TimeInterval = 1
     var webService: WebService!
     
@@ -214,7 +216,7 @@ final class WebServiceTests: XCTestCase {
 
 @available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
 extension WebServiceTests {
-    func testAsync() throws {
+    func testAsync() async throws {
         let request = Request(.GET, urlString: webService.baseURLString)
         let requestURL = try request.url()
         URLProtocolMock.requestHandler = { request in
