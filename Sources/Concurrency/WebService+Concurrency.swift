@@ -23,9 +23,9 @@ public extension WebService {
         return validData
     }
 
-    func decodable<T: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder()) async throws -> T {
+    func decodable<ObjectType: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
         let data = try await data(request: request)
-        return try decoder.decode(T.self, from: data)
+        return try decoder.decode(ObjectType.self, from: data)
     }
 
     func serializable(request: Request, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
