@@ -51,8 +51,9 @@ final class WebServiceTests: XCTestCase {
     func testDefaultRequest() throws {
         let baseURLString = webService.baseURLString
         let baseURL = webService.baseURL
-        let request = Request(.GET, urlString: baseURLString)
-        XCTAssertEqual(request.urlString, baseURLString)
+        XCTAssertNotNil(baseURLString)
+        let request = Request(.GET, urlString: baseURLString!)
+        XCTAssertEqual(request.urlString, baseURLString!)
         XCTAssertEqual(request.requestURL, baseURL)
         XCTAssertNil(request.headers[Request.Header.contentType])
         XCTAssertNil(request.headers[Request.Header.cacheControl])
@@ -75,7 +76,8 @@ final class WebServiceTests: XCTestCase {
 
     func testQueryItems() throws {
         let baseURLString = webService.baseURLString
-        var request = Request(.GET, urlString: baseURLString)
+        XCTAssertNotNil(baseURLString)
+        var request = Request(.GET, urlString: baseURLString!)
         request = request.setQueryItems([URLQueryItem(name: "test1", value: "test1"), URLQueryItem(name: "test2", value: "test2")])
         XCTAssertNotNil(request.queryItems)
         XCTAssertEqual(request.queryItems?.count ?? 0, 2)
@@ -93,7 +95,8 @@ final class WebServiceTests: XCTestCase {
 
     func testDefaultRequestConfigurations() throws {
         let baseURLString = webService.baseURLString
-        var request = Request(.GET, urlString: baseURLString)
+        XCTAssertNotNil(baseURLString)
+        var request = Request(.GET, urlString: baseURLString!)
         request.setCachePolicy(.reloadIgnoringLocalCacheData)
         XCTAssertEqual(request.cachePolicy, NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData)
         request.setContentType(Request.ContentType.json)
@@ -106,7 +109,8 @@ final class WebServiceTests: XCTestCase {
     }
 
     func testValidResponse() throws {
-        let request = Request(.GET, urlString: webService.baseURLString)
+        XCTAssertNotNil(webService.baseURLString)
+        let request = Request(.GET, urlString: webService.baseURLString!)
         let requestURL = try request.url()
         URLProtocolMock.requestHandler = { request in
             guard let url = request.url, url == requestURL else {
@@ -123,7 +127,8 @@ final class WebServiceTests: XCTestCase {
     }
     
     func testInvalidResponse() throws {
-        let request = Request(.GET, urlString: webService.baseURLString)
+        XCTAssertNotNil(webService.baseURLString)
+        let request = Request(.GET, urlString: webService.baseURLString!)
         let requestURL = try request.url()
         URLProtocolMock.requestHandler = { request in
             guard let url = request.url, url == requestURL else {
@@ -140,7 +145,8 @@ final class WebServiceTests: XCTestCase {
     }
     
     func testValidDataResponse() throws {
-        let request = Request(.GET, urlString: webService.baseURLString)
+        XCTAssertNotNil(webService.baseURLString)
+        let request = Request(.GET, urlString: webService.baseURLString!)
         let requestURL = try request.url()
         URLProtocolMock.requestHandler = { request in
             guard let url = request.url, url == requestURL else {
@@ -158,7 +164,8 @@ final class WebServiceTests: XCTestCase {
     }
     
     func testNetworkFailure() throws {
-        let request = Request(.GET, urlString: webService.baseURLString)
+        XCTAssertNotNil(webService.baseURLString)
+        let request = Request(.GET, urlString: webService.baseURLString!)
         let requestURL = try request.url()
         URLProtocolMock.requestHandler = { request in
             guard let url = request.url, url == requestURL else {
@@ -217,7 +224,8 @@ final class WebServiceTests: XCTestCase {
 @available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
 extension WebServiceTests {
     func testAsync() throws {
-        let request = Request(.GET, urlString: webService.baseURLString)
+        XCTAssertNotNil(webService.baseURLString)
+        let request = Request(.GET, urlString: webService.baseURLString!)
         let requestURL = try request.url()
         URLProtocolMock.requestHandler = { request in
             guard let url = request.url, url == requestURL else {

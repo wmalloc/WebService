@@ -19,9 +19,9 @@ public extension WebService {
             .eraseToAnyPublisher()
     }
 
-    func decodable<T: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
+    func decodable<ObjectType: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<ObjectType, Error> {
         data(request: request)
-            .decode(type: T.self, decoder: decoder)
+            .decode(type: ObjectType.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 

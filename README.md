@@ -17,15 +17,21 @@ A lightweight Web API for [Apple](https://www.apple.com) devices, written in [Sw
 
 ## Usage
 
-Import `WebService` at the top of the Swift file that will interact create the API for web call.
+There are three libraries that you can use.
 
-```swift
+1. `WebService` is the core library that provides the closure base APIs to fetch data.
+Just import `WebService` at the top of the Swift file that will interact create the API for web call.
+2. `WebServiceCombine` provides the `Combine` based API.
+3. `WebServiceConcurrency` provides the structured concurrecny based api that is backwards compatiable.
+
+
+``` swift
 import WebService
 ```
 
 You now make your client 
 
-```
+``` swift
 class APIClient {
     let webService: WebService
 
@@ -37,7 +43,7 @@ class APIClient {
 
 Once you have setup the service you can start to add your APIs for your backend service. This is hypothetical search call to get your search Data
 
-```
+``` swift
 func search(query: String, limit: UInt) -> AnyPublisher<SearchResponse, Error>? {
     let queryParameters: [String: Any] = ["query": query, "limit": limit]
     return webService.GET("/search").setQueryParameters(query)
@@ -54,7 +60,7 @@ func search(query: String, limit: UInt) -> AnyPublisher<SearchResponse, Error>? 
 ## Request
 If you did not want the service to build your `URLRequest` you can build your request using the `Request` structure.
 
-```
+``` swift
 func search<ObjectType: Decodable>(query: String, limit: UInt) -> AnyPublisher<SearchResponse, Error>? {
     var request = Request(.GET, url: webService.baseURLString + "/search")
         .setQueryParameters(query)
@@ -73,7 +79,7 @@ func search<ObjectType: Decodable>(query: String, limit: UInt) -> AnyPublisher<S
 
 ## async/await
 
-```
+``` swift
 func search<ObjectType: Decodable>(query: String, limit: UInt) async throws -> SearchResponse {
     var request = Request(.GET, url: webService.baseURLString + "/search")
         .setQueryParameters(query)
