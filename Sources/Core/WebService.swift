@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public final class WebService {
     public typealias DecodeblHandler<T: Decodable> = (Result<T, Error>) -> Void
     public typealias SerializableHandler = (Result<Any, Error>) -> Void
