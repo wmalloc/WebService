@@ -8,21 +8,26 @@
 
 import Foundation
 
+
 public final class WebService {
+    public typealias DecodeblHandler<T: Decodable> = (Result<T, Error>) -> Void
+    public typealias SerializableHandler = (Result<Any, Error>) -> Void
+    public typealias DataHandler = (Result<Data, Error>) -> Void
+ 
     public let baseURL: URL?
-    public var baseURLString: String {
-        baseURL?.absoluteString ?? ""
+    public var baseURLString: String? {
+        baseURL?.absoluteString
     }
 
-    public var session: URLSession
+    public let session: URLSession
 
     public init(baseURL: URL?, session: URLSession = .shared) {
         self.baseURL = baseURL
         self.session = session
     }
 
-    public convenience init(baseURLString: String, session: URLSession = .shared) {
-        let baseURL = URL(string: baseURLString)
+    public convenience init(baseURLString: String?, session: URLSession = .shared) {
+        let baseURL = URL(string: baseURLString ?? "")
         self.init(baseURL: baseURL, session: session)
     }
 }
