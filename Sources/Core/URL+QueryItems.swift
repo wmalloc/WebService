@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension URL {
+public extension URL {
     func ws_URLByAppendingQueryItems(_ newItems: [URLQueryItem]) -> Self? {
         var components = URLComponents(url: self, resolvingAgainstBaseURL: false)
         components?.ws_appendQueryItems(newItems)

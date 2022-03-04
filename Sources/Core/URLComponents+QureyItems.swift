@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension URLComponents {
+public extension URLComponents {
     mutating func ws_appendQueryItems(_ newItems: [URLQueryItem]) {
         if let existingQueryItems = queryItems {
             queryItems = existingQueryItems + newItems

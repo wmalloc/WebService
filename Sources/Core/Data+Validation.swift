@@ -17,25 +17,7 @@ public extension Data {
     }
 
     func ws_validate(_ response: URLResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw URLError(.badServerResponse)
-        }
-
-        guard acceptableStatusCodes.contains(httpResponse.statusCode) else {
-            let errorCode = URLError.Code(rawValue: httpResponse.statusCode)
-            throw URLError(errorCode)
-        }
-
-        if let validContentType = acceptableContentTypes {
-            if let contentType = httpResponse.allHeaderFields[Request.Header.contentType] as? String {
-                if !validContentType.contains(contentType) {
-                    throw URLError(.dataNotAllowed)
-                }
-            } else {
-                throw URLError(.badServerResponse)
-            }
-        }
-
+        _ = try response.ws_validate(acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
         return self
     }
 
