@@ -10,6 +10,6 @@ import Foundation
 import os.log
 
 extension OSLog {
-    private static let subsystem = "net.crimsonresearch.WebService"
-    static let tests = OSLog(subsystem: subsystem, category: "Tests")
+	private static let subsystem = "net.crimsonresearch.WebService"
+	static let tests = OSLog(subsystem: subsystem, category: "Tests")
 }
