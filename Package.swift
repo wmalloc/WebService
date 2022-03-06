@@ -11,7 +11,8 @@ let package = Package(
         .library(name: "WebService", targets: ["WebService"]),
         .library(name: "WebServiceCombine", targets: ["WebServiceCombine"]),
         .library(name: "WebServiceConcurrency", targets: ["WebServiceConcurrency"]),
-   ],
+        .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
+    ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
@@ -22,9 +23,11 @@ let package = Package(
         .target(name: "WebService", dependencies: [], path: "Sources/Core"),
         .target(name: "WebServiceCombine", dependencies: ["WebService"], path: "Sources/Combine"),
         .target(name: "WebServiceConcurrency", dependencies: ["WebService"], path: "Sources/Concurrency"),
+        .target(name: "WebServiceURLMock", dependencies: ["WebService"], path: "Sources/URLMock"),
         .testTarget(
             name: "WebServiceTests",
-            dependencies: ["WebService", "WebServiceCombine", "WebServiceConcurrency"],
-            path: "Tests/WebServiceTests"),
+            dependencies: ["WebService", "WebServiceCombine", "WebServiceConcurrency", "WebServiceURLMock"],
+            path: "Tests/WebServiceTests"
+        ),
     ]
 )

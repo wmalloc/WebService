@@ -9,42 +9,42 @@
 import Foundation
 
 public final class WebService {
-    public typealias DecodeblHandler<T: Decodable> = (Result<T, Error>) -> Void
-    public typealias SerializableHandler = (Result<Any, Error>) -> Void
-    public typealias DataHandler = (Result<Data, Error>) -> Void
- 
-    public let baseURL: URL?
-    public var baseURLString: String? {
-        baseURL?.absoluteString
-    }
+	public typealias DecodeblHandler<T: Decodable> = (Result<T, Error>) -> Void
+	public typealias SerializableHandler = (Result<Any, Error>) -> Void
+	public typealias DataHandler = (Result<Data, Error>) -> Void
 
-    public let session: URLSession
+	public let baseURL: URL?
+	public var baseURLString: String? {
+		baseURL?.absoluteString
+	}
 
-    public init(baseURL: URL?, session: URLSession = .shared) {
-        self.baseURL = baseURL
-        self.session = session
-    }
+	public let session: URLSession
 
-    public convenience init(baseURLString: String?, session: URLSession = .shared) {
-        let baseURL = URL(string: baseURLString ?? "")
-        self.init(baseURL: baseURL, session: session)
-    }
+	public init(baseURL: URL?, session: URLSession = .shared) {
+		self.baseURL = baseURL
+		self.session = session
+	}
+
+	public convenience init(baseURLString: String?, session: URLSession = .shared) {
+		let baseURL = URL(string: baseURLString ?? "")
+		self.init(baseURL: baseURL, session: session)
+	}
 }
 
 public extension WebService {
-    func absoluteURL(_ string: String) -> URL {
-        constructURL(string, relativeToURL: baseURL)!
-    }
+	func absoluteURL(_ string: String) -> URL {
+		constructURL(string, relativeToURL: baseURL)!
+	}
 
-    func absoluteURLString(_ string: String) -> String {
-        absoluteURL(string).absoluteString
-    }
+	func absoluteURLString(_ string: String) -> String {
+		absoluteURL(string).absoluteString
+	}
 
-    internal func constructURL(_ string: String, relativeToURL: URL?) -> URL? {
-        guard !string.isEmpty else { // if string is empty then just return the baseURL
-            return baseURL
-        }
-        let url = URL(string: string, relativeTo: relativeToURL)
-        return url
-    }
+	internal func constructURL(_ string: String, relativeToURL: URL?) -> URL? {
+		guard !string.isEmpty else { // if string is empty then just return the baseURL
+			return baseURL
+		}
+		let url = URL(string: string, relativeTo: relativeToURL)
+		return url
+	}
 }

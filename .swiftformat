@@ -1,0 +1,14 @@
+--exclude Pods, Package.swift
+--swiftversion 5.5.1
+--binarygrouping none
+--decimalgrouping none
+--hexgrouping none
+--ifdef no-indent
+--indent tab
+--octalgrouping none
+--patternlet inline
+--self init-only
+--stripunusedargs closure-only
+--tabwidth 4
+
+# rules
