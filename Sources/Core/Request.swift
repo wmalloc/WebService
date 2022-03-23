@@ -19,11 +19,13 @@ public typealias QueryParameterEncoder = (_ url: URL?, _ parameters: [String: An
 public struct Request {
 	public enum Method: String, CaseIterable {
 		case GET
-		case HEAD
 		case POST
 		case PUT
 		case PATCH
 		case DELETE
+        case HEAD
+        case OPTIONS
+        case TRACE
 
 		var shouldEncodeParametersInURL: Bool {
 			switch self {
@@ -219,8 +221,8 @@ extension Request: URLRequestEncodable {
 
 		if let body = body {
 			urlRequest.httpBody = body
-		}
-
+ 		}
+         
 		if let queryParameters = queryParameters, let encodedURL = queryParameterEncoder(urlRequest.url, queryParameters) {
 			urlRequest.url = encodedURL
 		}

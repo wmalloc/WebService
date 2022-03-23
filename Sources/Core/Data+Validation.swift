@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 public extension Data {
 	func ws_validateNotEmptyData() throws -> Self {
@@ -17,7 +18,13 @@ public extension Data {
 	}
 
 	func ws_validate(_ response: URLResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
-		_ = try response.ws_validate(acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
+        do {
+            _ = try response.ws_validate(acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
+        } catch {
+            let errorResponse = String(data: self, encoding: .utf8)
+            os_log("Error Response = %@", errorResponse ?? "")
+            throw error
+        }
 		return self
 	}
 
