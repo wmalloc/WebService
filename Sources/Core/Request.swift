@@ -282,7 +282,10 @@ public extension Request {
 	}
 
 	@discardableResult
-    func setJSON(_ json: Any) -> Self {
+    func setJSON(_ json: Any?) -> Self {
+        guard let json = json else {
+            return self
+        }
         var request = self
         request.contentType = Request.ContentType.json
         request.body = try? JSONSerialization.data(withJSONObject: json, options: [])
@@ -344,7 +347,10 @@ public extension Request {
 	}
 
 	@discardableResult
-    func setQueryParameters(_ parameters: [String: Any]) -> Self {
+    func setQueryParameters(_ parameters: [String: Any]?) -> Self {
+        guard let parameters = parameters else {
+            return self
+        }
         var request = self
         request.queryParameters = parameters
 		return request
@@ -372,7 +378,11 @@ public extension Request {
 	}
 
 	@discardableResult
-    func setFormParameters(_ parameters: [String: Any]) -> Self {
+    func setFormParameters(_ parameters: [String: Any]?) -> Self {
+        guard let parameters = parameters else {
+            return self
+        }
+
         var request = self
         request.formParameters = parameters
 		return request
@@ -386,16 +396,12 @@ public extension Request {
 	}
 
 	@discardableResult
-    func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) -> Self {
+    func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) throws -> Self {
         var request = self
-		do {
-			let data = try encoder.encode(body)
-            request.body = data
-            request.contentType = Request.ContentType.json
-		} catch {
-			os_log(.error, "Unable to encode body %@", error.localizedDescription)
-		}
-		return request
+        let data = try encoder.encode(body)
+        request.body = data
+        request.contentType = Request.ContentType.json
+        return request
 	}
 }
 
