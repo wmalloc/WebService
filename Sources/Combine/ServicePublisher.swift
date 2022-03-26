@@ -78,13 +78,13 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-	func setJSON(_ json: Any) -> Self {
+	func setJSON(_ json: Any?) -> Self {
         request = request.setJSON(json)
         return self
 	}
 
 	@discardableResult
-	func setJSONData(_ json: Data) -> Self {
+	func setJSONData(_ json: Data?) -> Self {
 		setBody(json, contentType: Request.ContentType.json)
 	}
 
@@ -119,9 +119,9 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-	func setQueryParameters(_ parameters: [String: Any]) -> Self {
+	func setQueryParameters(_ parameters: [String: Any]?) -> Self {
         request = request.setQueryParameters(parameters)
-		return self
+		    return self
 	}
 
 	@discardableResult
@@ -143,7 +143,7 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-	func setFormParameters(_ parameters: [String: Any]) -> Self {
+	func setFormParameters(_ parameters: [String: Any]?) -> Self {
         request = request.setFormParameters(parameters)
         return self
 	}
@@ -155,8 +155,9 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-	func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) -> Self {
-        request = request.setBody(body, encoder: encoder)
+	func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) throws -> Self {
+        request = try request.setBody(body, encoder: encoder)
+
         return self
 	}
 }
