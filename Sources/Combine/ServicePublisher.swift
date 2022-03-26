@@ -49,41 +49,38 @@ public extension URLSession {
 public extension URLSession.ServicePublisher {
 	@discardableResult
 	func setContentType(_ contentType: String) -> Self {
-		request.contentType = contentType
+		request = request.setContentType(contentType)
 		return self
 	}
 
 	@discardableResult
 	func setShouldHandleCookies(_ handle: Bool) -> Self {
-		request.shouldHandleCookies = handle
+        request = request.setShouldHandleCookies(handle)
 		return self
 	}
 
 	@discardableResult
 	func setParameters(_ parameters: [String: Any], encoding: Request.ParameterEncoding? = nil) -> Self {
-		request.parameters = parameters
-		request.parameterEncoding = encoding ?? .percent
+        request = request.setParameters(parameters, encoding: encoding)
 		return self
 	}
 
 	@discardableResult
-	func setBody(_ data: Data) -> Self {
-		request.body = data
+	func setBody(_ data: Data?) -> Self {
+        request = request.setBody(data)
 		return self
 	}
 
 	@discardableResult
-	func setBody(_ data: Data, contentType: String) -> Self {
-		request.body = data
-		request.contentType = contentType
-		return self
+	func setBody(_ data: Data?, contentType: String) -> Self {
+        request = request.setBody(data, contentType: contentType)
+        return self
 	}
 
 	@discardableResult
 	func setJSON(_ json: Any) -> Self {
-		request.contentType = Request.ContentType.json
-		request.body = try? JSONSerialization.data(withJSONObject: json, options: [])
-		return self
+        request = request.setJSON(json)
+        return self
 	}
 
 	@discardableResult
@@ -92,81 +89,74 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-	func setHeaders(_ headers: [String: String]) -> Self {
-		request.headers = headers
+    func setHeaders(_ headers: Set<Request.HTTPHeader>?) -> Self {
+        request = request.setHeaders(headers)
 		return self
 	}
 
 	@discardableResult
-	func setHeaderValue(_ value: String, forName name: String) -> Self {
-		request.headers[name] = value
+	func setHeaderValue(_ value: String?, forName name: String) -> Self {
+        request = request.setHeaderValue(value, forName: name)
 		return self
 	}
 
 	@discardableResult
 	func setCachePolicy(_ cachePolicy: NSURLRequest.CachePolicy) -> Self {
-		request.cachePolicy = cachePolicy
-		return self
+        request = request.setCachePolicy(cachePolicy)
+        return self
 	}
 
 	@discardableResult
 	func setTimeoutInterval(_ timeoutInterval: TimeInterval) -> Self {
-		request.timeoutInterval = timeoutInterval
+        request = request.setTimeoutInterval(timeoutInterval)
 		return self
 	}
 
 	@discardableResult
 	func setParameterEncoding(_ encoding: Request.ParameterEncoding) -> Self {
-		request.parameterEncoding = encoding
-		return self
+        request = request.setParameterEncoding(encoding)
+        return self
 	}
 
 	@discardableResult
 	func setQueryParameters(_ parameters: [String: Any]) -> Self {
-		request.queryParameters = parameters
+        request = request.setQueryParameters(parameters)
 		return self
 	}
 
 	@discardableResult
 	func setQueryParameters(_ parameters: [String: Any], encoder: @escaping QueryParameterEncoder) -> Self {
-		setQueryParameters(parameters)
-		request.queryParameterEncoder = encoder
-		return self
+        request = request.setQueryParameters(parameters, encoder: encoder)
+        return self
 	}
 
 	@discardableResult
 	func setQueryItems(_ queryItems: [URLQueryItem]) -> Self {
-		request.setQueryItems(queryItems)
+		request = request.setQueryItems(queryItems)
 		return self
 	}
 
 	@discardableResult
 	func appendQueryItems(_ queryItems: [URLQueryItem]) -> Self {
-		request.appendQueryItems(queryItems)
+		request = request.appendQueryItems(queryItems)
 		return self
 	}
 
 	@discardableResult
 	func setFormParameters(_ parameters: [String: Any]) -> Self {
-		request.formParameters = parameters
-		return self
+        request = request.setFormParameters(parameters)
+        return self
 	}
 
 	@discardableResult
 	func setFormParametersAllowedCharacters(_ allowedCharacters: CharacterSet) -> Self {
-		request.formParametersAllowedCharacters = allowedCharacters
+        request = request.setFormParametersAllowedCharacters(allowedCharacters)
 		return self
 	}
 
 	@discardableResult
 	func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) -> Self {
-		do {
-			let data = try encoder.encode(body)
-			request.body = data
-			request.contentType = Request.ContentType.json
-		} catch {
-			os_log(.error, "Unable to encode body %@", error.localizedDescription)
-		}
-		return self
+        request = request.setBody(body, encoder: encoder)
+        return self
 	}
 }

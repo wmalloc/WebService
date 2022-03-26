@@ -267,14 +267,14 @@ public extension Request {
 	}
 
 	@discardableResult
-    func setBody(_ data: Data) -> Self {
+    func setBody(_ data: Data?) -> Self {
         var request = self
         request.body = data
 		return request
 	}
 
 	@discardableResult
-    func setBody(_ data: Data, contentType: String) -> Self {
+    func setBody(_ data: Data?, contentType: String) -> Self {
         var request = self
         request.body = data
 		request.contentType = contentType
@@ -290,16 +290,30 @@ public extension Request {
 	}
 
 	@discardableResult
-    func setJSONData(_ json: Data) -> Self {
+    func setJSONData(_ json: Data?) -> Self {
         return setBody(json, contentType: Request.ContentType.json)
 	}
 
 	@discardableResult
-    func setHeaders(_ headers: Set<HTTPHeader>) -> Self {
+    func setHeaders(_ headers: Set<HTTPHeader>?) -> Self {
+        guard let headers = headers else {
+            return self
+        }
         var request = self
         request.headers = headers
 		return request
 	}
+
+    @discardableResult
+    func updateHeaders(_ headers: Set<HTTPHeader>?) -> Self {
+        guard let headers = headers else {
+            return self
+        }
+
+        var request = self
+        request.headers.formUnion(headers)
+        return request
+    }
 
 	@discardableResult
     func setHeaderValue(_ value: String?, forName name: String) -> Self {
