@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import os.log
 import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
@@ -131,13 +130,13 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-	func setQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+	func setQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
 		request = request.setQueryItems(queryItems)
 		return self
 	}
 
 	@discardableResult
-	func appendQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+	func appendQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
 		request = request.appendQueryItems(queryItems)
 		return self
 	}
