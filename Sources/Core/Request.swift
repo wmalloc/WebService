@@ -260,6 +260,9 @@ public extension Request {
 
 	@discardableResult
     func setParameters(_ parameters: [String: Any], encoding: Request.ParameterEncoding? = nil) -> Self {
+        guard !parameters.isEmpty else {
+            return self
+        }
         var request = self
         request.parameters = parameters
         request.parameterEncoding = encoding ?? .percent
@@ -268,6 +271,10 @@ public extension Request {
 
 	@discardableResult
     func setBody(_ data: Data?) -> Self {
+        guard let data = data else {
+            return self
+        }
+
         var request = self
         request.body = data
 		return request
@@ -275,6 +282,9 @@ public extension Request {
 
 	@discardableResult
     func setBody(_ data: Data?, contentType: String) -> Self {
+        guard let data = data else {
+            return self
+        }
         var request = self
         request.body = data
 		request.contentType = contentType
@@ -299,7 +309,7 @@ public extension Request {
 
 	@discardableResult
     func setHeaders(_ headers: Set<HTTPHeader>?) -> Self {
-        guard let headers = headers else {
+        guard let headers = headers, !headers.isEmpty else {
             return self
         }
         var request = self
@@ -309,7 +319,7 @@ public extension Request {
 
     @discardableResult
     func updateHeaders(_ headers: Set<HTTPHeader>?) -> Self {
-        guard let headers = headers else {
+        guard let headers = headers, !headers.isEmpty else {
             return self
         }
 
@@ -358,20 +368,31 @@ public extension Request {
 
 	@discardableResult
     func setQueryParameters(_ parameters: [String: Any], encoder: @escaping QueryParameterEncoder) -> Self {
+        guard !parameters.isEmpty else {
+            return self
+        }
         var request = setQueryParameters(parameters)
         request.queryParameterEncoder = encoder
 		return request
 	}
 
 	@discardableResult
-    func setQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+    func setQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
+        guard let queryItems = queryItems, !queryItems.isEmpty else {
+            return self
+        }
+
         var request = self
         request.queryItems = queryItems
 		return request
 	}
 
 	@discardableResult
-    func appendQueryItems(_ queryItems: [URLQueryItem]) -> Self {
+    func appendQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
+        guard let queryItems = queryItems, !queryItems.isEmpty else {
+            return self
+        }
+
 		var existingItems = self.queryItems ?? []
 		existingItems.append(contentsOf: queryItems)
 		return setQueryItems(existingItems)
