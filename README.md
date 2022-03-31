@@ -48,7 +48,7 @@ func search(query: String, limit: UInt) -> AnyPublisher<SearchResponse, Error>? 
     let queryParameters: [String: Any] = ["query": query, "limit": limit]
     return webService.GET("/search").setQueryParameters(query)
         .tryMap { (result) -> Data in
-            let validData = try result.data.ws_validate().ws_validate(result.response)
+            let validData = try result.data.ws_validate(result.response).ws_validateNotEmptyData()
             return validData
     }
     .decode(type: SearchResponse.self, decoder: JSONDecoder())
@@ -62,13 +62,13 @@ If you did not want the service to build your `URLRequest` you can build your re
 
 ``` swift
 func search<ObjectType: Decodable>(query: String, limit: UInt) -> AnyPublisher<SearchResponse, Error>? {
-    var request = Request(.GET, url: webService.baseURLString + "/search")
+    let request = Request(.GET, url: webService.baseURLString + "/search")
         .setQueryParameters(query)
         .setHeaders([Request.Header.contentType: Request.ContentType.json])
 
     return webService.servicePublisher(request: request)
         .tryMap { (result) -> Data in
-            let validData = try result.data.ws_validate().ws_validate(result.response)
+            let validData = try result.data.ws_validate(result.response).ws_validateNotEmptyData()
             return validData
     }
     .decode(type: ObjectType.self, decoder: JSONDecoder())
@@ -81,7 +81,7 @@ func search<ObjectType: Decodable>(query: String, limit: UInt) -> AnyPublisher<S
 
 ``` swift
 func search<ObjectType: Decodable>(query: String, limit: UInt) async throws -> SearchResponse {
-    var request = Request(.GET, url: webService.baseURLString + "/search")
+    let request = Request(.GET, url: webService.baseURLString + "/search")
         .setQueryParameters(query)
         .setHeaders([Request.Header.contentType: Request.ContentType.json])
     return try await webService.decodable(request)
