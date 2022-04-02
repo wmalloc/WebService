@@ -156,7 +156,6 @@ public extension URLSession.ServicePublisher {
 	@discardableResult
 	func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) throws -> Self {
         request = try request.setBody(body, encoder: encoder)
-
         return self
 	}
 }

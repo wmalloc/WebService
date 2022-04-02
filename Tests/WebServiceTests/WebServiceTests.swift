@@ -104,10 +104,10 @@ final class WebServiceTests: XCTestCase {
 	func testDefaultRequestConfigurations() throws {
 		let baseURLString = webService.baseURLString
 		XCTAssertNotNil(baseURLString)
-		let request = Request(.GET, urlString: baseURLString!)
+		var request = Request(.GET, urlString: baseURLString!)
             .setCachePolicy(.reloadIgnoringLocalCacheData)
 		XCTAssertEqual(request.cachePolicy, NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData)
-		request.setContentType(Request.ContentType.json)
+		request = request.setContentType(Request.ContentType.json)
         let first = request.headers.first { header in
             header.name == Request.Header.contentType
         }

@@ -344,9 +344,10 @@ public extension Request {
 	}
 
 	@discardableResult
-	mutating func setTimeoutInterval(_ timeoutInterval: TimeInterval) -> Self {
-		self.timeoutInterval = timeoutInterval
-		return self
+    func setTimeoutInterval(_ timeoutInterval: TimeInterval) -> Self {
+        var request = self
+        request.timeoutInterval = timeoutInterval
+		return request
 	}
 
 	@discardableResult
@@ -378,7 +379,7 @@ public extension Request {
 
 	@discardableResult
     func setQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
-        guard let queryItems = queryItems, !queryItems.isEmpty else {
+        guard let queryItems = queryItems else {
             return self
         }
 
@@ -389,7 +390,7 @@ public extension Request {
 
 	@discardableResult
     func appendQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
-        guard let queryItems = queryItems, !queryItems.isEmpty else {
+        guard let queryItems = queryItems else {
             return self
         }
 
