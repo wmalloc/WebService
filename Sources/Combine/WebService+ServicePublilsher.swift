@@ -12,30 +12,30 @@ import WebService
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
 	func GET(_ path: String) -> URLSession.ServicePublisher {
-		request(.GET, path: path)
+		servicePublisher(.GET, path: path)
 	}
 
 	func POST(_ path: String) -> URLSession.ServicePublisher {
-		request(.POST, path: path)
+		servicePublisher(.POST, path: path)
 	}
 
 	func PUT(_ path: String) -> URLSession.ServicePublisher {
-		request(.PUT, path: path)
+		servicePublisher(.PUT, path: path)
 	}
 
 	func PATCH(path: String) -> URLSession.ServicePublisher {
-		request(.PATCH, path: path)
+		servicePublisher(.PATCH, path: path)
 	}
 
 	func DELETE(_ path: String) -> URLSession.ServicePublisher {
-		request(.DELETE, path: path)
+		servicePublisher(.DELETE, path: path)
 	}
 
 	func HEAD(_ path: String) -> URLSession.ServicePublisher {
-		request(.HEAD, path: path)
+		servicePublisher(.HEAD, path: path)
 	}
 
-	func request(_ method: Request.Method, path: String) -> URLSession.ServicePublisher {
+	func servicePublisher(_ method: Request.Method, path: String) -> URLSession.ServicePublisher {
 		servicePublisher(request: Request(method, url: absoluteURL(path)))
 	}
 
