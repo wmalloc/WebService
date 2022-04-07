@@ -233,7 +233,7 @@ final class WebServiceTests: XCTestCase {
 
 @available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
 extension WebServiceTests {
-	func testAsync() throws {
+	func testAsync() async throws {
 		XCTAssertNotNil(webService.baseURLString)
 		let request = Request(.GET, urlString: webService.baseURLString!)
 		let requestURL = try request.url()
@@ -245,9 +245,79 @@ extension WebServiceTests {
 			return (Response.valid, Data())
 		}
 
-		Task {
-			let data = try await webService?.data(request: request)
-			XCTAssertEqual(data, Data())
-		}
+        let (data, _) = try await webService.data(request: request)
+        XCTAssertEqual(data, Data())
 	}
+    
+    func testDecodableData() throws {
+        let data =
+        """
+        {
+           "key1": "value1",
+           "key2": "value2"
+        }
+        """.data(using: .utf8)
+        XCTAssertNotNil(data)
+        let decoded = try JSONDecoder().decode([String: String].self, from: data!)
+        XCTAssertEqual(decoded.count, 2)
+        XCTAssertEqual(decoded["key1"], "value1")
+        XCTAssertEqual(decoded["key2"], "value2")
+        XCTAssertEqual(decoded["key3"], nil)
+   }
+    
+    func testAsyncDecodable() async throws {
+        let data =
+        """
+        {
+           "key1": "value1",
+           "key2": "value2"
+        }
+        """.data(using: .utf8)
+        XCTAssertNotNil(data)
+        XCTAssertNotNil(webService.baseURLString)
+        let request = Request(.GET, urlString: webService.baseURLString!)
+        let requestURL = try request.url()
+        URLProtocolMock.requestHandler = { request in
+            guard let url = request.url, url == requestURL else {
+                throw URLError(.badURL)
+            }
+
+            return (Response.valid, data!)
+        }
+
+        let decoded: [String: String] = try await webService.decodable(request: request)
+        XCTAssertEqual(decoded.count, 2)
+        XCTAssertEqual(decoded["key1"], "value1")
+        XCTAssertEqual(decoded["key2"], "value2")
+        XCTAssertEqual(decoded["key3"], nil)
+   }
+    
+    func testAsyncSerializable() async throws {
+        let data =
+        """
+        {
+           "key1": "value1",
+           "key2": "value2"
+        }
+        """.data(using: .utf8)
+        XCTAssertNotNil(data)
+        XCTAssertNotNil(webService.baseURLString)
+        let request = Request(.GET, urlString: webService.baseURLString!)
+        let requestURL = try request.url()
+        URLProtocolMock.requestHandler = { request in
+            guard let url = request.url, url == requestURL else {
+                throw URLError(.badURL)
+            }
+
+            return (Response.valid, data!)
+        }
+
+        let responseItem = try await webService.serializable(request: request)
+        let decoded = responseItem as? [String: String]
+        XCTAssertNotNil(decoded)
+        XCTAssertEqual(decoded!.count, 2)
+        XCTAssertEqual(decoded!["key1"], "value1")
+        XCTAssertEqual(decoded!["key2"], "value2")
+        XCTAssertEqual(decoded!["key3"], nil)
+   }
 }
