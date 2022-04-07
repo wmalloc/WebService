@@ -14,7 +14,7 @@ public extension WebService {
 	func data(request: Request) -> AnyPublisher<Data, Error> {
 		session.servicePublisher(for: request)
 			.tryMap { result -> Data in
-				try result.data.ws_validate(result.response).ws_validateNotEmptyData()
+				try result.data.ws_validate(result.response)
 			}
 			.eraseToAnyPublisher()
 	}

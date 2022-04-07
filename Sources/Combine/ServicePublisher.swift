@@ -12,6 +12,11 @@ import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension URLSession {
+    func servicePublisher(method: Request.Method = .GET, url: URL) -> URLSession.ServicePublisher {
+        servicePublisher(for: Request(method, url: url))
+    }
+    
+    @available(*, deprecated, message: "Use servicePublisher(method:url:) instead")
 	func servicePublisher(for url: URL) -> URLSession.ServicePublisher {
 		servicePublisher(for: .init(.GET, url: url))
 	}
@@ -156,7 +161,6 @@ public extension URLSession.ServicePublisher {
 	@discardableResult
 	func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) throws -> Self {
         request = try request.setBody(body, encoder: encoder)
-
         return self
 	}
 }
