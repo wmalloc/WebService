@@ -95,7 +95,9 @@ final class WebServiceTests: XCTestCase {
 		XCTAssertEqual(try request.urlRequest().url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2&test3=test3")
 		request = request.setQueryItems([])
 		XCTAssertEqual(request.queryItems?.count ?? 0, 0)
-		XCTAssertEqual(try request.urlRequest().url?.absoluteString, "https://localhost:8080")
+        let absoluteString = try request.urlRequest().url?.absoluteString
+        XCTAssertNotNil(absoluteString)
+		XCTAssertEqual(absoluteString!, "https://localhost:8080")
 		request = request.setQueryItems([URLQueryItem(name: "test 3", value: "test 3")])
 		XCTAssertEqual(request.queryItems?.count ?? 0, 1)
 		XCTAssertEqual(try request.urlRequest().url?.absoluteString, "https://localhost:8080?test%203=test%203")
@@ -113,10 +115,6 @@ final class WebServiceTests: XCTestCase {
 		}
 		XCTAssertEqual(first?.value, Request.ContentType.json)
 		XCTAssertEqual(request.headers.count, 1)
-	}
-
-	func testExample() throws {
-		// XCTAssertEqual(WebService().text, "Hello, World!")
 	}
 
 	func testValidResponse() throws {
@@ -231,7 +229,6 @@ final class WebServiceTests: XCTestCase {
 	}
 }
 
-@available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
 extension WebServiceTests {
 	func testAsync() async throws {
 		XCTAssertNotNil(webService.baseURLString)
