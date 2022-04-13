@@ -8,7 +8,7 @@
 import Foundation
 
 public extension HTTPURLResponse {
-    @discardableResult
+	@discardableResult
 	func ws_httpValidate(acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
 		guard acceptableStatusCodes.contains(statusCode) else {
 			let errorCode = URLError.Code(rawValue: statusCode)

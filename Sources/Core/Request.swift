@@ -23,9 +23,9 @@ public struct Request {
 		case PUT
 		case PATCH
 		case DELETE
-        case HEAD
-        case OPTIONS
-        case TRACE
+		case HEAD
+		case OPTIONS
+		case TRACE
 
 		var shouldEncodeParametersInURL: Bool {
 			switch self {
@@ -105,16 +105,16 @@ public struct Request {
 		public static let patchjson = "application/json-patch+json"
 	}
 
-    public struct HTTPHeader: Hashable {
-        public let name: String
-        public let value: String
-        
-        public init(name: String, value: String) {
-            self.name = name
-            self.value = value
-        }
-    }
-    
+	public struct HTTPHeader: Hashable {
+		public let name: String
+		public let value: String
+
+		public init(name: String, value: String) {
+			self.name = name
+			self.value = value
+		}
+	}
+
 	public let method: Method
 	public let requestURL: URL
 	public var urlString: String {
@@ -153,45 +153,45 @@ public struct Request {
 
 	public var contentType: String? {
 		get {
-            let header = headers.first { header in
-                header.name == Header.contentType
-            }
-            return header?.value
+			let header = headers.first { header in
+				header.name == Header.contentType
+			}
+			return header?.value
 		}
 		set {
-            guard let contentType = newValue else {
-                if let existing = headers.first(where: { header in
-                    header.name == Header.contentType
-                }) {
-                    headers.remove(existing)
-                }
-                return
-            }
-            let header = HTTPHeader(name: Header.contentType, value: contentType)
-            headers.insert(header)
+			guard let contentType = newValue else {
+				if let existing = headers.first(where: { header in
+					header.name == Header.contentType
+				}) {
+					headers.remove(existing)
+				}
+				return
+			}
+			let header = HTTPHeader(name: Header.contentType, value: contentType)
+			headers.insert(header)
 		}
 	}
 
 	var userAgent: String? {
 		get {
-            let header = headers.first { header in
-                header.name == Header.userAgent
-            }
-            return header?.value
-        }
+			let header = headers.first { header in
+				header.name == Header.userAgent
+			}
+			return header?.value
+		}
 		set {
-            guard let userAgent = newValue else {
-                if let existing = headers.first(where: { header in
-                    header.name == Header.userAgent
-                }) {
-                    headers.remove(existing)
-                }
-                return
-            }
-            
-            let header = HTTPHeader(name: Header.userAgent, value: userAgent)
-            headers.insert(header)
-        }
+			guard let userAgent = newValue else {
+				if let existing = headers.first(where: { header in
+					header.name == Header.userAgent
+				}) {
+					headers.remove(existing)
+				}
+				return
+			}
+
+			let header = HTTPHeader(name: Header.userAgent, value: userAgent)
+			headers.insert(header)
+		}
 	}
 
 	public init(_ method: Method, url: URL) {
@@ -207,12 +207,12 @@ public struct Request {
 
 extension Request: URLRequestable {
 	public func url() throws -> URL {
-        guard var urlComponents = URLComponents(string: urlString) else {
-            throw URLError(.badURL)
-        }
-        
-        urlComponents = urlComponents.appendQueryItems(queryItems ?? [])
-        guard let url = urlComponents.url else {
+		guard var urlComponents = URLComponents(string: urlString) else {
+			throw URLError(.badURL)
+		}
+
+		urlComponents = urlComponents.appendQueryItems(queryItems ?? [])
+		guard let url = urlComponents.url else {
 			throw URLError(.badURL)
 		}
 		return url
@@ -221,13 +221,13 @@ extension Request: URLRequestable {
 	public func urlRequest() throws -> URLRequest {
 		let requestURL = try url()
 		var urlRequest = URLRequest(url: requestURL)
-            .setHttpMethod(method)
-            .setCachePolicy(cachePolicy)
-            .setTimeoutInterval(timeoutInterval)
-            .setHttpShouldHandleCookies(shouldHandleCookies)
-            .setHttpHeaders(headers)
-        
-        if !parameters.isEmpty {
+			.setHttpMethod(method)
+			.setCachePolicy(cachePolicy)
+			.setTimeoutInterval(timeoutInterval)
+			.setHttpShouldHandleCookies(shouldHandleCookies)
+			.setHttpHeaders(headers)
+
+		if !parameters.isEmpty {
 			if method.shouldEncodeParametersInURL {
 				if let encodedURL = queryParameterEncoder(urlRequest.url, parameters) {
 					urlRequest.url = encodedURL
@@ -245,8 +245,8 @@ extension Request: URLRequestable {
 
 		if let body = body {
 			urlRequest.httpBody = body
- 		}
-         
+		}
+
 		if let queryParameters = queryParameters, let encodedURL = queryParameterEncoder(urlRequest.url, queryParameters) {
 			urlRequest.url = encodedURL
 		}
@@ -257,161 +257,161 @@ extension Request: URLRequestable {
 
 public extension Request {
 	@discardableResult
-    func setContentType(_ contentType: String?) -> Self {
-        var request = self
-		request.contentType = contentType
-		return request
-	}
-
-    @discardableResult
-    func setUserAgent(_ userAgent: String?) -> Self {
-        var request = self
-        request.userAgent = userAgent
-        return request
-    }
-    
-	@discardableResult
-    func setShouldHandleCookies(_ handle: Bool) -> Self {
-        var request = self
-        request.shouldHandleCookies = handle
-		return request
-	}
-
-	@discardableResult
-    func setParameters(_ parameters: [String: Any], encoding: Request.ParameterEncoding? = nil) -> Self {
-        guard !parameters.isEmpty else {
-            return self
-        }
-        var request = self
-        request.parameters = parameters
-        request.parameterEncoding = encoding ?? .percent
-		return request
-	}
-
-	@discardableResult
-    func setBody(_ data: Data?) -> Self {
-        guard let data = data else {
-            return self
-        }
-
-        var request = self
-        request.body = data
-		return request
-	}
-
-	@discardableResult
-    func setBody(_ data: Data?, contentType: String) -> Self {
-        guard let data = data else {
-            return self
-        }
-        var request = self
-        request.body = data
+	func setContentType(_ contentType: String?) -> Self {
+		var request = self
 		request.contentType = contentType
 		return request
 	}
 
 	@discardableResult
-    func setJSON(_ json: Any?) -> Self {
-        guard let json = json else {
-            return self
-        }
-        var request = self
-        request.contentType = Request.ContentType.json
-        request.body = try? JSONSerialization.data(withJSONObject: json, options: [])
+	func setUserAgent(_ userAgent: String?) -> Self {
+		var request = self
+		request.userAgent = userAgent
 		return request
 	}
 
 	@discardableResult
-    func setJSONData(_ json: Data?) -> Self {
-        return setBody(json, contentType: Request.ContentType.json)
-	}
-
-	@discardableResult
-    func setHeaders(_ headers: Set<HTTPHeader>?) -> Self {
-        guard let headers = headers, !headers.isEmpty else {
-            return self
-        }
-        var request = self
-        request.headers = headers
-		return request
-	}
-
-    @discardableResult
-    func updateHeaders(_ headers: Set<HTTPHeader>?) -> Self {
-        guard let headers = headers, !headers.isEmpty else {
-            return self
-        }
-
-        var request = self
-        request.headers.formUnion(headers)
-        return request
-    }
-
-	@discardableResult
-    func setHeaderValue(_ value: String, forName name: String) -> Self {
-        var request = self
-        let httpHeader = HTTPHeader(name: name, value: value)
-        request.headers.insert(httpHeader)
+	func setShouldHandleCookies(_ handle: Bool) -> Self {
+		var request = self
+		request.shouldHandleCookies = handle
 		return request
 	}
 
 	@discardableResult
-    func setCachePolicy(_ cachePolicy: NSURLRequest.CachePolicy) -> Self {
-        var request = self
-        request.cachePolicy = cachePolicy
+	func setParameters(_ parameters: [String: Any], encoding: Request.ParameterEncoding? = nil) -> Self {
+		guard !parameters.isEmpty else {
+			return self
+		}
+		var request = self
+		request.parameters = parameters
+		request.parameterEncoding = encoding ?? .percent
 		return request
 	}
 
 	@discardableResult
-    func setTimeoutInterval(_ timeoutInterval: TimeInterval) -> Self {
-        var request = self
-        request.timeoutInterval = timeoutInterval
+	func setBody(_ data: Data?) -> Self {
+		guard let data = data else {
+			return self
+		}
+
+		var request = self
+		request.body = data
 		return request
 	}
 
 	@discardableResult
-    func setParameterEncoding(_ encoding: Request.ParameterEncoding) -> Self {
-        var request = self
-        request.parameterEncoding = encoding
+	func setBody(_ data: Data?, contentType: String) -> Self {
+		guard let data = data else {
+			return self
+		}
+		var request = self
+		request.body = data
+		request.contentType = contentType
 		return request
 	}
 
 	@discardableResult
-    func setQueryParameters(_ parameters: [String: Any]?) -> Self {
-        guard let parameters = parameters else {
-            return self
-        }
-        var request = self
-        request.queryParameters = parameters
+	func setJSON(_ json: Any?) -> Self {
+		guard let json = json else {
+			return self
+		}
+		var request = self
+		request.contentType = Request.ContentType.json
+		request.body = try? JSONSerialization.data(withJSONObject: json, options: [])
 		return request
 	}
 
 	@discardableResult
-    func setQueryParameters(_ parameters: [String: Any], encoder: @escaping QueryParameterEncoder) -> Self {
-        guard !parameters.isEmpty else {
-            return self
-        }
-        var request = setQueryParameters(parameters)
-        request.queryParameterEncoder = encoder
+	func setJSONData(_ json: Data?) -> Self {
+		setBody(json, contentType: Request.ContentType.json)
+	}
+
+	@discardableResult
+	func setHeaders(_ headers: Set<HTTPHeader>?) -> Self {
+		guard let headers = headers, !headers.isEmpty else {
+			return self
+		}
+		var request = self
+		request.headers = headers
 		return request
 	}
 
 	@discardableResult
-    func setQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
-        guard let queryItems = queryItems else {
-            return self
-        }
+	func updateHeaders(_ headers: Set<HTTPHeader>?) -> Self {
+		guard let headers = headers, !headers.isEmpty else {
+			return self
+		}
 
-        var request = self
-        request.queryItems = queryItems
+		var request = self
+		request.headers.formUnion(headers)
 		return request
 	}
 
 	@discardableResult
-    func appendQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
-        guard let queryItems = queryItems else {
-            return self
-        }
+	func setHeaderValue(_ value: String, forName name: String) -> Self {
+		var request = self
+		let httpHeader = HTTPHeader(name: name, value: value)
+		request.headers.insert(httpHeader)
+		return request
+	}
+
+	@discardableResult
+	func setCachePolicy(_ cachePolicy: NSURLRequest.CachePolicy) -> Self {
+		var request = self
+		request.cachePolicy = cachePolicy
+		return request
+	}
+
+	@discardableResult
+	func setTimeoutInterval(_ timeoutInterval: TimeInterval) -> Self {
+		var request = self
+		request.timeoutInterval = timeoutInterval
+		return request
+	}
+
+	@discardableResult
+	func setParameterEncoding(_ encoding: Request.ParameterEncoding) -> Self {
+		var request = self
+		request.parameterEncoding = encoding
+		return request
+	}
+
+	@discardableResult
+	func setQueryParameters(_ parameters: [String: Any]?) -> Self {
+		guard let parameters = parameters else {
+			return self
+		}
+		var request = self
+		request.queryParameters = parameters
+		return request
+	}
+
+	@discardableResult
+	func setQueryParameters(_ parameters: [String: Any], encoder: @escaping QueryParameterEncoder) -> Self {
+		guard !parameters.isEmpty else {
+			return self
+		}
+		var request = setQueryParameters(parameters)
+		request.queryParameterEncoder = encoder
+		return request
+	}
+
+	@discardableResult
+	func setQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
+		guard let queryItems = queryItems else {
+			return self
+		}
+
+		var request = self
+		request.queryItems = queryItems
+		return request
+	}
+
+	@discardableResult
+	func appendQueryItems(_ queryItems: [URLQueryItem]?) -> Self {
+		guard let queryItems = queryItems else {
+			return self
+		}
 
 		var existingItems = self.queryItems ?? []
 		existingItems.append(contentsOf: queryItems)
@@ -419,30 +419,30 @@ public extension Request {
 	}
 
 	@discardableResult
-    func setFormParameters(_ parameters: [String: Any]?) -> Self {
-        guard let parameters = parameters else {
-            return self
-        }
+	func setFormParameters(_ parameters: [String: Any]?) -> Self {
+		guard let parameters = parameters else {
+			return self
+		}
 
-        var request = self
-        request.formParameters = parameters
+		var request = self
+		request.formParameters = parameters
 		return request
 	}
 
 	@discardableResult
-    func setFormParametersAllowedCharacters(_ allowedCharacters: CharacterSet) -> Self {
-        var request = self
-        request.formParametersAllowedCharacters = allowedCharacters
+	func setFormParametersAllowedCharacters(_ allowedCharacters: CharacterSet) -> Self {
+		var request = self
+		request.formParametersAllowedCharacters = allowedCharacters
 		return request
 	}
 
 	@discardableResult
-    func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) throws -> Self {
-        var request = self
-        let data = try encoder.encode(body)
-        request.body = data
-        request.contentType = Request.ContentType.json
-        return request
+	func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) throws -> Self {
+		var request = self
+		let data = try encoder.encode(body)
+		request.body = data
+		request.contentType = Request.ContentType.json
+		return request
 	}
 }
 

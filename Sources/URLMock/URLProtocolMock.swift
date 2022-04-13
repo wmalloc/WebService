@@ -12,11 +12,11 @@ import XCTest
 public class URLProtocolMock: URLProtocol {
 	public static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data?))?
 
-    public override class func canInit(with _: URLRequest) -> Bool { true }
-    public override class func canInit(with _: URLSessionTask) -> Bool { true }
-    public override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+	override public class func canInit(with _: URLRequest) -> Bool { true }
+	override public class func canInit(with _: URLSessionTask) -> Bool { true }
+	override public class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
-    public override func startLoading() {
+	override public func startLoading() {
 		guard let client = client else {
 			fatalError("missing client")
 		}
@@ -44,5 +44,5 @@ public class URLProtocolMock: URLProtocol {
 		}
 	}
 
-    public override func stopLoading() {}
+	override public func stopLoading() {}
 }

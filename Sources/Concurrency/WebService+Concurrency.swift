@@ -19,24 +19,24 @@ public extension WebService {
 		} else {
 			dataResponse = try await session.data(for: urlRequest)
 		}
-        return dataResponse
+		return dataResponse
 	}
 
-    func data<ObjectType>(request: Request, transform: DataMapper<Data, ObjectType>) async throws -> ObjectType {
-        let (data, response) = try await data(request: request)
-        try response.ws_validate()
-        return try transform(data)
-    }
-    
+	func data<ObjectType>(request: Request, transform: DataMapper<Data, ObjectType>) async throws -> ObjectType {
+		let (data, response) = try await data(request: request)
+		try response.ws_validate()
+		return try transform(data)
+	}
+
 	func decodable<ObjectType: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
-        try await data(request: request) { data in
-            try decoder.decode(ObjectType.self, from: data)
-        }
-    }
+		try await data(request: request) { data in
+			try decoder.decode(ObjectType.self, from: data)
+		}
+	}
 
 	func serializable(request: Request, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
-        try await data(request: request) { data in
-            try JSONSerialization.jsonObject(with: data, options: options)
-        }
-    }
+		try await data(request: request) { data in
+			try JSONSerialization.jsonObject(with: data, options: options)
+		}
+	}
 }

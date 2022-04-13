@@ -12,11 +12,11 @@ import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension URLSession {
-    func servicePublisher(method: Request.Method = .GET, url: URL) -> URLSession.ServicePublisher {
-        servicePublisher(for: Request(method, url: url))
-    }
-    
-    @available(*, deprecated, message: "Use servicePublisher(method:url:) instead")
+	func servicePublisher(method: Request.Method = .GET, url: URL) -> URLSession.ServicePublisher {
+		servicePublisher(for: Request(method, url: url))
+	}
+
+	@available(*, deprecated, message: "Use servicePublisher(method:url:) instead")
 	func servicePublisher(for url: URL) -> URLSession.ServicePublisher {
 		servicePublisher(for: .init(.GET, url: url))
 	}
@@ -59,32 +59,32 @@ public extension URLSession.ServicePublisher {
 
 	@discardableResult
 	func setShouldHandleCookies(_ handle: Bool) -> Self {
-        request = request.setShouldHandleCookies(handle)
+		request = request.setShouldHandleCookies(handle)
 		return self
 	}
 
 	@discardableResult
 	func setParameters(_ parameters: [String: Any], encoding: Request.ParameterEncoding? = nil) -> Self {
-        request = request.setParameters(parameters, encoding: encoding)
+		request = request.setParameters(parameters, encoding: encoding)
 		return self
 	}
 
 	@discardableResult
 	func setBody(_ data: Data?) -> Self {
-        request = request.setBody(data)
+		request = request.setBody(data)
 		return self
 	}
 
 	@discardableResult
 	func setBody(_ data: Data?, contentType: String) -> Self {
-        request = request.setBody(data, contentType: contentType)
-        return self
+		request = request.setBody(data, contentType: contentType)
+		return self
 	}
 
 	@discardableResult
 	func setJSON(_ json: Any?) -> Self {
-        request = request.setJSON(json)
-        return self
+		request = request.setJSON(json)
+		return self
 	}
 
 	@discardableResult
@@ -93,45 +93,45 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-    func setHeaders(_ headers: Set<Request.HTTPHeader>?) -> Self {
-        request = request.setHeaders(headers)
+	func setHeaders(_ headers: Set<Request.HTTPHeader>?) -> Self {
+		request = request.setHeaders(headers)
 		return self
 	}
 
 	@discardableResult
 	func setHeaderValue(_ value: String, forName name: String) -> Self {
-        request = request.setHeaderValue(value, forName: name)
+		request = request.setHeaderValue(value, forName: name)
 		return self
 	}
 
 	@discardableResult
 	func setCachePolicy(_ cachePolicy: NSURLRequest.CachePolicy) -> Self {
-        request = request.setCachePolicy(cachePolicy)
-        return self
+		request = request.setCachePolicy(cachePolicy)
+		return self
 	}
 
 	@discardableResult
 	func setTimeoutInterval(_ timeoutInterval: TimeInterval) -> Self {
-        request = request.setTimeoutInterval(timeoutInterval)
+		request = request.setTimeoutInterval(timeoutInterval)
 		return self
 	}
 
 	@discardableResult
 	func setParameterEncoding(_ encoding: Request.ParameterEncoding) -> Self {
-        request = request.setParameterEncoding(encoding)
-        return self
+		request = request.setParameterEncoding(encoding)
+		return self
 	}
 
 	@discardableResult
 	func setQueryParameters(_ parameters: [String: Any]?) -> Self {
-        request = request.setQueryParameters(parameters)
-        return self
+		request = request.setQueryParameters(parameters)
+		return self
 	}
 
 	@discardableResult
 	func setQueryParameters(_ parameters: [String: Any], encoder: @escaping QueryParameterEncoder) -> Self {
-        request = request.setQueryParameters(parameters, encoder: encoder)
-        return self
+		request = request.setQueryParameters(parameters, encoder: encoder)
+		return self
 	}
 
 	@discardableResult
@@ -148,19 +148,19 @@ public extension URLSession.ServicePublisher {
 
 	@discardableResult
 	func setFormParameters(_ parameters: [String: Any]?) -> Self {
-        request = request.setFormParameters(parameters)
-        return self
+		request = request.setFormParameters(parameters)
+		return self
 	}
 
 	@discardableResult
 	func setFormParametersAllowedCharacters(_ allowedCharacters: CharacterSet) -> Self {
-        request = request.setFormParametersAllowedCharacters(allowedCharacters)
+		request = request.setFormParametersAllowedCharacters(allowedCharacters)
 		return self
 	}
 
 	@discardableResult
 	func setBody<T: Encodable>(_ body: T, encoder: JSONEncoder = JSONEncoder()) throws -> Self {
-        request = try request.setBody(body, encoder: encoder)
-        return self
+		request = try request.setBody(body, encoder: encoder)
+		return self
 	}
 }
