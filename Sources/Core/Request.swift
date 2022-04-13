@@ -9,7 +9,7 @@
 import Foundation
 import os.log
 
-public protocol URLRequestEncodable {
+public protocol URLRequestable {
 	func url() throws -> URL
 	func urlRequest() throws -> URLRequest
 }
@@ -107,9 +107,9 @@ public struct Request {
 
     public struct HTTPHeader: Hashable {
         public let name: String
-        public let value: String?
+        public let value: String
         
-        public init(name: String, value: String?) {
+        public init(name: String, value: String) {
             self.name = name
             self.value = value
         }
@@ -159,7 +159,15 @@ public struct Request {
             return header?.value
 		}
 		set {
-            let header = HTTPHeader(name: Header.contentType, value: newValue)
+            guard let contentType = newValue else {
+                if let existing = headers.first(where: { header in
+                    header.name == Header.contentType
+                }) {
+                    headers.remove(existing)
+                }
+                return
+            }
+            let header = HTTPHeader(name: Header.contentType, value: contentType)
             headers.insert(header)
 		}
 	}
@@ -172,7 +180,16 @@ public struct Request {
             return header?.value
         }
 		set {
-            let header = HTTPHeader(name: Header.userAgent, value: newValue)
+            guard let userAgent = newValue else {
+                if let existing = headers.first(where: { header in
+                    header.name == Header.userAgent
+                }) {
+                    headers.remove(existing)
+                }
+                return
+            }
+            
+            let header = HTTPHeader(name: Header.userAgent, value: userAgent)
             headers.insert(header)
         }
 	}
@@ -188,16 +205,14 @@ public struct Request {
 	}
 }
 
-extension Request: URLRequestEncodable {
+extension Request: URLRequestable {
 	public func url() throws -> URL {
-		var urlComponents = URLComponents(string: urlString)
-		if var items = queryItems {
-			items.append(contentsOf: urlComponents?.queryItems ?? [])
-			if !items.isEmpty {
-				urlComponents?.queryItems = items
-			}
-		}
-		guard let url = urlComponents?.url else {
+        guard var urlComponents = URLComponents(string: urlString) else {
+            throw URLError(.badURL)
+        }
+        
+        urlComponents = urlComponents.appendQueryItems(queryItems ?? [])
+        guard let url = urlComponents.url else {
 			throw URLError(.badURL)
 		}
 		return url
@@ -206,16 +221,13 @@ extension Request: URLRequestEncodable {
 	public func urlRequest() throws -> URLRequest {
 		let requestURL = try url()
 		var urlRequest = URLRequest(url: requestURL)
-		urlRequest.httpMethod = method.rawValue
-		urlRequest.cachePolicy = cachePolicy
-		urlRequest.timeoutInterval = timeoutInterval
-		urlRequest.httpShouldHandleCookies = shouldHandleCookies
-
-		for header in headers {
-            urlRequest.setValue(header.value, forHTTPHeaderField: header.name)
-		}
-
-		if !parameters.isEmpty {
+            .setHttpMethod(method)
+            .setCachePolicy(cachePolicy)
+            .setTimeoutInterval(timeoutInterval)
+            .setHttpShouldHandleCookies(shouldHandleCookies)
+            .setHttpHeaders(headers)
+        
+        if !parameters.isEmpty {
 			if method.shouldEncodeParametersInURL {
 				if let encodedURL = queryParameterEncoder(urlRequest.url, parameters) {
 					urlRequest.url = encodedURL
@@ -245,12 +257,19 @@ extension Request: URLRequestEncodable {
 
 public extension Request {
 	@discardableResult
-    func setContentType(_ contentType: String) -> Self {
+    func setContentType(_ contentType: String?) -> Self {
         var request = self
 		request.contentType = contentType
 		return request
 	}
 
+    @discardableResult
+    func setUserAgent(_ userAgent: String?) -> Self {
+        var request = self
+        request.userAgent = userAgent
+        return request
+    }
+    
 	@discardableResult
     func setShouldHandleCookies(_ handle: Bool) -> Self {
         var request = self
@@ -329,7 +348,7 @@ public extension Request {
     }
 
 	@discardableResult
-    func setHeaderValue(_ value: String?, forName name: String) -> Self {
+    func setHeaderValue(_ value: String, forName name: String) -> Self {
         var request = self
         let httpHeader = HTTPHeader(name: name, value: value)
         request.headers.insert(httpHeader)

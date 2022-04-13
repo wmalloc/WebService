@@ -99,7 +99,7 @@ public extension URLSession.ServicePublisher {
 	}
 
 	@discardableResult
-	func setHeaderValue(_ value: String?, forName name: String) -> Self {
+	func setHeaderValue(_ value: String, forName name: String) -> Self {
         request = request.setHeaderValue(value, forName: name)
 		return self
 	}
@@ -125,7 +125,7 @@ public extension URLSession.ServicePublisher {
 	@discardableResult
 	func setQueryParameters(_ parameters: [String: Any]?) -> Self {
         request = request.setQueryParameters(parameters)
-		    return self
+        return self
 	}
 
 	@discardableResult

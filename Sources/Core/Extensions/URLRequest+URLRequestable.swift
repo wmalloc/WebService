@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension URLRequest: URLRequestEncodable {
+extension URLRequest: URLRequestable {
 	public func url() throws -> URL {
 		guard let url = url else {
 			throw URLError(.badURL)
