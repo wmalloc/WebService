@@ -11,16 +11,12 @@ import Foundation
 public extension URLRequest {
     @discardableResult
     func setContentType(_ contentType: String) -> Self {
-        var request = self
-        request.contentType = contentType
-        return request
+        setHttpHeader(contentType, forKey: URLRequest.Header.contentType)
     }
     
     @discardableResult
     func setUserAgent(_ userAgent: String) -> Self {
-        var request = self
-        request.userAgent = userAgent
-        return request
+        setHttpHeader(userAgent, forKey: URLRequest.Header.userAgent)
     }
     
 	@discardableResult
@@ -159,4 +155,18 @@ public extension URLRequest {
 		request.httpMethod = method.rawValue
 		return request
 	}
+    
+    @discardableResult
+    func setHttpHeader(_ value: String?, forKey key: String) -> Self {
+        var request = self
+        request.setValue(value, forHTTPHeaderField: key)
+        return request
+    }
+    
+    @discardableResult
+    func addHttpHeader(_ value: String, forKey key: String) -> Self {
+        var request = self
+        request.addValue(value, forHTTPHeaderField: key)
+        return request
+    }
 }

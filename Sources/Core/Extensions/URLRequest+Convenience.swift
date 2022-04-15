@@ -10,17 +10,10 @@ import Foundation
 public extension URLRequest {
     subscript(header key: String) -> String? {
         get {
-            allHTTPHeaderFields?.first { element in
-                element.key == key
-            }?.value
+            value(forHTTPHeaderField: key)
         }
         set {
-            if let value = newValue {
-                var headers = allHTTPHeaderFields ?? [:]
-                headers.removeValue(forKey: key)
-                headers[key] = value
-                allHTTPHeaderFields = headers
-            }
+            setValue(newValue, forHTTPHeaderField: key)
         }
     }
 
