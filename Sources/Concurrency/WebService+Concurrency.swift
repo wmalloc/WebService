@@ -22,6 +22,16 @@ public extension WebService {
 		return dataResponse
 	}
 
+    func data(request: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        let dataResponse: (data: Data, response: URLResponse)
+        if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
+            dataResponse = try await session.data(for: request, delegate: nil)
+        } else {
+            dataResponse = try await session.data(for: request)
+        }
+        return dataResponse
+    }
+
 	func data<ObjectType>(request: Request, transform: DataMapper<Data, ObjectType>) async throws -> ObjectType {
 		let (data, response) = try await data(request: request)
 		try response.ws_validate()

@@ -19,6 +19,14 @@ public extension WebService {
 			.eraseToAnyPublisher()
 	}
 
+    func data(for request: URLRequest) -> AnyPublisher<Data, Error> {
+        session.dataTaskPublisher(for: request)
+            .tryMap { result -> Data in
+                try result.data.ws_validate(result.response)
+            }
+            .eraseToAnyPublisher()
+    }
+
 	func decodable<ObjectType: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<ObjectType, Error> {
 		data(request: request)
 			.decode(type: ObjectType.self, decoder: decoder)

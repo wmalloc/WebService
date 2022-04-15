@@ -16,8 +16,10 @@ public extension URLRequest {
         }
         set {
             if let value = newValue {
-                allHTTPHeaderFields?.removeValue(forKey: key)
-                allHTTPHeaderFields?[key] = value
+                var headers = allHTTPHeaderFields ?? [:]
+                headers.removeValue(forKey: key)
+                headers[key] = value
+                allHTTPHeaderFields = headers
             }
         }
     }

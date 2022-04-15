@@ -9,6 +9,20 @@
 import Foundation
 
 public extension URLRequest {
+    @discardableResult
+    func setContentType(_ contentType: String) -> Self {
+        var request = self
+        request.contentType = contentType
+        return request
+    }
+    
+    @discardableResult
+    func setUserAgent(_ userAgent: String) -> Self {
+        var request = self
+        request.userAgent = userAgent
+        return request
+    }
+    
 	@discardableResult
 	func setCachePolicy(_ cachePolicy: URLRequest.CachePolicy) -> Self {
 		var request = self
