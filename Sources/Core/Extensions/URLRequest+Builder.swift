@@ -1,5 +1,5 @@
 //
-//  URLComponents+QueryItems.swift
+//  URLRequest+Builder.swift
 //  WebService
 //
 //  Created by Waqar Malik on 5/28/20.
@@ -130,7 +130,7 @@ public extension URLRequest {
 
 public extension URLRequest {
 	@discardableResult
-	func setHttpHeaders(_ httpHeaders: Set<Request.HTTPHeader>) -> Self {
+    func setHttpHeaders(_ httpHeaders: Set<HTTPHeader>) -> Self {
 		let mapped: [String: String] = httpHeaders.reduce([:]) { partialResult, header in
 			var result = partialResult
 			result[header.name] = header.value
@@ -140,7 +140,7 @@ public extension URLRequest {
 	}
 
 	@discardableResult
-	func setHttpMethod(_ method: Request.Method) -> Self {
+	func setHttpMethod(_ method: HTTPMethod) -> Self {
 		var request = self
 		request.httpMethod = method.rawValue
 		return request

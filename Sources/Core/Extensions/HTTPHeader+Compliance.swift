@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  HTTPHeader+Compliance.swift
 //
 //
 //  Created by Waqar Malik on 3/25/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Request.HTTPHeader: CustomStringConvertible {
+extension HTTPHeader: CustomStringConvertible {
 	public var description: String {
 		"""
 		{

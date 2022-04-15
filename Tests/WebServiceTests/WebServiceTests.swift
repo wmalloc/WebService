@@ -58,11 +58,11 @@ final class WebServiceTests: XCTestCase {
 		XCTAssertEqual(request.urlString, baseURLString!)
 		XCTAssertEqual(request.requestURL, baseURL)
 		let contentType = request.headers.first { header in
-			header.name == Request.Header.contentType
+            header.name == URLRequest.Header.contentType
 		}
 		XCTAssertNil(contentType)
 		let cacheControl = request.headers.first { header in
-			header.name == Request.Header.cacheControl
+            header.name == URLRequest.Header.cacheControl
 		}
 		XCTAssertNil(cacheControl)
 		XCTAssertEqual(request.headers.count, 0)
@@ -109,11 +109,11 @@ final class WebServiceTests: XCTestCase {
 		var request = Request(.GET, urlString: baseURLString!)
 			.setCachePolicy(.reloadIgnoringLocalCacheData)
 		XCTAssertEqual(request.cachePolicy, NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData)
-		request = request.setContentType(Request.ContentType.json)
+		request = request.setContentType(URLRequest.ContentType.json)
 		let first = request.headers.first { header in
-			header.name == Request.Header.contentType
+            header.name == URLRequest.Header.contentType
 		}
-		XCTAssertEqual(first?.value, Request.ContentType.json)
+		XCTAssertEqual(first?.value, URLRequest.ContentType.json)
 		XCTAssertEqual(request.headers.count, 1)
 	}
 

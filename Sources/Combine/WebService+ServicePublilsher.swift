@@ -35,7 +35,7 @@ public extension WebService {
 		servicePublisher(.HEAD, path: path)
 	}
 
-	func servicePublisher(_ method: Request.Method, path: String) -> URLSession.ServicePublisher {
+	func servicePublisher(_ method: HTTPMethod, path: String) -> URLSession.ServicePublisher {
 		servicePublisher(request: Request(method, url: absoluteURL(path)))
 	}
 
