@@ -8,8 +8,8 @@
 import Foundation
 
 public extension WebService {
-	func dataTask<T>(urlRequest: URLRequest, transform: @escaping DataMapper<Data, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
-		let dataTask = session.dataTask(with: urlRequest) { data, urlResponse, error in
+	func dataTask<T>(request: URLRequest, transform: @escaping DataMapper<Data, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
+		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
 			if let error = error {
 				completion?(.failure(error))
 				return
@@ -30,23 +30,11 @@ public extension WebService {
 		return dataTask
 	}
 
-	func dataTask<T>(request: Request, transform: @escaping DataMapper<Data, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
-		guard let urlRequest = try? request.urlRequest() else {
-			completion?(.failure(URLError(.badURL)))
-			return nil
-		}
-		return dataTask(urlRequest: urlRequest, transform: transform, completion: completion)
-	}
-
-	func dataTask(urlRequest: URLRequest, completion: WebService.DataHandler<Data>?) -> URLSessionDataTask? {
-		dataTask(urlRequest: urlRequest, transform: { $0 }, completion: completion)
-	}
-
-	func dataTask(request: Request, completion: WebService.DataHandler<Data>?) -> URLSessionDataTask? {
+	func dataTask(request: URLRequest, completion: WebService.DataHandler<Data>?) -> URLSessionDataTask? {
 		dataTask(request: request, transform: { $0 }, completion: completion)
 	}
 
-	func decodableTask<T: Decodable>(request: Request, decoder: JSONDecoder = JSONDecoder(), completion: WebService.DecodeblHandler<T>?) -> URLSessionDataTask? {
+	func decodableTask<T: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: WebService.DecodeblHandler<T>?) -> URLSessionDataTask? {
 		dataTask(request: request) { data in
 			try decoder.decode(T.self, from: data)
 		} completion: { result in
@@ -54,7 +42,7 @@ public extension WebService {
 		}
 	}
 
-	func serializableTask(request: Request, options: JSONSerialization.ReadingOptions = .allowFragments, completion: WebService.SerializableHandler?) -> URLSessionDataTask? {
+	func serializableTask(request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: WebService.SerializableHandler?) -> URLSessionDataTask? {
 		dataTask(request: request) { data in
 			try JSONSerialization.jsonObject(with: data, options: options)
 		} completion: { result in

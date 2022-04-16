@@ -68,7 +68,7 @@ final class WebServiceTests: XCTestCase {
 
 		XCTAssertNil(request.contentType)
 		XCTAssertNil(request.userAgent)
-		XCTAssertEqual(try request.urlRequest(), URLRequest(url: baseURL!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
+		XCTAssertEqual(request, URLRequest(url: baseURL!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
 	}
 
 	func testQueryItems() throws {
@@ -107,8 +107,9 @@ final class WebServiceTests: XCTestCase {
 
 	func testValidResponse() throws {
 		XCTAssertNotNil(webService.baseURLString)
-		let request = Request(.GET, urlString: webService.baseURLString!)
-		let requestURL = try request.url()
+        let request = URLRequest(url: webService.baseURL!)
+            .setMethod(.GET)
+        let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
@@ -125,8 +126,9 @@ final class WebServiceTests: XCTestCase {
 
 	func testInvalidResponse() throws {
 		XCTAssertNotNil(webService.baseURLString)
-		let request = Request(.GET, urlString: webService.baseURLString!)
-		let requestURL = try request.url()
+        let request = URLRequest(url: webService.baseURL!)
+            .setMethod(.GET)
+		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
@@ -143,8 +145,9 @@ final class WebServiceTests: XCTestCase {
 
 	func testValidDataResponse() throws {
 		XCTAssertNotNil(webService.baseURLString)
-		let request = Request(.GET, urlString: webService.baseURLString!)
-		let requestURL = try request.url()
+        let request = URLRequest(url: webService.baseURL!)
+            .setMethod(.GET)
+		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
@@ -162,8 +165,9 @@ final class WebServiceTests: XCTestCase {
 
 	func testNetworkFailure() throws {
 		XCTAssertNotNil(webService.baseURLString)
-		let request = Request(.GET, urlString: webService.baseURLString!)
-		let requestURL = try request.url()
+        let request = URLRequest(url: webService.baseURL!)
+            .setMethod(.GET)
+		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
@@ -221,7 +225,7 @@ extension WebServiceTests {
 	func testAsync() async throws {
 		XCTAssertNotNil(webService.baseURLString)
         let request = URLRequest(url: webService.baseURL!)
-		let requestURL = try request.url()
+		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
@@ -260,8 +264,9 @@ extension WebServiceTests {
 			""".data(using: .utf8)
 		XCTAssertNotNil(data)
 		XCTAssertNotNil(webService.baseURLString)
-		let request = Request(.GET, urlString: webService.baseURLString!)
-		let requestURL = try request.url()
+        let request = URLRequest(url: webService.baseURL!)
+            .setMethod(.GET)
+        let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
@@ -287,8 +292,9 @@ extension WebServiceTests {
 			""".data(using: .utf8)
 		XCTAssertNotNil(data)
 		XCTAssertNotNil(webService.baseURLString)
-		let request = Request(.GET, urlString: webService.baseURLString!)
-		let requestURL = try request.url()
+        let request = URLRequest(url: webService.baseURL!)
+            .setMethod(.GET)
+        let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)

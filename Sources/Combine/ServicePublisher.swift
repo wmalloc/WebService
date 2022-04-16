@@ -12,16 +12,7 @@ import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension URLSession {
-	func servicePublisher(method: HTTPMethod = .GET, url: URL) -> URLSession.ServicePublisher {
-		servicePublisher(for: Request(method, url: url))
-	}
-
-	@available(*, deprecated, message: "Use servicePublisher(method:url:) instead")
-	func servicePublisher(for url: URL) -> URLSession.ServicePublisher {
-		servicePublisher(for: .init(.GET, url: url))
-	}
-
-	func servicePublisher(for request: Request) -> URLSession.ServicePublisher {
+	func servicePublisher(for request: URLRequest) -> URLSession.ServicePublisher {
 		.init(request: request, session: self)
 	}
 
@@ -31,19 +22,15 @@ public extension URLSession {
 
 		public let session: URLSession
 		var dataTaskPublisher: DataTaskPublisher?
-		var request: Request
+		let request: URLRequest
 
-		public init(request: Request, session: URLSession) {
+		public init(request: URLRequest, session: URLSession) {
 			self.request = request
 			self.session = session
 		}
 
 		public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == URLSession.ServicePublisher.Failure, S.Input == URLSession.ServicePublisher.Output {
-			let theSession = session
-			guard let urlRequest = try? request.urlRequest() else {
-				return
-			}
-			dataTaskPublisher = DataTaskPublisher(request: urlRequest, session: theSession)
+            dataTaskPublisher = DataTaskPublisher(request: request, session: session)
 			dataTaskPublisher?.receive(subscriber: subscriber)
 		}
 	}
