@@ -12,7 +12,7 @@ public final class WebService {
 	public typealias DecodeblHandler<T: Decodable> = (Result<T, Error>) -> Void
 	public typealias SerializableHandler = (Result<Any, Error>) -> Void
 	public typealias DataHandler<T> = (Result<T, Error>) -> Void
-    public typealias DataMapper<InputType, OutputType> = (InputType) throws -> OutputType
+	public typealias DataMapper<InputType, OutputType> = (InputType) throws -> OutputType
 
 	public let baseURL: URL?
 	public var baseURLString: String? {
