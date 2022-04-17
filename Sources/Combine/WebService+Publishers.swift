@@ -11,10 +11,19 @@ import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
+    func dataPublisher(for url: URL) -> AnyPublisher<Data, Error> {
+        session.dataTaskPublisher(for: url)
+            .tryMap { result in
+                try result.response.ws_validate()
+                return try result.data.ws_validateNotEmptyData()
+            }.eraseToAnyPublisher()
+    }
+    
     func dataPublisher(for request: URLRequest) -> AnyPublisher<Data, Error> {
         session.dataTaskPublisher(for: request)
             .tryMap { result -> Data in
-                try result.data.ws_validate(result.response)
+                try result.response.ws_validate()
+                return try result.data.ws_validate(result.response)
             }
             .eraseToAnyPublisher()
     }
