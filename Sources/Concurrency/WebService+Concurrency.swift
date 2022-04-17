@@ -33,6 +33,7 @@ public extension WebService {
 
 	func data<ObjectType>(for request: URLRequest, transform: DataMapper<(data: Data, response: URLResponse), ObjectType>) async throws -> ObjectType {
 		let result = try await data(for: request)
+		try response.ws_validate()
 		return try transform(result)
 	}
 
