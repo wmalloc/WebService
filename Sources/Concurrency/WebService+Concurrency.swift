@@ -36,7 +36,9 @@ public extension WebService {
 		return try transform(result)
 	}
 
-		try await data(for: request) { result in
+    func decodable<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
+        try await data(for: request) { result in
+
             let data = try result.data.ws_validateNotEmptyData()
             return try decoder.decode(ObjectType.self, from: data)
 		}
