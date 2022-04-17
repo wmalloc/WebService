@@ -118,7 +118,7 @@ final class WebServiceTests: XCTestCase {
 			return (Response.valid, Data())
 		}
 
-		let publisher = webService.servicePublisher(request: request)
+		let publisher = webService.dataPublisher(for: request)
 		let validTest = evalValidResponseTest(publisher: publisher)
 		wait(for: validTest.expectations, timeout: testTimeout)
 		validTest.cancellable?.cancel()
@@ -137,7 +137,7 @@ final class WebServiceTests: XCTestCase {
 			return (Response.invalid401, Data())
 		}
 
-		let publisher = webService.servicePublisher(request: request)
+		let publisher = webService.dataPublisher(for: request)
 		let invalidTest = evalInvalidResponseTest(publisher: publisher)
 		wait(for: invalidTest.expectations, timeout: testTimeout)
 		invalidTest.cancellable?.cancel()
@@ -157,7 +157,7 @@ final class WebServiceTests: XCTestCase {
 			return (Response.valid, data)
 		}
 
-		let publisher = webService.servicePublisher(request: request)
+		let publisher = webService.dataPublisher(for: request)
 		let invalidTest = evalValidResponseTest(publisher: publisher)
 		wait(for: invalidTest.expectations, timeout: testTimeout)
 		invalidTest.cancellable?.cancel()
@@ -176,7 +176,7 @@ final class WebServiceTests: XCTestCase {
 			let data = Data("{}".utf8)
 			return (Response.invalid401, data)
 		}
-		let publisher = webService.servicePublisher(request: request)
+		let publisher = webService.dataPublisher(for: request)
 		let invalidTest = evalInvalidResponseTest(publisher: publisher)
 		wait(for: invalidTest.expectations, timeout: testTimeout)
 		invalidTest.cancellable?.cancel()
@@ -234,7 +234,7 @@ extension WebServiceTests {
 			return (Response.valid, Data())
 		}
 
-		let (data, _) = try await webService.data(request: request)
+		let (data, _) = try await webService.data(for: request)
 		XCTAssertEqual(data, Data())
 	}
 
@@ -303,7 +303,7 @@ extension WebServiceTests {
 			return (Response.valid, data!)
 		}
 
-		let responseItem = try await webService.serializable(request: request)
+		let responseItem = try await webService.serializable(for: request)
 		let decoded = responseItem as? [String: String]
 		XCTAssertNotNil(decoded)
 		XCTAssertEqual(decoded!.count, 2)
