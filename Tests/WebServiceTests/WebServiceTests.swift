@@ -275,7 +275,7 @@ extension WebServiceTests {
 			return (Response.valid, data!)
 		}
 
-		let decoded: [String: String] = try await webService.decodable(request: request)
+		let decoded: [String: String] = try await webService.decodable(for: request)
 		XCTAssertEqual(decoded.count, 2)
 		XCTAssertEqual(decoded["key1"], "value1")
 		XCTAssertEqual(decoded["key2"], "value2")
