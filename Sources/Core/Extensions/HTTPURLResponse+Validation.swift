@@ -16,7 +16,7 @@ public extension HTTPURLResponse {
 		}
 
 		if let validContentType = acceptableContentTypes {
-            if let contentType = allHeaderFields[URLRequest.Header.contentType] as? String {
+			if let contentType = allHeaderFields[URLRequest.Header.contentType] as? String {
 				if !validContentType.contains(contentType) {
 					throw URLError(.dataNotAllowed)
 				}
