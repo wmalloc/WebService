@@ -17,15 +17,18 @@ import os.log
 import XCTest
 
 final class WebServiceTests: XCTestCase {
-	static var allTests = [("testBaseURL", testBaseURL), ("testDefaultRequest", testDefaultRequest), ("testQueryItems", testQueryItems)]
+    static let baseURLString = "http://localhost:8080"
+    static let baseURL = URL(string: "http://localhost:8080")!
+    
+	static var allTests = [("testDefaultRequest", testDefaultRequest), ("testQueryItems", testQueryItems)]
 	let testTimeout: TimeInterval = 1
 	var webService: WebService!
 
 	enum Response {
-		static let invalid = URLResponse(url: URL(string: "http://localhost:8080")!, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
-		static let valid = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 200, httpVersion: nil, headerFields: nil)!
-		static let invalid300 = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 300, httpVersion: nil, headerFields: nil)!
-		static let invalid401 = HTTPURLResponse(url: URL(string: "http://localhost:8080")!, statusCode: 401, httpVersion: nil, headerFields: nil)!
+        static let invalid = URLResponse(url: WebServiceTests.baseURL, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+		static let valid = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
+		static let invalid300 = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 300, httpVersion: nil, headerFields: nil)!
+		static let invalid401 = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 401, httpVersion: nil, headerFields: nil)!
 	}
 
 	let networkError = NSError(domain: "NSURLErrorDomain", code: -1004, /* kCFURLErrorCannotConnectToHost*/ userInfo: nil)
@@ -35,27 +38,16 @@ final class WebServiceTests: XCTestCase {
 
 		// and create the URLSession from that
 		let session = URLSession(configuration: config)
-		webService = WebService(baseURLString: "https://localhost:8080", session: session)
+		webService = WebService(session: session)
 	}
 
 	override func tearDownWithError() throws {
 		webService = nil
 	}
 
-	func testBaseURL() throws {
-		let baseURLString = "https://localhost:8080"
-		let baseURL = URL(string: baseURLString)
-		XCTAssertEqual(webService.baseURLString, baseURLString)
-		XCTAssertNotNil(webService.baseURL)
-		XCTAssertEqual(webService.baseURL, baseURL)
-	}
-
-	func testDefaultRequest() throws {
-		let baseURLString = webService.baseURLString
-		let baseURL = webService.baseURL
-		XCTAssertNotNil(baseURLString)
-		let request = URLRequest(url: baseURL!)
-		XCTAssertEqual(request.url?.absoluteString, baseURLString!)
+    func testDefaultRequest() throws {
+        let request = URLRequest(url: Self.baseURL)
+        XCTAssertEqual(request.url?.absoluteString, Self.baseURLString)
 		let contentType = request[header: URLRequest.Header.contentType]
 		XCTAssertNil(contentType)
 		let cacheControl = request[header: URLRequest.Header.cacheControl]
@@ -68,34 +60,30 @@ final class WebServiceTests: XCTestCase {
 
 		XCTAssertNil(request.contentType)
 		XCTAssertNil(request.userAgent)
-		XCTAssertEqual(request, URLRequest(url: baseURL!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
+        XCTAssertEqual(request, URLRequest(url: Self.baseURL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
 	}
 
 	func testQueryItems() throws {
-		let baseURLString = webService.baseURLString
-		XCTAssertNotNil(baseURLString)
-		var components = URLComponents(string: baseURLString!)!
+        var components = URLComponents(string: Self.baseURLString)!
 		components = components.setQueryItems([URLQueryItem(name: "test1", value: "test1"), URLQueryItem(name: "test2", value: "test2")])
 		XCTAssertNotNil(components.queryItems)
 		XCTAssertEqual(components.queryItems?.count ?? 0, 2)
-		XCTAssertEqual(components.url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2")
+        XCTAssertEqual(components.url?.absoluteString, "\(Self.baseURLString)?test1=test1&test2=test2")
 		components = components.appendQueryItems([URLQueryItem(name: "test3", value: "test3")])
 		XCTAssertEqual(components.queryItems?.count ?? 0, 3)
-		XCTAssertEqual(components.url?.absoluteString, "https://localhost:8080?test1=test1&test2=test2&test3=test3")
+        XCTAssertEqual(components.url?.absoluteString, "\(Self.baseURLString)?test1=test1&test2=test2&test3=test3")
 		components = components.setQueryItems([])
 		XCTAssertEqual(components.queryItems?.count ?? 0, 0)
 		let absoluteString = components.url?.absoluteString
 		XCTAssertNotNil(absoluteString)
-		XCTAssertEqual(absoluteString!, "https://localhost:8080")
+        XCTAssertEqual(absoluteString!, Self.baseURLString)
 		components = components.setQueryItems([URLQueryItem(name: "test 3", value: "test 3")])
 		XCTAssertEqual(components.queryItems?.count ?? 0, 1)
-		XCTAssertEqual(components.url?.absoluteString, "https://localhost:8080?test%203=test%203")
+        XCTAssertEqual(components.url?.absoluteString, "\(Self.baseURLString)?test%203=test%203")
 	}
 
 	func testDefaultRequestConfigurations() throws {
-		let baseURLString = webService.baseURLString
-		XCTAssertNotNil(baseURLString)
-		var request = URLRequest(url: webService.baseURL!)
+        var request = URLRequest(url: Self.baseURL)
 			.setCachePolicy(.reloadIgnoringLocalCacheData)
 		XCTAssertEqual(request.cachePolicy, NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData)
 		request = request
@@ -106,8 +94,7 @@ final class WebServiceTests: XCTestCase {
 	}
 
 	func testValidResponse() throws {
-		XCTAssertNotNil(webService.baseURLString)
-		let request = URLRequest(url: webService.baseURL!)
+        let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
@@ -125,8 +112,7 @@ final class WebServiceTests: XCTestCase {
 	}
 
 	func testInvalidResponse() throws {
-		XCTAssertNotNil(webService.baseURLString)
-		let request = URLRequest(url: webService.baseURL!)
+        let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
@@ -144,8 +130,7 @@ final class WebServiceTests: XCTestCase {
 	}
 
 	func testValidDataResponse() throws {
-		XCTAssertNotNil(webService.baseURLString)
-		let request = URLRequest(url: webService.baseURL!)
+        let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
@@ -164,8 +149,7 @@ final class WebServiceTests: XCTestCase {
 	}
 
 	func testNetworkFailure() throws {
-		XCTAssertNotNil(webService.baseURLString)
-		let request = URLRequest(url: webService.baseURL!)
+        let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
@@ -223,8 +207,7 @@ final class WebServiceTests: XCTestCase {
 
 extension WebServiceTests {
 	func testAsync() async throws {
-		XCTAssertNotNil(webService.baseURLString)
-		let request = URLRequest(url: webService.baseURL!)
+        let request = URLRequest(url: Self.baseURL)
 		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
 			guard let url = request.url, url == requestURL else {
@@ -263,8 +246,7 @@ extension WebServiceTests {
 			}
 			""".data(using: .utf8)
 		XCTAssertNotNil(data)
-		XCTAssertNotNil(webService.baseURLString)
-		let request = URLRequest(url: webService.baseURL!)
+        let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in
@@ -291,8 +273,7 @@ extension WebServiceTests {
 			}
 			""".data(using: .utf8)
 		XCTAssertNotNil(data)
-		XCTAssertNotNil(webService.baseURLString)
-		let request = URLRequest(url: webService.baseURL!)
+        let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
 		URLProtocolMock.requestHandler = { request in

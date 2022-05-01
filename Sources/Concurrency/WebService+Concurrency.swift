@@ -10,20 +10,20 @@ import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
-	func data(from url: URL) async throws -> (data: Data, response: URLResponse) {
+	func data(from url: URL, delegate: URLSessionTaskDelegate? = nil) async throws -> (data: Data, response: URLResponse) {
 		let dataResponse: (data: Data, response: URLResponse)
 		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
-			dataResponse = try await session.data(from: url, delegate: nil)
+			dataResponse = try await session.data(from: url, delegate: delegate)
 		} else {
 			dataResponse = try await session.data(from: url)
 		}
 		return dataResponse
 	}
 
-	func data(for request: URLRequest) async throws -> (data: Data, response: URLResponse) {
+	func data(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> (data: Data, response: URLResponse) {
 		let dataResponse: (data: Data, response: URLResponse)
 		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
-			dataResponse = try await session.data(for: request, delegate: nil)
+			dataResponse = try await session.data(for: request, delegate: delegate)
 		} else {
 			dataResponse = try await session.data(for: request)
 		}

@@ -20,3 +20,14 @@ public struct HTTPHeader: Hashable, Identifiable {
 		name
 	}
 }
+
+extension HTTPHeader: CustomStringConvertible {
+    public var description: String {
+        """
+        {
+            name: \(name),
+            value: \(String(describing: value))
+        }
+        """
+    }
+}

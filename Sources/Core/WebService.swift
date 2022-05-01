@@ -14,38 +14,9 @@ public final class WebService {
 	public typealias DataHandler<T> = (Result<T, Error>) -> Void
 	public typealias DataMapper<InputType, OutputType> = (InputType) throws -> OutputType
 
-	public let baseURL: URL?
-	public var baseURLString: String? {
-		baseURL?.absoluteString
-	}
+    public let session: URLSession
 
-	public let session: URLSession
-
-	public init(baseURL: URL?, session: URLSession = .shared) {
-		self.baseURL = baseURL
-		self.session = session
-	}
-
-	public convenience init(baseURLString: String?, session: URLSession = .shared) {
-		let baseURL = URL(string: baseURLString ?? "")
-		self.init(baseURL: baseURL, session: session)
-	}
-}
-
-public extension WebService {
-	func absoluteURL(_ string: String) -> URL {
-		constructURL(string, relativeToURL: baseURL)!
-	}
-
-	func absoluteURLString(_ string: String) -> String {
-		absoluteURL(string).absoluteString
-	}
-
-	internal func constructURL(_ string: String, relativeToURL: URL?) -> URL? {
-		guard !string.isEmpty else { // if string is empty then just return the baseURL
-			return baseURL
-		}
-		let url = URL(string: string, relativeTo: relativeToURL)
-		return url
+	public init(session: URLSession = .shared) {
+        self.session = session
 	}
 }
