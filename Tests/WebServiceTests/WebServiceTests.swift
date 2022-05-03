@@ -20,7 +20,10 @@ final class WebServiceTests: XCTestCase {
     static let baseURLString = "http://localhost:8080"
     static let baseURL = URL(string: "http://localhost:8080")!
     
-	static var allTests = [("testDefaultRequest", testDefaultRequest), ("testQueryItems", testQueryItems)]
+    static var allTests = [("testDefaultRequest", testDefaultRequest), ("testQueryItems", testQueryItems),
+                           ("testDefaultRequestConfigurations", testDefaultRequestConfigurations), ("testValidResponse", testValidResponse),
+                           ("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse), ("testNetworkFailure", testNetworkFailure),
+                           ("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable), ("testAsyncSerializable", testAsyncSerializable)]
 	let testTimeout: TimeInterval = 1
 	var webService: WebService!
 
