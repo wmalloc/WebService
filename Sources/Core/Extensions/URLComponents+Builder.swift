@@ -31,8 +31,8 @@ public extension URLComponents {
 
 	@discardableResult
 	func setQueryItems(_ queryItems: [URLQueryItem]) -> Self {
-        var components = self
-        components.queryItems = queryItems.isEmpty ? nil : queryItems
+		var components = self
+		components.queryItems = queryItems.isEmpty ? nil : queryItems
 		return components
 	}
 
@@ -52,8 +52,8 @@ public extension URLComponents {
 	func appendQueryItems(_ newQueryItems: [URLQueryItem]) -> Self {
 		var existingQueryItems = queryItems ?? []
 		existingQueryItems.append(contentsOf: newQueryItems)
-        return setQueryItems(existingQueryItems)
-    }
+		return setQueryItems(existingQueryItems)
+	}
 
 	@discardableResult
 	func appendQueryItems(_ parameters: [String: String]) -> Self {
@@ -143,8 +143,8 @@ public extension URLComponents {
 
 	@discardableResult
 	func setPercentEncodedQueryItems(_ percentEncodedQueryItems: [URLQueryItem]) -> Self {
-        var components = self
-        components.percentEncodedQueryItems = percentEncodedQueryItems.isEmpty ? nil : percentEncodedQueryItems
+		var components = self
+		components.percentEncodedQueryItems = percentEncodedQueryItems.isEmpty ? nil : percentEncodedQueryItems
 		return components
 	}
 
@@ -152,6 +152,6 @@ public extension URLComponents {
 	func setAppendPercentEncodedQueryItems(_ percentEncodedQueryItems: [URLQueryItem]) -> Self {
 		var existingQueryItems = self.percentEncodedQueryItems ?? []
 		existingQueryItems.append(contentsOf: percentEncodedQueryItems)
-        return setPercentEncodedQueryItems(existingQueryItems)
-    }
+		return setPercentEncodedQueryItems(existingQueryItems)
+	}
 }

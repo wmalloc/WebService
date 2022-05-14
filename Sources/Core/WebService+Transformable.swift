@@ -31,12 +31,12 @@ public extension WebService {
 	}
 
 	func dataTask(with request: URLRequest, completion: WebService.DataHandler<Data>?) -> URLSessionDataTask? {
-        dataTask(with: request, transform: { $0.data }, completion: completion)
+		dataTask(with: request, transform: { $0.data }, completion: completion)
 	}
 
 	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: WebService.DecodeblHandler<T>?) -> URLSessionDataTask? {
 		dataTask(with: request) { result in
-            try decoder.decode(T.self, from: result.data)
+			try decoder.decode(T.self, from: result.data)
 		} completion: { result in
 			completion?(result)
 		}
@@ -44,7 +44,7 @@ public extension WebService {
 
 	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: WebService.SerializableHandler?) -> URLSessionDataTask? {
 		dataTask(with: request) { result in
-            try JSONSerialization.jsonObject(with: result.data, options: options)
+			try JSONSerialization.jsonObject(with: result.data, options: options)
 		} completion: { result in
 			completion?(result)
 		}
