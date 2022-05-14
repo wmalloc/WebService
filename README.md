@@ -11,7 +11,6 @@ A lightweight Web API for [Apple](https://www.apple.com) devices, written in [Sw
 --------------------------|------------------------------------------------------------
 `Request` | Build your `URLRequest` to make a call
 `WebService` | Main object you can subclass to create an API client.
-`URSSession.ServicePublisher`| Uses `DataPublisherTask` to make REST call
 `URLRequestEncodable` Protocol | If you would like to provide your own request builder
 
 
