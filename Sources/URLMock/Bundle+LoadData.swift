@@ -8,11 +8,11 @@
 import Foundation
 
 public extension Bundle {
-	func loadTestData(name: String, withExtension: String) throws -> Data {
-		guard let url = url(forResource: name, withExtension: withExtension) else {
-			throw URLError(.unsupportedURL)
+    func data(forResource: String, withExtension: String, subdirectory: String = "TestData") throws -> Data {
+		guard let url = url(forResource: forResource, withExtension: withExtension, subdirectory: subdirectory) else {
+			throw URLError(.fileDoesNotExist)
 		}
-		let data = try Data(contentsOf: url, options: [])
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
 		return data
 	}
 }
