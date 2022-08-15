@@ -28,7 +28,7 @@ public enum HTTPMethod: String, CaseIterable, Hashable {
 }
 
 extension HTTPMethod: CustomStringConvertible {
-    public var description: String {
-        rawValue
-    }
+	public var description: String {
+		rawValue
+	}
 }

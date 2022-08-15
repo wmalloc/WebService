@@ -47,11 +47,11 @@ public extension URLRequest {
 	}
 
 	@discardableResult
-    func setHttpBody(_ httpBody: Data?, contentType: String = URLRequest.ContentType.json) -> Self {
+	func setHttpBody(_ httpBody: Data?, contentType: String = URLRequest.ContentType.json) -> Self {
 		var request = self
-        request.setValue(contentType, forHTTPHeaderField: URLRequest.Header.contentType)
+		request.setValue(contentType, forHTTPHeaderField: URLRequest.Header.contentType)
 		request.httpBody = httpBody
-        return request
+		return request
 	}
 
 	@discardableResult

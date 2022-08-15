@@ -8,7 +8,7 @@
 import Foundation
 
 public extension WebService {
-    func dataTask<T>(with request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
+	func dataTask<T>(with request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
 		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
 			if let error = error {
 				completion?(.failure(error))
