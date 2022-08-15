@@ -1,8 +1,8 @@
 //
 //  Publisher+SinkOnMain.swift
-//  WebService
 //
 //  Created by Waqar Malik on 8/13/21.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Combine

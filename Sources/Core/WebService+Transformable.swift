@@ -1,14 +1,14 @@
 //
 //  WebService+Transformable.swift
 //
-//
 //  Created by Waqar Malik on 3/1/22.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Foundation
 
 public extension WebService {
-	func dataTask<T>(with request: URLRequest, transform: @escaping DataMapper<(data: Data, response: URLResponse), T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
+    func dataTask<T>(with request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
 		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
 			if let error = error {
 				completion?(.failure(error))

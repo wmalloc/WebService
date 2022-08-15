@@ -1,9 +1,8 @@
 //
 //  URLProtocolMock.swift
-//  WebServiceTests
 //
 //  Created by Waqar Malik on 6/21/20.
-//  Copyright © 2020 Crimson Research, Inc. All rights reserved.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Foundation

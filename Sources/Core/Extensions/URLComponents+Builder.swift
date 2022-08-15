@@ -1,8 +1,8 @@
 //
 //  URLComponents+Builder.swift
 //
-//
 //  Created by Waqar Malik on 4/12/22.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Foundation

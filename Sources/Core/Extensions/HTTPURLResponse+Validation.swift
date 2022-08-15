@@ -1,8 +1,8 @@
 //
 //  HTTPURLResponse+Validation.swift
 //
-//
 //  Created by Waqar Malik on 3/3/22.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Foundation

@@ -1,9 +1,8 @@
 //
 //  WebServiceTests.swift
-//  WebServiceTests
 //
 //  Created by Waqar Malik on 4/28/20.
-//  Copyright © 2020 Crimson Research, Inc. All rights reserved.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Combine

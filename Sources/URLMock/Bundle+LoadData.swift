@@ -1,8 +1,8 @@
 //
-//  File.swift
-//
+//  Bundle+LoadData.swift
 //
 //  Created by Waqar Malik on 3/4/22.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Foundation

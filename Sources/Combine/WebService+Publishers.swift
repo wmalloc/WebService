@@ -1,8 +1,8 @@
 //
 //  WebService+Convenience.swift
-//  WebService
 //
 //  Created by Waqar Malik on 6/16/21.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Combine
@@ -28,7 +28,7 @@ public extension WebService {
 			.eraseToAnyPublisher()
 	}
 
-	func dataPublisher<ObjectType>(for request: URLRequest, transform: @escaping DataMapper<(data: Data, response: URLResponse), ObjectType>) -> AnyPublisher<ObjectType, Error> {
+	func dataPublisher<ObjectType>(for request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		session.dataTaskPublisher(for: request)
 			.tryMap { result -> ObjectType in
 				try transform(result)

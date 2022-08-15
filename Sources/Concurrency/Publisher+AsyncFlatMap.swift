@@ -1,8 +1,8 @@
 //
 //  Publisher+AsyncFlatMap.swift
 //
-//
 //  Created by Waqar Malik on 4/6/22.
+//  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
 import Combine
