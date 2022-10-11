@@ -27,10 +27,10 @@ public extension Data {
 		return self
 	}
 
-    func ws_validate(_ dataResponse: WebService.DataResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
-        try dataResponse.data.ws_validate(dataResponse.response, acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
-    }
-    
+	func ws_validate(_ dataResponse: WebService.DataResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
+		try dataResponse.data.ws_validate(dataResponse.response, acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
+	}
+
 	internal static func ws_validate(_ data: Data, _ response: URLResponse, acceptableContentTypes: Set<String>? = nil) throws -> Self {
 		try data.ws_validate(response, acceptableStatusCodes: 200 ..< 300, acceptableContentTypes: acceptableContentTypes).ws_validateNotEmptyData()
 	}
