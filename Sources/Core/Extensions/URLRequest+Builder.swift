@@ -51,6 +51,7 @@ public extension URLRequest {
 		var request = self
 		request.setValue(contentType, forHTTPHeaderField: URLRequest.Header.contentType)
 		request.httpBody = httpBody
+		request.setValue("\(httpBody?.count ?? 0)", forHTTPHeaderField: URLRequest.Header.contentLength)
 		return request
 	}
 
