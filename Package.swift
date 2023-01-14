@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "WebService",
+    defaultLocalization: "en",
     platforms: [.iOS(.v13), .tvOS(.v13), .macOS(.v10_15), .watchOS(.v6), .macCatalyst(.v13)],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
@@ -27,7 +28,8 @@ let package = Package(
         .testTarget(
             name: "WebServiceTests",
             dependencies: ["WebService", "WebServiceCombine", "WebServiceConcurrency", "WebServiceURLMock"],
-            path: "Tests/WebServiceTests"
+            path: "Tests/WebServiceTests",
+            resources: [.copy("TestData")]
         ),
     ]
 )
