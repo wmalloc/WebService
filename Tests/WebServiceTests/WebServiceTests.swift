@@ -99,7 +99,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -117,7 +118,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -135,7 +137,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -154,7 +157,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -211,7 +215,8 @@ extension WebServiceTests {
 	func testAsync() async throws {
 		let request = URLRequest(url: Self.baseURL)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -251,7 +256,8 @@ extension WebServiceTests {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -278,7 +284,8 @@ extension WebServiceTests {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}

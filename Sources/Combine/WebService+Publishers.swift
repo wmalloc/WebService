@@ -31,8 +31,8 @@ public extension WebService {
 	func dataPublisher<ObjectType>(for request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		session.dataTaskPublisher(for: request)
 			.tryMap { result -> ObjectType in
-                _ = try result.data.ws_validate(result.response)
-                return try transform(result)
+				_ = try result.data.ws_validate(result.response)
+				return try transform(result)
 			}
 			.eraseToAnyPublisher()
 	}
@@ -43,11 +43,19 @@ public extension WebService {
 			.eraseToAnyPublisher()
 	}
 
-    func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
+	func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
 		dataPublisher(for: request)
 			.tryMap { data -> Any in
 				try JSONSerialization.jsonObject(with: data, options: options)
 			}
 			.eraseToAnyPublisher()
+	}
+
+	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping DataMapper<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
+		Future { [weak self] promise in
+			_ = self?.upload(with: request, fromFile: file, transform: transform) { result in
+				promise(result)
+			}
+		}.eraseToAnyPublisher()
 	}
 }

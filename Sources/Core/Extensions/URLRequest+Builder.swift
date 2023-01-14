@@ -49,9 +49,9 @@ public extension URLRequest {
 	@discardableResult
 	func setHttpBody(_ httpBody: Data?, contentType: String? = nil) -> Self {
 		var request = self
-        if let contentType = contentType {
-            request.setValue(contentType, forHTTPHeaderField: URLRequest.Header.contentType)
-        }
+		if let contentType = contentType {
+			request.setValue(contentType, forHTTPHeaderField: URLRequest.Header.contentType)
+		}
 		request.httpBody = httpBody
 		request.setValue("\(httpBody?.count ?? 0)", forHTTPHeaderField: URLRequest.Header.contentLength)
 		return request

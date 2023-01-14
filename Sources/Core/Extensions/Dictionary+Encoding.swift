@@ -9,14 +9,14 @@ import Foundation
 
 /// Extension to modify the query items
 extension Dictionary where Key == String, Value == String? {
-    var ws_queryItems: [URLQueryItem] {
-        let items = map { item -> URLQueryItem in
-            URLQueryItem(name: item.key, value: item.value?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
-        }
-        return items
-    }
+	var ws_queryItems: [URLQueryItem] {
+		let items = map { item -> URLQueryItem in
+			URLQueryItem(name: item.key, value: item.value?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
+		}
+		return items
+	}
 
-    var ws_percentEncodedData: Data? {
+	var ws_percentEncodedData: Data? {
 		ws_percentEncodedData(with: nil)
 	}
 
@@ -29,7 +29,7 @@ extension Dictionary where Key == String, Value == String? {
 	}
 
 	func ws_percentEncodedQueryString(with allowedCharacterSet: CharacterSet? = nil) -> String? {
-        let characterSet = allowedCharacterSet ?? .urlQueryAllowed // Defaults to Query allowed
+		let characterSet = allowedCharacterSet ?? .urlQueryAllowed // Defaults to Query allowed
 		var components = URLComponents(string: "")
 		components?.queryItems = ws_queryItems
 
