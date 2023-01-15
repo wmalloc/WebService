@@ -9,7 +9,11 @@ import Foundation
 import XCTest
 
 public class URLProtocolMock: URLProtocol {
-	public static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data?))?
+	public typealias RequestHandler = (URLRequest) throws -> (HTTPURLResponse, Data?)
+	public static var requestHandlers: [URL: RequestHandler] = [:]
+
+	@available(*, unavailable, message: "use requestHandlers: instead")
+	public static var requestHandler: RequestHandler?
 
 	override public class func canInit(with _: URLRequest) -> Bool { true }
 	override public class func canInit(with _: URLSessionTask) -> Bool { true }
@@ -20,7 +24,7 @@ public class URLProtocolMock: URLProtocol {
 			fatalError("missing client")
 		}
 
-		guard let handler = Self.requestHandler else {
+		guard let url = request.url, let handler = Self.requestHandlers.removeValue(forKey: url) else {
 			fatalError("Handler is unavailable.")
 		}
 

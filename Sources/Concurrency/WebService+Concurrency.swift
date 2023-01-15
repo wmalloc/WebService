@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os.log
 import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
@@ -47,5 +48,10 @@ public extension WebService {
 			let data = try result.data.ws_validateNotEmptyData()
 			return try JSONSerialization.jsonObject(with: data, options: options)
 		}
+	}
+
+	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transform: DataMapper<WebService.DataResponse, ObjectType>) async throws -> ObjectType {
+		let result = try await session.upload(for: request, fromFile: file)
+		return try transform(result)
 	}
 }
