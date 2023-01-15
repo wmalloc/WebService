@@ -10,5 +10,5 @@ import os.log
 
 extension OSLog {
 	private static let subsystem = "net.crimsonresearch.WebService"
-	static let tests = OSLog(subsystem: subsystem, category: "Tests")
+	static let tests = OSLog(subsystem: subsystem, category: "WebServiceTests")
 }

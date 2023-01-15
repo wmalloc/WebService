@@ -99,7 +99,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -117,7 +118,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -135,7 +137,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -154,7 +157,8 @@ final class WebServiceTests: XCTestCase {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -211,7 +215,8 @@ extension WebServiceTests {
 	func testAsync() async throws {
 		let request = URLRequest(url: Self.baseURL)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
@@ -224,15 +229,9 @@ extension WebServiceTests {
 	}
 
 	func testDecodableData() throws {
-		let data =
-			"""
-			{
-			   "key1": "value1",
-			   "key2": "value2"
-			}
-			""".data(using: .utf8)
-		XCTAssertNotNil(data)
-		let decoded = try JSONDecoder().decode([String: String].self, from: data!)
+        let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
+        XCTAssertNotNil(data)
+		let decoded = try JSONDecoder().decode([String: String].self, from: data)
 		XCTAssertEqual(decoded.count, 2)
 		XCTAssertEqual(decoded["key1"], "value1")
 		XCTAssertEqual(decoded["key2"], "value2")
@@ -240,23 +239,18 @@ extension WebServiceTests {
 	}
 
 	func testAsyncDecodable() async throws {
-		let data =
-			"""
-			{
-			   "key1": "value1",
-			   "key2": "value2"
-			}
-			""".data(using: .utf8)
-		XCTAssertNotNil(data)
+        let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
+        XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
 
-			return (Response.valid, data!)
+			return (Response.valid, data)
 		}
 
 		let decoded: [String: String] = try await webService.decodable(for: request)
@@ -267,23 +261,18 @@ extension WebServiceTests {
 	}
 
 	func testAsyncSerializable() async throws {
-		let data =
-			"""
-			{
-			   "key1": "value1",
-			   "key2": "value2"
-			}
-			""".data(using: .utf8)
-		XCTAssertNotNil(data)
+        let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
+        XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
-		URLProtocolMock.requestHandler = { request in
+		XCTAssertNotNil(requestURL)
+		URLProtocolMock.requestHandlers[requestURL!] = { request in
 			guard let url = request.url, url == requestURL else {
 				throw URLError(.badURL)
 			}
 
-			return (Response.valid, data!)
+			return (Response.valid, data)
 		}
 
 		let responseItem = try await webService.serializable(for: request)
