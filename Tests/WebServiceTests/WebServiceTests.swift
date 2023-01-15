@@ -229,8 +229,8 @@ extension WebServiceTests {
 	}
 
 	func testDecodableData() throws {
-        let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
-        XCTAssertNotNil(data)
+		let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
+		XCTAssertNotNil(data)
 		let decoded = try JSONDecoder().decode([String: String].self, from: data)
 		XCTAssertEqual(decoded.count, 2)
 		XCTAssertEqual(decoded["key1"], "value1")
@@ -239,8 +239,8 @@ extension WebServiceTests {
 	}
 
 	func testAsyncDecodable() async throws {
-        let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
-        XCTAssertNotNil(data)
+		let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
+		XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url
@@ -261,8 +261,8 @@ extension WebServiceTests {
 	}
 
 	func testAsyncSerializable() async throws {
-        let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
-        XCTAssertNotNil(data)
+		let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
+		XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.GET)
 		let requestURL = request.url

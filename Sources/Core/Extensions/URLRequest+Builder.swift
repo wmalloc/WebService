@@ -9,16 +9,6 @@ import Foundation
 
 public extension URLRequest {
 	@discardableResult
-	func setContentType(_ contentType: String) -> Self {
-		setHttpHeader(contentType, forName: URLRequest.Header.contentType)
-	}
-
-	@discardableResult
-	func setUserAgent(_ userAgent: String) -> Self {
-		setHttpHeader(userAgent, forName: URLRequest.Header.userAgent)
-	}
-
-	@discardableResult
 	func setCachePolicy(_ cachePolicy: URLRequest.CachePolicy) -> Self {
 		var request = self
 		request.cachePolicy = cachePolicy
@@ -72,9 +62,23 @@ public extension URLRequest {
 	}
 
 	@discardableResult
+	func setHttpHeader(_ value: String?, forName name: String) -> Self {
+		var request = self
+		request.setValue(value, forHTTPHeaderField: name)
+		return request
+	}
+
+	@discardableResult
 	func setHttpHeaders(_ httpHeaders: [String: String]) -> Self {
 		var request = self
 		request.allHTTPHeaderFields = httpHeaders
+		return request
+	}
+
+	@discardableResult
+	func addHttpHeader(_ value: String, forName name: String) -> Self {
+		var request = self
+		request.addValue(value, forHTTPHeaderField: name)
 		return request
 	}
 
@@ -143,55 +147,55 @@ public extension URLRequest {
 
 public extension URLRequest {
 	@discardableResult
-	func setMethod(_ method: HTTPMethod) -> Self {
+	func setContentType(_ contentType: String) -> Self {
+		setHeader(.contentType(contentType))
+	}
+
+	@discardableResult
+	func setUserAgent(_ userAgent: String) -> Self {
+		setHeader(.userAgent(userAgent))
+	}
+
+	@discardableResult
+	func setMethod(_ method: HTTPMethod?) -> Self {
+		setHttpMethod(method?.rawValue)
+	}
+
+	@discardableResult
+	func setHeader(_ header: HTTPHeader?) -> Self {
+		guard let header else {
+			return self
+		}
+		return setHttpHeader(header.value, forName: header.name)
+	}
+
+	@discardableResult
+	func setHttpHeaders(_ httpHeaders: HTTPHeaders?) -> Self {
 		var request = self
-		request.httpMethod = method.rawValue
-		return request
-	}
-
-	@discardableResult
-	func setHeader(_ header: HTTPHeader) -> Self {
-		setHttpHeader(header.value, forName: header.name)
-	}
-
-	@discardableResult
-	func addHeader(_ header: HTTPHeader) -> Self {
-		addHttpHeader(header.value, forKey: header.name)
-	}
-
-	@discardableResult
-	func setHttpHeader(_ value: String?, forName name: String) -> Self {
-		var request = self
-		request.setValue(value, forHTTPHeaderField: name)
+		request.headers = httpHeaders
 		return request
 	}
 
 	@discardableResult
 	func setHeaders(_ headers: [HTTPHeader]?) -> Self {
-		guard let headers = headers else {
-			return self
+		guard let headers else {
+			return setHttpHeaders(nil)
 		}
-
-		var request = self
-		for header in headers {
-			request.setValue(header.value, forHTTPHeaderField: header.name)
-		}
-		return request
+		return setHttpHeaders(HTTPHeaders(headers))
 	}
 
 	@discardableResult
-	func addHttpHeader(_ value: String, forKey key: String) -> Self {
-		var request = self
-		request.addValue(value, forHTTPHeaderField: key)
-		return request
+	func addHeader(_ header: HTTPHeader) -> Self {
+		addHttpHeader(header.value, forName: header.name)
 	}
 
 	@discardableResult
-	func addHeaders(_ headers: [HTTPHeader]?) -> Self {
-		guard let headers = headers else {
-			return self
-		}
+	func addHeaders(_ headers: HTTPHeaders) -> Self {
+		addHeaders(headers.headers)
+	}
 
+	@discardableResult
+	func addHeaders(_ headers: [HTTPHeader]) -> Self {
 		var request = self
 		for header in headers {
 			request.addValue(header.value, forHTTPHeaderField: header.name)
