@@ -52,10 +52,16 @@ public extension WebService {
 	}
 
 	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping DataMapper<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
-		Future { [weak self] promise in
-			self?.upload(with: request, fromFile: file, transform: transform) { result in
+		var sessionDataTask: URLSessionDataTask?
+        let receiveCancel = { sessionDataTask?.cancel() }
+		return Future { [weak self] promise in
+			sessionDataTask = self?.upload(with: request, fromFile: file, transform: transform) { result in
 				promise(result)
 			}
-		}.eraseToAnyPublisher()
+		}
+		.handleEvents(receiveCancel: {
+			receiveCancel()
+		})
+		.eraseToAnyPublisher()
 	}
 }
