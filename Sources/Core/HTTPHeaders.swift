@@ -13,12 +13,10 @@ public struct HTTPHeaders {
 	public init() {}
 
 	public init(_ headers: [HTTPHeader]) {
-		self.init()
 		headers.forEach { update($0) }
 	}
 
 	public init(_ dictionary: [String: String]) {
-		self.init()
 		dictionary.forEach { (key: String, value: String) in
 			update(name: key, value: value)
 		}
@@ -38,14 +36,18 @@ public struct HTTPHeaders {
 		headers.replaceSubrange(index ... index, with: [header])
 	}
 
-	@inlinable
-	public mutating func add(name: String, value: String) {
-		update(HTTPHeader(name: name, value: value))
+	@discardableResult
+	public func add(name: String, value: String) -> Self {
+		var headers = self
+		headers.update(HTTPHeader(name: name, value: value))
+		return headers
 	}
 
-	@inlinable
-	public mutating func add(_ header: HTTPHeader) {
-		update(header)
+	@discardableResult
+	public func add(_ header: HTTPHeader) -> Self {
+		var headers = self
+		headers.update(header)
+		return headers
 	}
 
 	@discardableResult
