@@ -8,7 +8,7 @@
 import Foundation
 
 public extension WebService {
-    @discardableResult
+	@discardableResult
 	func dataTask(for request: URLRequest, completion: WebService.DataHandler<Data?>?) -> URLSessionDataTask? {
 		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
 			if let error = error {
@@ -40,7 +40,7 @@ public extension WebService {
 
 	 - returns: URLSessionDataTask
 	 */
-    @discardableResult
+	@discardableResult
 	func dataTask<T>(with request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
 		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
 			if let error = error {
@@ -64,7 +64,7 @@ public extension WebService {
 		return dataTask
 	}
 
-    @discardableResult
+	@discardableResult
 	func dataTask(with request: URLRequest, completion: WebService.DataHandler<Data>?) -> URLSessionDataTask? {
 		dataTask(with: request, transform: { $0.data }, completion: completion)
 	}
@@ -78,7 +78,7 @@ public extension WebService {
 
 	 - returns: URLSessionDataTask
 	 */
-    @discardableResult
+	@discardableResult
 	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: WebService.DecodeblHandler<T>?) -> URLSessionDataTask? {
 		dataTask(with: request) { result in
 			try decoder.decode(T.self, from: result.data)
@@ -96,7 +96,7 @@ public extension WebService {
 
 	 - returns: URLSessionDataTask
 	 */
-    @discardableResult
+	@discardableResult
 	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: WebService.SerializableHandler?) -> URLSessionDataTask? {
 		dataTask(with: request) { result in
 			try JSONSerialization.jsonObject(with: result.data, options: options)
@@ -105,7 +105,7 @@ public extension WebService {
 		}
 	}
 
-    @discardableResult
+	@discardableResult
 	func upload<T>(with request: URLRequest, fromFile file: URL, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
 		let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
 			if let error = error {
