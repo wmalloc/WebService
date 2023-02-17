@@ -7,20 +7,24 @@
 
 import Foundation
 
-enum EncodingCharacters {
+public enum EncodingCharacters {
 	static let crlf = "\r\n"
 }
 
-enum MultipartFormBoundaryType {
+public enum MultipartFormBoundaryType: Hashable, Identifiable {
+    public var id: MultipartFormBoundaryType {
+        self
+    }
+
 	case initial // --boundary
 	case interstitial // --boundary
 	case final // --boundary--
 
-	static func boundaryData(forBoundaryType boundaryType: MultipartFormBoundaryType, boundary: String) -> Data {
+	public static func boundaryData(forBoundaryType boundaryType: MultipartFormBoundaryType, boundary: String) -> Data {
 		Data(self.boundary(forBoundaryType: boundaryType, boundary: boundary).utf8)
 	}
 
-	static func boundary(forBoundaryType boundaryType: MultipartFormBoundaryType, boundary: String) -> String {
+	public static func boundary(forBoundaryType boundaryType: MultipartFormBoundaryType, boundary: String) -> String {
 		let boundaryText: String
 		switch boundaryType {
 		case .initial:

@@ -7,20 +7,20 @@
 
 import Foundation
 
-class MultipartFormBodyPart {
+public class MultipartFormBodyPart {
 	static var streamBufferSize: Int = 1024
-	let headers: HTTPHeaders
-	let bodyStream: InputStream
-	let bodyContentLength: UInt64
+	public let headers: HTTPHeaders
+	public let bodyStream: InputStream
+	public let bodyContentLength: UInt64
 
-	init(headers: HTTPHeaders, bodyStream: InputStream, bodyContentLength: UInt64) {
+	public init(headers: HTTPHeaders, bodyStream: InputStream, bodyContentLength: UInt64) {
 		self.headers = headers
 		self.bodyStream = bodyStream
 		self.bodyContentLength = bodyContentLength
 	}
 }
 
-extension MultipartFormBodyPart {
+public extension MultipartFormBodyPart {
 	func encoded() throws -> Data {
 		var encoded = Data()
 		let headerData = encodedHeaders()
@@ -36,6 +36,7 @@ extension MultipartFormBodyPart {
 		let headerText = headers.map { "\($0.name): \($0.value)\(EncodingCharacters.crlf)" }
 			.joined()
 			+ EncodingCharacters.crlf
+        
 		return Data(headerText.utf8)
 	}
 

@@ -9,7 +9,7 @@
 import Foundation
 
 public enum MultipartFormError: LocalizedError {
-	case invalidURL(URL)
+	case badURL(URL)
 	case invalidFilename(URL)
 	case fileNotFound(URL, Error?)
 	case fileAlreadyExists(URL)
@@ -23,28 +23,28 @@ public enum MultipartFormError: LocalizedError {
 
 	public var errorDescription: String? {
 		switch self {
-		case .invalidURL(let url):
-			return "webservice.invalid.url".localized(bundle: .module) + " " + url.absoluteString
+		case .badURL(let url):
+			return "invalid.url".localized(bundle: .module) + " " + url.absoluteString
 		case .invalidFilename(let url):
-			return url.absoluteString
+			return "invalid.filename".localized(bundle: .module)  + " " + url.absoluteString
 		case .fileNotFound(let url, let error):
-			return url.absoluteString + " " + (error?.localizedDescription ?? "")
+			return "file.notfound".localized(bundle: .module) + " " + url.absoluteString + " " + (error?.localizedDescription ?? "")
 		case .fileAlreadyExists(let url):
-			return url.absoluteString
+			return "file.already.exists".localized(bundle: .module) + " " + url.absoluteString
 		case .accessDenied(let url):
-			return url.absoluteString
+            return "access.denined".localized(bundle: .module) + " " + url.absoluteString
 		case .fileIsDirectory(let url):
-			return url.absoluteString
+			return "file.is.directory".localized(bundle: .module) + " " + url.absoluteString
 		case .fileSizeNotAvailable(let url):
-			return url.absoluteString
+			return "file.size.not.available".localized(bundle: .module) + " " + url.absoluteString
 		case .streamCreation(let url):
-			return url.absoluteString
+			return "stream.creation".localized(bundle: .module) + " " + url.absoluteString
 		case .outputStreamWriteFailed(let error):
-			return error.localizedDescription
+			return "output.stream.write.failed".localized(bundle: .module) + " " + error.localizedDescription
 		case .inputStreamReadFailed(let error):
-			return error.localizedDescription
+			return "input.stream.read.failed".localized(bundle: .module) + " " + error.localizedDescription
 		case .inputStreamLength(let message):
-			return message
+			return "input.stream.length".localized(bundle: .module) + " " + message
 		}
 	}
 }

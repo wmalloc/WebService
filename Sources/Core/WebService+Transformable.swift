@@ -8,7 +8,15 @@
 import Foundation
 
 public extension WebService {
-	@discardableResult
+    /**
+     Make a request call and return decoded data as decoded by the transformer, this requesst must return data
+
+     - parameter request:    Request where to get the data from
+     - parameter completion: completion handler
+
+     - returns: URLSessionDataTask
+     */
+    @discardableResult
 	func dataTask(for request: URLRequest, completion: WebService.DataHandler<Data?>?) -> URLSessionDataTask? {
 		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
 			if let error = error {
@@ -105,6 +113,16 @@ public extension WebService {
 		}
 	}
 
+    /**
+     Serilizes the response data  tinto raw JSON object
+
+     - parameter request:    Request where to get the data from
+     - parameter fromFile:   URL of the file to upload
+     - parameter transform:  Closure to transform the result
+     - parameter completion: Completion handler
+
+     - returns: URLSessionDataTask
+     */
 	@discardableResult
 	func upload<T>(with request: URLRequest, fromFile file: URL, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
 		let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
