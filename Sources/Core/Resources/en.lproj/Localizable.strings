@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+
+  Created by Waqar Malik on 2/17/23.
+  
+*/
+
+/* Invalid URL */
+"webservice.invalid.url" = "Invalid URL";

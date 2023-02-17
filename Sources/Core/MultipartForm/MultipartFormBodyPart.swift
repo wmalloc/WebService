@@ -1,6 +1,6 @@
 //
 //  MultipartFormBodyPart.swift
-//  
+//
 //  Created by Waqar Malik on 1/24/23.
 //  Copyright © 2020 Waqar Malik All rights reserved.
 //
@@ -8,101 +8,101 @@
 import Foundation
 
 class MultipartFormBodyPart {
-    static var streamBufferSize: Int = 1024
-    let headers: HTTPHeaders
-    let bodyStream: InputStream
-    let bodyContentLength: UInt64
+	static var streamBufferSize: Int = 1024
+	let headers: HTTPHeaders
+	let bodyStream: InputStream
+	let bodyContentLength: UInt64
 
-    init(headers: HTTPHeaders, bodyStream: InputStream, bodyContentLength: UInt64) {
-        self.headers = headers
-        self.bodyStream = bodyStream
-        self.bodyContentLength = bodyContentLength
-    }
+	init(headers: HTTPHeaders, bodyStream: InputStream, bodyContentLength: UInt64) {
+		self.headers = headers
+		self.bodyStream = bodyStream
+		self.bodyContentLength = bodyContentLength
+	}
 }
 
 extension MultipartFormBodyPart {
-    func encoded() throws -> Data {
-        var encoded = Data()
-        let headerData = encodedHeaders()
-        encoded.append(headerData)
-        let bodyStreamData = try encodedBodyStream()
-        encoded.append(bodyStreamData)
-        return encoded
-    }
+	func encoded() throws -> Data {
+		var encoded = Data()
+		let headerData = encodedHeaders()
+		encoded.append(headerData)
+		let bodyStreamData = try encodedBodyStream()
+		encoded.append(bodyStreamData)
+		return encoded
+	}
 }
 
 extension MultipartFormBodyPart {
-    func encodedHeaders() -> Data {
-        let headerText = headers.map { "\($0.name): \($0.value)\(EncodingCharacters.crlf)" }
-            .joined()
-        + EncodingCharacters.crlf
-        return Data(headerText.utf8)
-    }
-    
-    private func encodedBodyStream() throws -> Data {
-        let inputStream = bodyStream
-        inputStream.open()
-        defer {
-            inputStream.close()
-        }
+	func encodedHeaders() -> Data {
+		let headerText = headers.map { "\($0.name): \($0.value)\(EncodingCharacters.crlf)" }
+			.joined()
+			+ EncodingCharacters.crlf
+		return Data(headerText.utf8)
+	}
 
-        var encoded = Data()
+	private func encodedBodyStream() throws -> Data {
+		let inputStream = bodyStream
+		inputStream.open()
+		defer {
+			inputStream.close()
+		}
 
-        while inputStream.hasBytesAvailable {
-            var buffer = [UInt8](repeating: 0, count: Self.streamBufferSize)
-            let bytesRead = inputStream.read(&buffer, maxLength: Self.streamBufferSize)
+		var encoded = Data()
 
-            if let error = inputStream.streamError {
-                throw MultipartFormError.inputStreamReadFailed(error)
-            }
+		while inputStream.hasBytesAvailable {
+			var buffer = [UInt8](repeating: 0, count: Self.streamBufferSize)
+			let bytesRead = inputStream.read(&buffer, maxLength: Self.streamBufferSize)
 
-            if bytesRead > 0 {
-                encoded.append(buffer, count: bytesRead)
-            } else {
-                break
-            }
-        }
+			if let error = inputStream.streamError {
+				throw MultipartFormError.inputStreamReadFailed(error)
+			}
 
-        guard UInt64(encoded.count) == bodyContentLength else {
-            let message = "Expect body content length \(bodyContentLength), encodedLength \(encoded.count)"
-            throw MultipartFormError.inputStreamLength(message)
-         }
-        
-        return encoded
-    }
+			if bytesRead > 0 {
+				encoded.append(buffer, count: bytesRead)
+			} else {
+				break
+			}
+		}
 
+		guard UInt64(encoded.count) == bodyContentLength else {
+			let message = "Expect body content length \(bodyContentLength), encodedLength \(encoded.count)"
+			throw MultipartFormError.inputStreamLength(message)
+		}
+
+		return encoded
+	}
 }
+
 extension MultipartFormBodyPart {
-    func write(to outputStream: OutputStream) throws {
-        let headerData = encodedHeaders()
-        try Data.write(data: headerData, to: outputStream)
-        try write(bodyStreamTo: outputStream)
-    }
+	func write(to outputStream: OutputStream) throws {
+		let headerData = encodedHeaders()
+		try Data.write(data: headerData, to: outputStream)
+		try write(bodyStreamTo: outputStream)
+	}
 
-    func write(bodyStreamTo outputStream: OutputStream) throws {
-        let inputStream = bodyStream
-    
-        inputStream.open()
-        defer {
-            inputStream.close()
-        }
+	func write(bodyStreamTo outputStream: OutputStream) throws {
+		let inputStream = bodyStream
 
-        while inputStream.hasBytesAvailable {
-            var buffer = [UInt8](repeating: 0, count: Self.streamBufferSize)
-            let bytesRead = inputStream.read(&buffer, maxLength: Self.streamBufferSize)
+		inputStream.open()
+		defer {
+			inputStream.close()
+		}
 
-            if let error = inputStream.streamError {
-                throw MultipartFormError.inputStreamReadFailed(error)
-            }
+		while inputStream.hasBytesAvailable {
+			var buffer = [UInt8](repeating: 0, count: Self.streamBufferSize)
+			let bytesRead = inputStream.read(&buffer, maxLength: Self.streamBufferSize)
 
-            if bytesRead > 0 {
-                if buffer.count != bytesRead {
-                    buffer = Array(buffer[0..<bytesRead])
-                }
-                try Data.write(buffer: &buffer, to: outputStream)
-            } else {
-                break
-            }
-        }
-    }
+			if let error = inputStream.streamError {
+				throw MultipartFormError.inputStreamReadFailed(error)
+			}
+
+			if bytesRead > 0 {
+				if buffer.count != bytesRead {
+					buffer = Array(buffer[0 ..< bytesRead])
+				}
+				try Data.write(buffer: &buffer, to: outputStream)
+			} else {
+				break
+			}
+		}
+	}
 }

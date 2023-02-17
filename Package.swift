@@ -15,9 +15,7 @@ let package = Package(
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        //.package(url: "https://github.com/realm/SwiftLint.git", branch: "main")
         .package(url: "https://github.com/lukepistrol/SwiftLintPlugin.git", from: "0.2.2"),
-        .package(url: "https://github.com/MarcoEidinger/SwiftFormatPlugin.git", from: "0.50.3"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
