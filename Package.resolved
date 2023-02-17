@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftFormatPlugin",
+        "repositoryURL": "https://github.com/MarcoEidinger/SwiftFormatPlugin",
+        "state": {
+          "branch": null,
+          "revision": "cc9614586ab73e7137959396885a13773d89f66e",
+          "version": "0.50.3"
+        }
+      },
+      {
+        "package": "SwiftLintPlugin",
+        "repositoryURL": "https://github.com/lukepistrol/SwiftLintPlugin",
+        "state": {
+          "branch": null,
+          "revision": "f69b412a765396d44dc9f4788a5b79919c1ca9e3",
+          "version": "0.2.2"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
