@@ -16,8 +16,8 @@ public struct HTTPHeader: Hashable, Identifiable {
 		self.value = value
 	}
 
-	public var id: String {
-		name
+	public var id: HTTPHeader {
+		self
 	}
 }
 
