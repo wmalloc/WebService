@@ -15,13 +15,13 @@ let package = Package(
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/lukepistrol/SwiftLintPlugin.git", .upToNextMajor(from: "0.2.2")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
-        .target(name: "WebService", dependencies: [], path: "Sources/Core"),
+        .target(name: "WebService", dependencies: [], path: "Sources/Core",
+                plugins: [.plugin(name: "SwiftLint", package: "SwiftLintPlugin")]),
         .target(name: "WebServiceCombine", dependencies: ["WebService"], path: "Sources/Combine"),
         .target(name: "WebServiceConcurrency", dependencies: ["WebService"], path: "Sources/Concurrency"),
         .target(name: "WebServiceURLMock", dependencies: ["WebService"], path: "Sources/URLMock"),

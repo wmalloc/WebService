@@ -1,0 +1,11 @@
+--109AF0987D004171B0A8481D6401B62D
+Content-Disposition: form-data; name="Profile"
+Content-Type: application/json
+
+{"familyName": "Malik", "givenName": "Waqar"}
+--109AF0987D004171B0A8481D6401B62D
+Content-Disposition: form-data; name="Image"
+Content-Type: application/octet-stream
+
+eyJob21lUGFnZSI6ICJodHRwczovL3d3dy5hcHBsZS5jb20ifQ==
+--109AF0987D004171B0A8481D6401B62D--

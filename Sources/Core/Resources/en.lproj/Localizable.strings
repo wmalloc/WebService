@@ -1,0 +1,39 @@
+/* 
+  Localizable.strings
+
+  Created by Waqar Malik on 2/17/23.
+  
+*/
+
+/* Invalid URL */
+"invalid.url" = "Bad URL";
+
+/* Invalid filename*/
+"invalid.filename" = "Invalid filename";
+
+/* File not found */
+"file.notfound" = "File not found";
+
+/* File already exists */
+"file.already.exists" = "File already exists";
+
+/* Access denined */
+"access.denined" = "Access Denied";
+
+/* File is directory */
+"file.is.directory" = "File is directory";
+
+/* File size not availble */
+"file.size.not.available" = "File size not available";
+
+/* Stream creation */
+"stream.creation" = "Stream creation";
+
+/* Output stream write failed */
+"output.stream.write.failed" = "Output stream write failed";
+
+/* Input stream read failed */
+"input.stream.read.failed" = "Input stream read failed";
+
+/* Input stream length */
+"input.stream.length" = "Input stream length";
