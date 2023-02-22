@@ -14,7 +14,6 @@ public final class WebService {
 	public typealias ErrorHandler = (Error?) -> Void
 	public typealias DataMapper<InputType, OutputType> = (InputType) throws -> OutputType
 	public typealias DataResponse = (data: Data, response: URLResponse)
-
 	public let session: URLSession
 
 	static var sessionConfiguration: URLSessionConfiguration = {
