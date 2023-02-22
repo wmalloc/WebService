@@ -34,7 +34,7 @@ public enum HTTPMethod: String, CaseIterable, Hashable, Identifiable {
     public var id: HTTPMethod {
         self
     }
-    
+
 	var shouldEncodeParametersInURL: Bool {
 		switch self {
 		case .GET, .HEAD, .DELETE:
