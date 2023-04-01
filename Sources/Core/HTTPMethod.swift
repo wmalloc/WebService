@@ -9,7 +9,7 @@ import Foundation
 
 /**
  Method to make web api calls
- 
+
  Available cases:
  - **GET**: Requests a representation of the specified resource. Requests using `GET` should only retrieve data.
  - **POST**: Submits an entity to the specified resource, often causing a change in state or side effects on the server.
@@ -31,9 +31,9 @@ public enum HTTPMethod: String, CaseIterable, Hashable, Identifiable {
 	case OPTIONS
 	case TRACE
 
-    public var id: HTTPMethod {
-        self
-    }
+	public var id: HTTPMethod {
+		self
+	}
 
 	var shouldEncodeParametersInURL: Bool {
 		switch self {
