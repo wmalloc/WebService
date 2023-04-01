@@ -31,7 +31,7 @@ public extension WebService {
 		return dataResponse
 	}
 
-	func data<ObjectType>(for request: URLRequest, transform: DataMapper<WebService.DataResponse, ObjectType>) async throws -> ObjectType {
+	func data<ObjectType>(for request: URLRequest, transform: Transformer<WebService.DataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await data(for: request)
 		return try transform(result)
 	}
@@ -44,13 +44,10 @@ public extension WebService {
 	}
 
 	func serializable(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
-		try await data(for: request) { result in
-			let data = try result.data.ws_validateNotEmptyData()
-			return try JSONSerialization.jsonObject(with: data, options: options)
-		}
+		try await data(for: request, transform: Self.jsonSerializableTransformer(options: options))
 	}
 
-	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transform: DataMapper<WebService.DataResponse, ObjectType>) async throws -> ObjectType {
+	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transform: Transformer<WebService.DataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await session.upload(for: request, fromFile: file)
 		return try transform(result)
 	}

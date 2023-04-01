@@ -28,7 +28,7 @@ public extension WebService {
 			.eraseToAnyPublisher()
 	}
 
-	func dataPublisher<ObjectType>(for request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
+	func dataPublisher<ObjectType>(for request: URLRequest, transform: @escaping Transformer<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		session.dataTaskPublisher(for: request)
 			.tryMap { result -> ObjectType in
 				try result.data.ws_validate(result.response)
@@ -44,14 +44,10 @@ public extension WebService {
 	}
 
 	func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
-		dataPublisher(for: request)
-			.tryMap { data -> Any in
-				try JSONSerialization.jsonObject(with: data, options: options)
-			}
-			.eraseToAnyPublisher()
+		dataPublisher(for: request, transform: Self.jsonSerializableTransformer(options: options))
 	}
 
-	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping DataMapper<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
+	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		var sessionDataTask: URLSessionDataTask?
 		let receiveCancel = { sessionDataTask?.cancel() }
 		return Future { [weak self] promise in

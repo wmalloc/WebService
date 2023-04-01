@@ -8,23 +8,23 @@
 import Foundation
 
 public extension WebService {
-    /**
-     Make a request call and return decoded data as decoded by the transformer, this requesst must return data
+	/**
+	 Make a request call and return decoded data as decoded by the transformer, this requesst must return data
 
-     - parameter request:    Request where to get the data from
-     - parameter completion: completion handler
+	 - parameter request:    Request where to get the data from
+	 - parameter completion: completion handler
 
-     - returns: URLSessionDataTask
-     */
-    @discardableResult
+	 - returns: URLSessionDataTask
+	 */
+	@discardableResult
 	func dataTask(for request: URLRequest, completion: WebService.DataHandler<Data?>?) -> URLSessionDataTask? {
 		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
-			if let error = error {
+			if let error {
 				completion?(.failure(error))
 				return
 			}
 
-			guard let urlResponse = urlResponse else {
+			guard let urlResponse else {
 				completion?(.failure(URLError(.badServerResponse)))
 				return
 			}
@@ -49,14 +49,14 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func dataTask<T>(with request: URLRequest, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
+	func dataTask<T>(with request: URLRequest, transform: @escaping Transformer<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
 		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
-			if let error = error {
+			if let error {
 				completion?(.failure(error))
 				return
 			}
 
-			guard let data = data, let urlResponse = urlResponse else {
+			guard let data, let urlResponse else {
 				completion?(.failure(URLError(.badServerResponse)))
 				return
 			}
@@ -88,11 +88,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: WebService.DecodeblHandler<T>?) -> URLSessionDataTask? {
-		dataTask(with: request) { result in
-			try decoder.decode(T.self, from: result.data)
-		} completion: { result in
-			completion?(result)
-		}
+		dataTask(with: request, transform: Self.jsonDecodableTransformer(decoder: decoder), completion: completion)
 	}
 
 	/**
@@ -106,32 +102,28 @@ public extension WebService {
 	 */
 	@discardableResult
 	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: WebService.SerializableHandler?) -> URLSessionDataTask? {
-		dataTask(with: request) { result in
-			try JSONSerialization.jsonObject(with: result.data, options: options)
-		} completion: { result in
-			completion?(result)
-		}
+		dataTask(with: request, transform: Self.jsonSerializableTransformer(options: options), completion: completion)
 	}
 
-    /**
-     Serilizes the response data  tinto raw JSON object
+	/**
+	 Serilizes the response data  tinto raw JSON object
 
-     - parameter request:    Request where to get the data from
-     - parameter fromFile:   URL of the file to upload
-     - parameter transform:  Closure to transform the result
-     - parameter completion: Completion handler
+	 - parameter request:    Request where to get the data from
+	 - parameter fromFile:   URL of the file to upload
+	 - parameter transform:  Closure to transform the result
+	 - parameter completion: Completion handler
 
-     - returns: URLSessionDataTask
-     */
+	 - returns: URLSessionDataTask
+	 */
 	@discardableResult
-	func upload<T>(with request: URLRequest, fromFile file: URL, transform: @escaping DataMapper<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
+	func upload<T>(with request: URLRequest, fromFile file: URL, transform: @escaping Transformer<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
 		let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
-			if let error = error {
+			if let error {
 				completion?(.failure(error))
 				return
 			}
 
-			guard let data = data, let urlResponse = urlResponse else {
+			guard let data, let urlResponse else {
 				completion?(.failure(URLError(.badServerResponse)))
 				return
 			}
