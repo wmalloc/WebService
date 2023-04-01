@@ -12,9 +12,9 @@ public enum EncodingCharacters {
 }
 
 public enum MultipartFormBoundaryType: Hashable, Identifiable {
-    public var id: MultipartFormBoundaryType {
-        self
-    }
+	public var id: MultipartFormBoundaryType {
+		self
+	}
 
 	case initial // --boundary
 	case interstitial // --boundary

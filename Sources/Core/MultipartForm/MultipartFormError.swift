@@ -26,13 +26,13 @@ public enum MultipartFormError: LocalizedError {
 		case .badURL(let url):
 			return "invalid.url".localized(bundle: .module) + " " + url.absoluteString
 		case .invalidFilename(let url):
-			return "invalid.filename".localized(bundle: .module)  + " " + url.absoluteString
+			return "invalid.filename".localized(bundle: .module) + " " + url.absoluteString
 		case .fileNotFound(let url, let error):
 			return "file.notfound".localized(bundle: .module) + " " + url.absoluteString + " " + (error?.localizedDescription ?? "")
 		case .fileAlreadyExists(let url):
 			return "file.already.exists".localized(bundle: .module) + " " + url.absoluteString
 		case .accessDenied(let url):
-            return "access.denined".localized(bundle: .module) + " " + url.absoluteString
+			return "access.denined".localized(bundle: .module) + " " + url.absoluteString
 		case .fileIsDirectory(let url):
 			return "file.is.directory".localized(bundle: .module) + " " + url.absoluteString
 		case .fileSizeNotAvailable(let url):
