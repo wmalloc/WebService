@@ -61,3 +61,13 @@ public extension WebService {
 		.eraseToAnyPublisher()
 	}
 }
+
+public extension WebService {
+	func decoded<Route: URLRequestable>(route: Route) -> AnyPublisher<Route.Response, Error> {
+		guard let request = try? route.urlRequest() else {
+			return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
+		}
+
+		return dataPublisher(for: request, transform: route.transformer)
+	}
+}

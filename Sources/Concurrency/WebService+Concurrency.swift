@@ -52,3 +52,10 @@ public extension WebService {
 		return try transform(result)
 	}
 }
+
+public extension WebService {
+	func decoded<Route: URLRequestable>(route: Route) async throws -> Route.Response {
+		let request = try route.urlRequest()
+		return try await data(for: request, transform: route.transformer)
+	}
+}
