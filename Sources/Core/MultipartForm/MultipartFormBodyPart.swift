@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class MultipartFormBodyPart {
+open class MultipartFormBodyPart {
 	static var streamBufferSize: Int = 1024
 	public let headers: HTTPHeaders
 	public let bodyStream: InputStream

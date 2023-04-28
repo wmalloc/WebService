@@ -8,7 +8,7 @@
 import Foundation
 import URLRequestable
 
-public class WebService: URLRequestRetrievable {
+open class WebService: URLRequestRetrievable {
     public let session: URLSession
 
 	public static var sessionConfiguration: URLSessionConfiguration = {
