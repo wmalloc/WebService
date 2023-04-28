@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import URLRequestable
 
 public extension HTTPURLResponse {
 	var headers: HTTPHeaders {

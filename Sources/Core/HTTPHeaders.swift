@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import URLRequestable
 
 public struct HTTPHeaders: Hashable {
 	public private(set) var headers: [HTTPHeader] = []

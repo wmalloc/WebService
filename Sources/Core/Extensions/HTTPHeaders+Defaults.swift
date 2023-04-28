@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import URLRequestable
 
 public extension HTTPHeaders {
 	static var defaultHeaders: HTTPHeaders {

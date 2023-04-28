@@ -50,9 +50,9 @@ final class WebServiceTests: XCTestCase {
 	func testDefaultRequest() throws {
 		let request = URLRequest(url: Self.baseURL)
 		XCTAssertEqual(request.url?.absoluteString, Self.baseURLString)
-		let contentType = request[header: URLRequest.Header.contentType]
+		let contentType = request[header: .contentType]
 		XCTAssertNil(contentType)
-		let cacheControl = request[header: URLRequest.Header.cacheControl]
+		let cacheControl = request[header: .cacheControl]
 		XCTAssertNil(cacheControl)
 		XCTAssertNil(request.allHTTPHeaderFields)
 		XCTAssertNil(request.httpBody)
@@ -89,9 +89,9 @@ final class WebServiceTests: XCTestCase {
 			.setCachePolicy(.reloadIgnoringLocalCacheData)
 		XCTAssertEqual(request.cachePolicy, NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData)
 		request = request
-			.setContentType(URLRequest.ContentType.json)
-		let first = request[header: URLRequest.Header.contentType]
-		XCTAssertEqual(first, URLRequest.ContentType.json)
+			.setContentType(.json)
+		let first = request[header: .contentType]
+		XCTAssertEqual(first, .json)
 		XCTAssertEqual(request.allHTTPHeaderFields?.count, 1)
 	}
 

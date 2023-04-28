@@ -8,31 +8,23 @@
 import Combine
 import Foundation
 import WebService
+import URLRequestable
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
 	func dataPublisher(for url: URL) -> AnyPublisher<Data, Error> {
 		session.dataTaskPublisher(for: url)
 			.tryMap { result in
-				try result.response.ws_validate()
-				return try result.data.ws_validateNotEmptyData()
+				try result.response.url_validate()
+				return try result.data.url_validateNotEmptyData()
 			}.eraseToAnyPublisher()
 	}
 
 	func dataPublisher(for request: URLRequest) -> AnyPublisher<Data, Error> {
-		session.dataTaskPublisher(for: request)
+        session.dataTaskPublisher(for: request)
 			.tryMap { result -> Data in
-				try result.response.ws_validate()
+				try result.response.url_validate()
 				return try result.data.ws_validate(result.response)
-			}
-			.eraseToAnyPublisher()
-	}
-
-	func dataPublisher<ObjectType>(for request: URLRequest, transform: @escaping Transformer<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
-		session.dataTaskPublisher(for: request)
-			.tryMap { result -> ObjectType in
-				try result.data.ws_validate(result.response)
-				return try transform(result)
 			}
 			.eraseToAnyPublisher()
 	}
@@ -44,10 +36,10 @@ public extension WebService {
 	}
 
 	func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
-		dataPublisher(for: request, transform: Self.jsonSerializableTransformer(options: options))
+        dataPublisher(for: request, transform: JSONSerialization.transformer(options: options))
 	}
 
-	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<WebService.DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
+	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		var sessionDataTask: URLSessionDataTask?
 		let receiveCancel = { sessionDataTask?.cancel() }
 		return Future { [weak self] promise in
