@@ -7,6 +7,7 @@
 
 import CoreServices
 import Foundation
+import CoreServices
 
 public class MultipartFormData {
 	public let boundary: String
