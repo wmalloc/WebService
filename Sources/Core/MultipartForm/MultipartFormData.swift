@@ -10,7 +10,7 @@ import Foundation
 import CoreServices
 import URLRequestable
 
-public class MultipartFormData {
+open class MultipartFormData {
 	public let boundary: String
 
 	open lazy var contentType: String = "multipart/form-data; boundary=\(self.boundary)"
