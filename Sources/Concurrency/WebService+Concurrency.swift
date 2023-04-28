@@ -25,7 +25,7 @@ public extension WebService {
 	func data(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> DataResponse {
 		let dataResponse: DataResponse
 		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
-            dataResponse = try await data(for: request, transform: { $0 }, delegate: delegate)
+            dataResponse = try await session.data(for: request, delegate: delegate)
 		} else {
 			dataResponse = try await session.data(for: request)
 		}
@@ -38,11 +38,8 @@ public extension WebService {
 	}
 
 	func decodable<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
-		try await data(for: request) { result in
-			let data = try result.data.url_validateNotEmptyData()
-			return try decoder.decode(ObjectType.self, from: data)
-		}
-	}
+        try await data(for: request, transform: JSONDecoder.transformer(decoder: decoder))
+    }
 
 	func serializable(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
         try await data(for: request, transform: JSONSerialization.transformer(options: options))
@@ -51,13 +48,6 @@ public extension WebService {
 	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transform: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await session.upload(for: request, fromFile: file)
 		return try transform(result)
-	}
-}
-
-public extension WebService {
-	func decoded<Route: URLRequestable>(route: Route) async throws -> Route.Response {
-		let request = try route.urlRequest()
-		return try await data(for: request, transform: route.transformer)
 	}
 }
 
