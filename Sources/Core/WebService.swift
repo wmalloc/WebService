@@ -8,17 +8,17 @@
 import Foundation
 import URLRequestable
 
-public final class WebService: URLRequestRetrievable {
+public class WebService: URLRequestRetrievable {
     public let session: URLSession
 
-	static var sessionConfiguration: URLSessionConfiguration = {
+	public static var sessionConfiguration: URLSessionConfiguration = {
 		var config = URLSessionConfiguration.default
 		config.headers = HTTPHeaders.defaultHeaders
 		config.requestCachePolicy = .useProtocolCachePolicy
 		return config
 	}()
 
-	public init(session: URLSession = .shared) {
+    required public init(session: URLSession = .shared) {
 		self.session = session
 	}
 }
