@@ -8,6 +8,7 @@
 
 @testable import WebService
 import XCTest
+import URLRequestable
 
 final class HTTPHeadersTests: XCTestCase {
 	func testBaseHeaders() throws {
@@ -19,7 +20,7 @@ final class HTTPHeadersTests: XCTestCase {
 		XCTAssertFalse(headers.isEmpty)
 		XCTAssertEqual(headers.count, 3)
 		XCTAssertTrue(headers.contains(.defaultUserAgent))
-		XCTAssertFalse(headers.contains(.contentType(URLRequest.ContentType.json)))
+		XCTAssertFalse(headers.contains(.contentType(.json)))
 	}
 
 	func testURLSessionConfiguration() throws {
@@ -31,49 +32,30 @@ final class HTTPHeadersTests: XCTestCase {
 		XCTAssertEqual(headers?.count, 3)
 	}
 
-	func testDefaultHeaders() throws {
-		let acceptEncoding = HTTPHeader.defaultAcceptEncoding
-		XCTAssertEqual(acceptEncoding.name, URLRequest.Header.acceptEncoding)
-		XCTAssertEqual(acceptEncoding.value, "br;q=1.0, gzip;q=0.9, deflate;q=0.8")
-
-		// "xctest/14.2 (com.apple.dt.xctest.tool; build:21501; macOS Version 13.1 (Build 22C65)) WebService"
-		let userAgent = HTTPHeader.defaultUserAgent
-		XCTAssertEqual(userAgent.name, URLRequest.Header.userAgent)
-		XCTAssertTrue(userAgent.value.contains("com.apple.dt.xctest.tool"))
-		XCTAssertTrue(userAgent.value.hasPrefix("xctest"))
-		XCTAssertTrue(userAgent.value.hasSuffix("WebService"))
-		XCTAssertEqual(userAgent.value, String.ws_userAgent)
-
-		let acceptLanguage = HTTPHeader.defaultAcceptLanguage
-		XCTAssertEqual(acceptLanguage.name, URLRequest.Header.acceptLanguage)
-		let lanugages = Locale.preferredLanguages.prefix(6).ws_qualityEncoded()
-		XCTAssertEqual(acceptLanguage.value, lanugages)
-	}
-
 	func testURLRequestHeaders() throws {
 		let request = URLRequest(url: URL(string: "https://api.github.com")!)
 			.setMethod(.GET)
-			.setUserAgent(String.ws_userAgent)
+			.setUserAgent(String.url_userAgent)
 			.setHttpHeaders(HTTPHeaders.defaultHeaders)
-			.addHeader(HTTPHeader.accept(URLRequest.ContentType.json))
+			.addHeader(HTTPHeader.accept(.json))
 
 		let headers = request.headers
 		XCTAssertNotNil(headers)
 		XCTAssertEqual(headers?.count, 4)
-		XCTAssertFalse(headers!.contains(.contentType(URLRequest.ContentType.xml)))
+		XCTAssertFalse(headers!.contains(.contentType(.xml)))
 		XCTAssertTrue(headers!.contains(.defaultAcceptLanguage))
 	}
 
 	func testDictionary() throws {
 		var headers = HTTPHeaders()
-		headers.update(name: URLRequest.Header.contentType, value: URLRequest.ContentType.xml)
+		headers.update(name: .contentType, value: .xml)
 		XCTAssertEqual(headers.count, 1)
-		XCTAssertEqual(headers.value(for: URLRequest.Header.contentType), URLRequest.ContentType.xml)
-		headers.update(name: URLRequest.Header.contentType, value: URLRequest.ContentType.json)
+		XCTAssertEqual(headers.value(for: .contentType), .xml)
+		headers.update(name: .contentType, value: .json)
 		XCTAssertEqual(headers.count, 1)
-		XCTAssertEqual(headers.value(for: URLRequest.Header.contentType), URLRequest.ContentType.json)
-		headers = headers.add(HTTPHeader(name: URLRequest.Header.authorization, value: "Password"))
-			.add(HTTPHeader(name: URLRequest.Header.contentLength, value: "\(0)"))
+		XCTAssertEqual(headers.value(for: .contentType), .json)
+		headers = headers.add(HTTPHeader(name: .authorization, value: "Password"))
+			.add(HTTPHeader(name: .contentLength, value: "\(0)"))
 			.add(.authorization(token: "Token"))
 		XCTAssertEqual(headers.count, 3)
 		let dictionary = headers.dictionary

@@ -33,7 +33,7 @@ public extension MultipartFormBodyPart {
 
 extension MultipartFormBodyPart {
 	func encodedHeaders() -> Data {
-		let headerText = headers.map { "\($0.name): \($0.value)\(EncodingCharacters.crlf)" }
+		let headerText = headers.map { "\($0.name): \($0.value ?? "")\(EncodingCharacters.crlf)" }
 			.joined()
 			+ EncodingCharacters.crlf
 

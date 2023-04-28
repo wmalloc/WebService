@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "URLRequestable",
+        "repositoryURL": "https://github.com/wmalloc/URLRequestable.git",
+        "state": {
+          "branch": null,
+          "revision": "0e44fca5dfb926a04f35f7499407986d0711c27b",
+          "version": "0.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

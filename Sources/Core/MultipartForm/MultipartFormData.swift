@@ -8,6 +8,7 @@
 import CoreServices
 import Foundation
 import CoreServices
+import URLRequestable
 
 public class MultipartFormData {
 	public let boundary: String
@@ -176,6 +177,6 @@ extension MultipartFormData {
 		{
 			return contentType as String
 		}
-		return URLRequest.ContentType.octetStream
+		return .octetStream
 	}
 }

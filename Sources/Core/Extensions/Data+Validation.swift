@@ -7,21 +7,9 @@
 
 import Foundation
 import os.log
+import URLRequestable
 
 public extension Data {
-	/**
-	 Checks if the data is empty or not, throws if data is empty
-
-	 - returns: Data
-	 */
-	@discardableResult
-	func ws_validateNotEmptyData() throws -> Self {
-		guard !isEmpty else {
-			throw URLError(.zeroByteResource)
-		}
-		return self
-	}
-
 	/**
 	 Validate the data given the response, and status codes and content types, throws errors if not valid
 
@@ -34,7 +22,7 @@ public extension Data {
 	@discardableResult
 	func ws_validate(_ response: URLResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
 		do {
-			_ = try response.ws_validate(acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
+			_ = try response.url_validate(acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
 		} catch {
 			let errorResponse = String(data: self, encoding: .utf8)
 			os_log("Error Response = %@", errorResponse ?? "")
@@ -53,7 +41,7 @@ public extension Data {
 	 - returns: Data
 	 */
 	@discardableResult
-	func ws_validate(_ dataResponse: WebService.DataResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
+	func ws_validate(_ dataResponse: DataResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
 		try dataResponse.data.ws_validate(dataResponse.response, acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
 	}
 
@@ -67,6 +55,6 @@ public extension Data {
 	 - returns: Data
 	 */
 	internal static func ws_validate(_ data: Data, _ response: URLResponse, acceptableContentTypes: Set<String>? = nil) throws -> Self {
-		try data.ws_validate(response, acceptableStatusCodes: 200 ..< 300, acceptableContentTypes: acceptableContentTypes).ws_validateNotEmptyData()
+		try data.ws_validate(response, acceptableStatusCodes: 200 ..< 300, acceptableContentTypes: acceptableContentTypes).url_validateNotEmptyData()
 	}
 }

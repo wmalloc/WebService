@@ -7,6 +7,7 @@
 
 @testable import WebService
 import XCTest
+import URLRequestable
 
 final class MultiformDataTests: XCTestCase {
 	func testBoundary() throws {
@@ -30,7 +31,7 @@ final class MultiformDataTests: XCTestCase {
 		let profileData = profileDataString.data(using: .utf8)
 		XCTAssertNotNil(profileData)
 		let multiformData = MultipartFormData(boundary: boundray)
-		multiformData.append(data: profileData!, withName: "Profile", mimeType: URLRequest.ContentType.json)
+		multiformData.append(data: profileData!, withName: "Profile", mimeType: .json)
 		let imageDataString = "{\"homePage\": \"https://www.apple.com\"}"
 		let imageString = imageDataString.data(using: .utf8)?.base64EncodedData()
 		XCTAssertNotNil(imageString)
