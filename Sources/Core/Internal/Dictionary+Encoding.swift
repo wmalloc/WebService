@@ -39,3 +39,12 @@ extension Dictionary where Key == String, Value == String? {
 		return components?.query
 	}
 }
+
+extension Dictionary where Key == String, Value == Any {
+	var ws_queryItems: [URLQueryItem] {
+		let items = map { item -> URLQueryItem in
+			URLQueryItem(name: item.key, value: "\(item.value)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
+		}
+		return items
+	}
+}

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import URLRequestable
 
 public extension URLRequest {
 	subscript(header key: String) -> String? {
@@ -19,19 +20,19 @@ public extension URLRequest {
 
 	var contentType: String? {
 		get {
-			self[header: URLRequest.Header.contentType]
+			self[header: .contentType]
 		}
 		set {
-			self[header: URLRequest.Header.contentType] = newValue
+			self[header: .contentType] = newValue
 		}
 	}
 
 	var userAgent: String? {
 		get {
-			self[header: URLRequest.Header.userAgent]
+			self[header: .userAgent]
 		}
 		set {
-			self[header: URLRequest.Header.userAgent] = newValue
+			self[header: .userAgent] = newValue
 		}
 	}
 }

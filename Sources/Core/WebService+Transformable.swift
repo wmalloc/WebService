@@ -6,75 +6,12 @@
 //
 
 import Foundation
+import URLRequestable
 
 public extension WebService {
-	/**
-	 Make a request call and return decoded data as decoded by the transformer, this requesst must return data
-
-	 - parameter request:    Request where to get the data from
-	 - parameter completion: completion handler
-
-	 - returns: URLSessionDataTask
-	 */
 	@discardableResult
-	func dataTask(for request: URLRequest, completion: WebService.DataHandler<Data?>?) -> URLSessionDataTask? {
-		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
-			if let error {
-				completion?(.failure(error))
-				return
-			}
-
-			guard let urlResponse else {
-				completion?(.failure(URLError(.badServerResponse)))
-				return
-			}
-			do {
-				try urlResponse.ws_validate()
-				completion?(.success(data))
-			} catch {
-				completion?(.failure(error))
-			}
-		}
-		dataTask.resume()
-		return dataTask
-	}
-
-	/**
-	 Make a request call and return decoded data as decoded by the transformer, this requesst must return data
-
-	 - parameter request:    Request where to get the data from
-	 - parameter transform:  Transformer how to convert the data to different type
-	 - parameter completion: completion handler
-
-	 - returns: URLSessionDataTask
-	 */
-	@discardableResult
-	func dataTask<T>(with request: URLRequest, transform: @escaping Transformer<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
-		let dataTask = session.dataTask(with: request) { data, urlResponse, error in
-			if let error {
-				completion?(.failure(error))
-				return
-			}
-
-			guard let data, let urlResponse else {
-				completion?(.failure(URLError(.badServerResponse)))
-				return
-			}
-			do {
-				try urlResponse.ws_validate()
-				let mapped = try transform((data, urlResponse))
-				completion?(.success(mapped))
-			} catch {
-				completion?(.failure(error))
-			}
-		}
-		dataTask.resume()
-		return dataTask
-	}
-
-	@discardableResult
-	func dataTask(with request: URLRequest, completion: WebService.DataHandler<Data>?) -> URLSessionDataTask? {
-		dataTask(with: request, transform: { $0.data }, completion: completion)
+	func dataTask(with request: URLRequest, completion: DataHandler<Data>?) -> URLSessionDataTask? {
+		dataTask(for: request, transform: { $0.data }, completion: completion)
 	}
 
 	/**
@@ -87,8 +24,8 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: WebService.DecodeblHandler<T>?) -> URLSessionDataTask? {
-		dataTask(with: request, transform: Self.jsonDecodableTransformer(decoder: decoder), completion: completion)
+	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodeblHandler<T>?) -> URLSessionDataTask? {
+        dataTask(for: request, transform: JSONDecoder.transformer(decoder: decoder), completion: completion)
 	}
 
 	/**
@@ -101,8 +38,8 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: WebService.SerializableHandler?) -> URLSessionDataTask? {
-		dataTask(with: request, transform: Self.jsonSerializableTransformer(options: options), completion: completion)
+	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler?) -> URLSessionDataTask? {
+        dataTask(for: request, transform: JSONSerialization.transformer(options: options), completion: completion)
 	}
 
 	/**
@@ -116,7 +53,7 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func upload<T>(with request: URLRequest, fromFile file: URL, transform: @escaping Transformer<WebService.DataResponse, T>, completion: WebService.DataHandler<T>?) -> URLSessionDataTask? {
+	func upload<T>(with request: URLRequest, fromFile file: URL, transform: @escaping Transformer<DataResponse, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
 		let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
 			if let error {
 				completion?(.failure(error))
@@ -128,7 +65,7 @@ public extension WebService {
 				return
 			}
 			do {
-				try urlResponse.ws_validate()
+				try urlResponse.url_validate()
 				let mapped = try transform((data, urlResponse))
 				completion?(.success(mapped))
 			} catch {

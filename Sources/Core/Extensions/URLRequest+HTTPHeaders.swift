@@ -6,6 +6,21 @@
 //
 
 import Foundation
+import URLRequestable
+
+public extension URLRequest {
+    @discardableResult
+    func setHttpHeaders(_ httpHeaders: HTTPHeaders?) -> Self {
+        var request = self
+        request.headers = httpHeaders
+        return request
+    }
+
+    @discardableResult
+    func addHeaders(_ headers: HTTPHeaders) -> Self {
+        addHeaders(headers.headers)
+    }
+}
 
 public extension URLRequest {
 	var headers: HTTPHeaders? {
