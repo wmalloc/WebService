@@ -13,11 +13,11 @@ import WebService
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
 	func dataPublisher(for url: URL) -> AnyPublisher<Data, Error> {
-		dataPublisher(for: URLRequest(url: url), transform: { $0.data })
+		dataPublisher(for: URLRequest(url: url), transformer: { $0.data })
 	}
 
 	func dataPublisher(for request: URLRequest) -> AnyPublisher<Data, Error> {
-		dataPublisher(for: request, transform: { $0.data })
+		dataPublisher(for: request, transformer: { $0.data })
 	}
 
 	func decodablePublisher<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<ObjectType, Error> {
@@ -27,14 +27,14 @@ public extension WebService {
 	}
 
 	func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
-		dataPublisher(for: request, transform: JSONSerialization.transformer(options: options))
+		dataPublisher(for: request, transformer: JSONSerialization.transformer(options: options))
 	}
 
 	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		var sessionDataTask: URLSessionDataTask?
 		let receiveCancel = { sessionDataTask?.cancel() }
 		return Future { [weak self] promise in
-			sessionDataTask = self?.upload(with: request, fromFile: file, transform: transform) { result in
+			sessionDataTask = self?.upload(with: request, fromFile: file, transformer: transform) { result in
 				promise(result)
 			}
 		}

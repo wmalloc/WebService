@@ -11,7 +11,7 @@ import URLRequestable
 public extension WebService {
 	@discardableResult
 	func dataTask(with request: URLRequest, completion: DataHandler<Data>?) -> URLSessionDataTask? {
-		dataTask(for: request, transform: { $0.data }, completion: completion)
+		dataTask(for: request, transformer: { $0.data }, completion: completion)
 	}
 
 	/**
@@ -25,7 +25,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodeblHandler<T>?) -> URLSessionDataTask? {
-		dataTask(for: request, transform: JSONDecoder.transformer(decoder: decoder), completion: completion)
+		dataTask(for: request, transformer: JSONDecoder.transformer(decoder: decoder), completion: completion)
 	}
 
 	/**
@@ -39,7 +39,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler?) -> URLSessionDataTask? {
-		dataTask(for: request, transform: JSONSerialization.transformer(options: options), completion: completion)
+		dataTask(for: request, transformer: JSONSerialization.transformer(options: options), completion: completion)
 	}
 
 	/**
@@ -53,7 +53,7 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func upload<T>(with request: URLRequest, fromFile file: URL, transform: @escaping Transformer<DataResponse, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
+	func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<DataResponse, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
 		let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
 			if let error {
 				completion?(.failure(error))
@@ -66,7 +66,7 @@ public extension WebService {
 			}
 			do {
 				try urlResponse.url_validate()
-				let mapped = try transform((data, urlResponse))
+				let mapped = try transformer((data, urlResponse))
 				completion?(.success(mapped))
 			} catch {
 				completion?(.failure(error))

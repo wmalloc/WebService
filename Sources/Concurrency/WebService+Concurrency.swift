@@ -32,22 +32,22 @@ public extension WebService {
 		return dataResponse
 	}
 
-	func data<ObjectType>(for request: URLRequest, transform: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
+	func data<ObjectType>(for request: URLRequest, transformer: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await data(for: request)
-		return try transform(result)
+		return try transformer(result)
 	}
 
 	func decodable<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
-		try await data(for: request, transform: JSONDecoder.transformer(decoder: decoder))
+		try await data(for: request, transformer: JSONDecoder.transformer(decoder: decoder))
 	}
 
 	func serializable(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
-		try await data(for: request, transform: JSONSerialization.transformer(options: options))
+		try await data(for: request, transformer: JSONSerialization.transformer(options: options))
 	}
 
-	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transform: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
+	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transformer: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await session.upload(for: request, fromFile: file)
-		return try transform(result)
+		return try transformer(result)
 	}
 }
 
