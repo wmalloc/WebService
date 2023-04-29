@@ -25,7 +25,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodeblHandler<T>?) -> URLSessionDataTask? {
-        dataTask(for: request, transform: JSONDecoder.transformer(decoder: decoder), completion: completion)
+		dataTask(for: request, transform: JSONDecoder.transformer(decoder: decoder), completion: completion)
 	}
 
 	/**
@@ -39,7 +39,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler?) -> URLSessionDataTask? {
-        dataTask(for: request, transform: JSONSerialization.transformer(options: options), completion: completion)
+		dataTask(for: request, transform: JSONSerialization.transformer(options: options), completion: completion)
 	}
 
 	/**

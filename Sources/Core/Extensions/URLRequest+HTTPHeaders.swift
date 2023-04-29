@@ -9,16 +9,25 @@ import Foundation
 import URLRequestable
 
 public extension URLRequest {
-    @discardableResult
-    func setHttpHeaders(_ httpHeaders: HTTPHeaders?) -> Self {
-        var request = self
-        request.headers = httpHeaders
-        return request
-    }
+	@discardableResult
+	func setHttpHeaders(_ httpHeaders: HTTPHeaders?) -> Self {
+		var request = self
+		request.headers = httpHeaders
+		return request
+	}
 
+	@discardableResult
+	func addHeaders(_ headers: HTTPHeaders) -> Self {
+		addHeaders(headers.headers)
+	}
+    
     @discardableResult
-    func addHeaders(_ headers: HTTPHeaders) -> Self {
-        addHeaders(headers.headers)
+    func setMultipartFormData(_ multipartFormData: MultipartFormData) throws -> Self {
+        let request = self
+        request.setHttpBody(try multipartFormData.encoded(), contentType: multipartFormData.contentType)
+            .setHeader(HTTPHeader(name: .contentLength, value: "\(multipartFormData.contentLength)"))
+            .setHeader(HTTPHeader(name: .contentType, value: multipartFormData.contentType))
+        return self
     }
 }
 
