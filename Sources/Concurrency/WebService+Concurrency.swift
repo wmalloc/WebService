@@ -52,4 +52,4 @@ public extension WebService {
 }
 
 @available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
-extension WebService: URLRequestAsyncRetrievable {}
+extension WebService: URLRequestAsyncTransferable {}
