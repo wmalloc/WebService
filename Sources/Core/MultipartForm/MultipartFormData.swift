@@ -7,7 +7,6 @@
 
 import CoreServices
 import Foundation
-import CoreServices
 import URLRequestable
 
 open class MultipartFormData {
@@ -23,7 +22,7 @@ open class MultipartFormData {
 
 	public init(fileManager: FileManager = .default, boundary: String = UUID().uuidString.replacingOccurrences(of: "-", with: "")) {
 		self.fileManager = fileManager
-		self.boundary = boundary
+		self.boundary = "---------------------------" + boundary
 	}
 
 	let fileManager: FileManager

@@ -8,8 +8,8 @@
 import Foundation
 import URLRequestable
 
-open class WebService: URLRequestRetrievable {
-    public let session: URLSession
+open class WebService: URLRequestTransferable {
+	public let session: URLSession
 
 	public static var sessionConfiguration: URLSessionConfiguration = {
 		var config = URLSessionConfiguration.default
@@ -18,7 +18,7 @@ open class WebService: URLRequestRetrievable {
 		return config
 	}()
 
-    required public init(session: URLSession = .shared) {
+	public required init(session: URLSession = .shared) {
 		self.session = session
 	}
 }

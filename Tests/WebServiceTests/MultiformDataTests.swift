@@ -5,9 +5,9 @@
 //  Created by Waqar Malik on 1/29/23.
 //
 
+import URLRequestable
 @testable import WebService
 import XCTest
-import URLRequestable
 
 final class MultiformDataTests: XCTestCase {
 	func testBoundary() throws {
