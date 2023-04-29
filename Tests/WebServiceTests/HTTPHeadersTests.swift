@@ -6,9 +6,9 @@
 //  Copyright © 2020 Waqar Malik All rights reserved.
 //
 
+import URLRequestable
 @testable import WebService
 import XCTest
-import URLRequestable
 
 final class HTTPHeadersTests: XCTestCase {
 	func testBaseHeaders() throws {

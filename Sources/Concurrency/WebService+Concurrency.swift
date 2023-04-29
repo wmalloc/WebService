@@ -7,8 +7,8 @@
 
 import Foundation
 import os.log
-import WebService
 import URLRequestable
+import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
@@ -25,7 +25,7 @@ public extension WebService {
 	func data(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> DataResponse {
 		let dataResponse: DataResponse
 		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
-            dataResponse = try await session.data(for: request, delegate: delegate)
+			dataResponse = try await session.data(for: request, delegate: delegate)
 		} else {
 			dataResponse = try await session.data(for: request)
 		}
@@ -38,11 +38,11 @@ public extension WebService {
 	}
 
 	func decodable<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
-        try await data(for: request, transform: JSONDecoder.transformer(decoder: decoder))
-    }
+		try await data(for: request, transform: JSONDecoder.transformer(decoder: decoder))
+	}
 
 	func serializable(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
-        try await data(for: request, transform: JSONSerialization.transformer(options: options))
+		try await data(for: request, transform: JSONSerialization.transformer(options: options))
 	}
 
 	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transform: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
@@ -52,5 +52,4 @@ public extension WebService {
 }
 
 @available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
-extension WebService: URLRequestAsyncRetrievable {
-}
+extension WebService: URLRequestAsyncRetrievable {}

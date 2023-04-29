@@ -7,7 +7,6 @@
 
 import CoreServices
 import Foundation
-import CoreServices
 import URLRequestable
 
 open class MultipartFormData {
