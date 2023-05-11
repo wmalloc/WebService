@@ -24,7 +24,7 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodeblHandler<T>?) -> URLSessionDataTask? {
+	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodableHandler<T>?) -> URLSessionDataTask? {
 		dataTask(for: request, transformer: JSONDecoder.transformer(decoder: decoder), completion: completion)
 	}
 
