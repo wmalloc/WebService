@@ -7,5 +7,6 @@
 
 import Foundation
 import WebService
+import URLRequestable
 
 extension EncodingCharacters: @unchecked Sendable {}

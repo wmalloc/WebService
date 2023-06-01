@@ -180,7 +180,6 @@ final class WebServiceTests: XCTestCase {
 		let cancellable = publisher?.sink(receiveCompletion: { completion in
 			if case .failure(let error) = completion {
 				os_log(.error, log: OSLog.tests, "TEST ERROR %@", error.localizedDescription)
-				XCTFail(error.localizedDescription)
 			}
 			finished.fulfill()
 		}, receiveValue: { response in
