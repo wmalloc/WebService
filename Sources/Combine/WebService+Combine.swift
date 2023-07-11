@@ -30,7 +30,7 @@ public extension WebService {
 		dataPublisher(for: request, transformer: JSONSerialization.transformer(options: options))
 	}
 
-	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<DataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
+	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<URLDataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		var sessionDataTask: URLSessionDataTask?
 		let receiveCancel = { sessionDataTask?.cancel() }
 		return Future { [weak self] promise in

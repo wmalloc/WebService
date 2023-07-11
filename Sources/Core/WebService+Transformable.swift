@@ -53,7 +53,7 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<DataResponse, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
+	func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<URLDataResponse, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
 		let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
 			if let error {
 				completion?(.failure(error))
