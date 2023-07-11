@@ -12,8 +12,8 @@ import WebService
 
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
-	func data(from url: URL, delegate: URLSessionTaskDelegate? = nil) async throws -> DataResponse {
-		let dataResponse: DataResponse
+	func data(from url: URL, delegate: URLSessionTaskDelegate? = nil) async throws -> URLDataResponse {
+		let dataResponse: URLDataResponse
 		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
 			dataResponse = try await session.data(from: url, delegate: delegate)
 		} else {
@@ -22,8 +22,8 @@ public extension WebService {
 		return dataResponse
 	}
 
-	func data(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> DataResponse {
-		let dataResponse: DataResponse
+	func data(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> URLDataResponse {
+		let dataResponse: URLDataResponse
 		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
 			dataResponse = try await session.data(for: request, delegate: delegate)
 		} else {
@@ -32,7 +32,7 @@ public extension WebService {
 		return dataResponse
 	}
 
-	func data<ObjectType>(for request: URLRequest, transformer: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
+	func data<ObjectType>(for request: URLRequest, transformer: Transformer<URLDataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await data(for: request)
 		return try transformer(result)
 	}
@@ -45,7 +45,7 @@ public extension WebService {
 		try await data(for: request, transformer: JSONSerialization.transformer(options: options))
 	}
 
-	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transformer: Transformer<DataResponse, ObjectType>) async throws -> ObjectType {
+	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transformer: Transformer<URLDataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await session.upload(for: request, fromFile: file)
 		return try transformer(result)
 	}
