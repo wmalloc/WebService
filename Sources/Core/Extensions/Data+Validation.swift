@@ -41,7 +41,7 @@ public extension Data {
 	 - returns: Data
 	 */
 	@discardableResult
-	func ws_validate(_ dataResponse: DataResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
+	func ws_validate(_ dataResponse: URLDataResponse, acceptableStatusCodes: Range<Int> = 200 ..< 300, acceptableContentTypes: Set<String>? = nil) throws -> Self {
 		try dataResponse.data.ws_validate(dataResponse.response, acceptableStatusCodes: acceptableStatusCodes, acceptableContentTypes: acceptableContentTypes)
 	}
 
