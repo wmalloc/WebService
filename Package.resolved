@@ -11,12 +11,21 @@
         }
       },
       {
+        "package": "http-types",
+        "repositoryURL": "https://github.com/apple/swift-http-types.git",
+        "state": {
+          "branch": null,
+          "revision": "39661f4ca82db8ad050cc060a471c8e2c542b24f",
+          "version": "0.1.1"
+        }
+      },
+      {
         "package": "URLRequestable",
         "repositoryURL": "https://github.com/wmalloc/URLRequestable.git",
         "state": {
           "branch": null,
-          "revision": "baa42ce656b035eb495f55e7921aefd64089b636",
-          "version": "0.1.2"
+          "revision": "517b88f9150f0c8706c6813499bcdb035b9aeb27",
+          "version": "0.1.3"
         }
       }
     ]

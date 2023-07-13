@@ -12,6 +12,7 @@ import os.log
 @testable import WebServiceCombine
 @testable import WebServiceConcurrency
 @testable import WebServiceURLMock
+import HTTPTypes
 
 import XCTest
 
@@ -97,7 +98,7 @@ final class WebServiceTests: XCTestCase {
 
 	func testValidResponse() throws {
 		let request = URLRequest(url: Self.baseURL)
-			.setMethod(.GET)
+			.setMethod(.get)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
 		URLProtocolMock.requestHandlers[requestURL!] = { request in
@@ -116,7 +117,7 @@ final class WebServiceTests: XCTestCase {
 
 	func testInvalidResponse() throws {
 		let request = URLRequest(url: Self.baseURL)
-			.setMethod(.GET)
+			.setMethod(.get)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
 		URLProtocolMock.requestHandlers[requestURL!] = { request in
@@ -135,7 +136,7 @@ final class WebServiceTests: XCTestCase {
 
 	func testValidDataResponse() throws {
 		let request = URLRequest(url: Self.baseURL)
-			.setMethod(.GET)
+			.setMethod(.get)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
 		URLProtocolMock.requestHandlers[requestURL!] = { request in
@@ -155,7 +156,7 @@ final class WebServiceTests: XCTestCase {
 
 	func testNetworkFailure() throws {
 		let request = URLRequest(url: Self.baseURL)
-			.setMethod(.GET)
+			.setMethod(.get)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
 		URLProtocolMock.requestHandlers[requestURL!] = { request in
@@ -241,7 +242,7 @@ extension WebServiceTests {
 		let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
 		XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
-			.setMethod(.GET)
+			.setMethod(.get)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
 		URLProtocolMock.requestHandlers[requestURL!] = { request in
@@ -263,7 +264,7 @@ extension WebServiceTests {
 		let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
 		XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
-			.setMethod(.GET)
+			.setMethod(.get)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
 		URLProtocolMock.requestHandlers[requestURL!] = { request in
