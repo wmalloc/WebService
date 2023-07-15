@@ -14,42 +14,6 @@ import os.log
 @testable import WebServiceURLMock
 import HTTPTypes
 import URLRequestable
-
-import XCTest
-
-final class WebServiceTests: XCTestCase {
-	static let baseURLString = "http://localhost:8080"
-	static let baseURL = URL(string: "http://localhost:8080")!
-
-	static var allTests = [("testValidResponse", testValidResponse),
-	                       ("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse), ("testNetworkFailure", testNetworkFailure),
-	                       ("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable), ("testAsyncSerializable", testAsyncSerializable)]
-	let testTimeout: TimeInterval = 1
-	var webService: WebService!
-
-	enum Response {
-		static let invalid = URLResponse(url: WebServiceTests.baseURL, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
-		static let valid = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
-		static let invalid300 = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 300, httpVersion: nil, headerFields: nil)!
-		static let invalid401 = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 401, httpVersion: nil, headerFields: nil)!
-	}
-
-	let networkError = NSError(domain: "NSURLErrorDomain", code: -1004, /* kCFURLErrorCannotConnectToHost*/ userInfo: nil)
-	override func setUpWithError() throws {
-		let config = URLSessionConfiguration.ephemeral
-		config.protocolClasses = [URLProtocolMock.self]
-
-		// and create the URLSession from that
-		let session = URLSession(configuration: config)
-		webService = WebService(session: session)
-	}
-
-	override func tearDownWithError() throws {
-		webService = nil
-	}
-
-    func testValidResponse() throws {
-		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.get)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
