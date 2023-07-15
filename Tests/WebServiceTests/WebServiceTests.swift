@@ -13,6 +13,7 @@ import os.log
 @testable import WebServiceConcurrency
 @testable import WebServiceURLMock
 import HTTPTypes
+import URLRequestable
 
 import XCTest
 
@@ -20,8 +21,7 @@ final class WebServiceTests: XCTestCase {
 	static let baseURLString = "http://localhost:8080"
 	static let baseURL = URL(string: "http://localhost:8080")!
 
-	static var allTests = [("testDefaultRequest", testDefaultRequest), ("testQueryItems", testQueryItems),
-	                       ("testDefaultRequestConfigurations", testDefaultRequestConfigurations), ("testValidResponse", testValidResponse),
+	static var allTests = [("testValidResponse", testValidResponse),
 	                       ("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse), ("testNetworkFailure", testNetworkFailure),
 	                       ("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable), ("testAsyncSerializable", testAsyncSerializable)]
 	let testTimeout: TimeInterval = 1
@@ -48,55 +48,7 @@ final class WebServiceTests: XCTestCase {
 		webService = nil
 	}
 
-	func testDefaultRequest() throws {
-		let request = URLRequest(url: Self.baseURL)
-		XCTAssertEqual(request.url?.absoluteString, Self.baseURLString)
-		let contentType = request[header: .contentType]
-		XCTAssertNil(contentType)
-		let cacheControl = request[header: .cacheControl]
-		XCTAssertNil(cacheControl)
-		XCTAssertNil(request.allHTTPHeaderFields)
-		XCTAssertNil(request.httpBody)
-		XCTAssertTrue(request.httpShouldHandleCookies)
-		XCTAssertEqual(request.cachePolicy, NSURLRequest.CachePolicy.useProtocolCachePolicy)
-		XCTAssertEqual(request.timeoutInterval, 60.0)
-
-		XCTAssertNil(request.contentType)
-		XCTAssertNil(request.userAgent)
-		XCTAssertEqual(request, URLRequest(url: Self.baseURL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0))
-	}
-
-	func testQueryItems() throws {
-		var components = URLComponents(string: Self.baseURLString)!
-		components = components.setQueryItems([URLQueryItem(name: "test1", value: "test1"), URLQueryItem(name: "test2", value: "test2")])
-		XCTAssertNotNil(components.queryItems)
-		XCTAssertEqual(components.queryItems?.count ?? 0, 2)
-		XCTAssertEqual(components.url?.absoluteString, "\(Self.baseURLString)?test1=test1&test2=test2")
-		components = components.appendQueryItems([URLQueryItem(name: "test3", value: "test3")])
-		XCTAssertEqual(components.queryItems?.count ?? 0, 3)
-		XCTAssertEqual(components.url?.absoluteString, "\(Self.baseURLString)?test1=test1&test2=test2&test3=test3")
-		components = components.setQueryItems([])
-		XCTAssertEqual(components.queryItems?.count ?? 0, 0)
-		let absoluteString = components.url?.absoluteString
-		XCTAssertNotNil(absoluteString)
-		XCTAssertEqual(absoluteString!, Self.baseURLString)
-		components = components.setQueryItems([URLQueryItem(name: "test 3", value: "test 3")])
-		XCTAssertEqual(components.queryItems?.count ?? 0, 1)
-		XCTAssertEqual(components.url?.absoluteString, "\(Self.baseURLString)?test%203=test%203")
-	}
-
-	func testDefaultRequestConfigurations() throws {
-		var request = URLRequest(url: Self.baseURL)
-			.setCachePolicy(.reloadIgnoringLocalCacheData)
-		XCTAssertEqual(request.cachePolicy, NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData)
-		request = request
-			.setContentType(.json)
-		let first = request[header: .contentType]
-		XCTAssertEqual(first, .json)
-		XCTAssertEqual(request.allHTTPHeaderFields?.count, 1)
-	}
-
-	func testValidResponse() throws {
+    func testValidResponse() throws {
 		let request = URLRequest(url: Self.baseURL)
 			.setMethod(.get)
 		let requestURL = request.url
