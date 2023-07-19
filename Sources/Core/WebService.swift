@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HTTPTypes
 import URLRequestable
 
 open class WebService: URLRequestTransferable {
@@ -13,7 +14,7 @@ open class WebService: URLRequestTransferable {
 
 	public static var sessionConfiguration: URLSessionConfiguration = {
 		var config = URLSessionConfiguration.default
-		config.headers = HTTPHeaders.defaultHeaders
+		config.headers = HTTPFields.defaultHeaders
 		config.requestCachePolicy = .useProtocolCachePolicy
 		return config
 	}()
