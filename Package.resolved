@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "swift-collections",
-        "repositoryURL": "https://github.com/apple/swift-collections.git",
+        "package": "http-types",
+        "repositoryURL": "https://github.com/apple/swift-http-types.git",
         "state": {
           "branch": null,
-          "revision": "937e904258d22af6e447a0b72c0bc67583ef64a2",
-          "version": "1.0.4"
+          "revision": "6861b096b0bd0cc339b9c5d34d55c665c7490703",
+          "version": "0.2.0"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/wmalloc/URLRequestable.git",
         "state": {
           "branch": null,
-          "revision": "0fad083bd93c2e9e2860136360c21936723067a6",
-          "version": "0.3.0"
+          "revision": "6974f6f76d74209b661a9e3293c08e963876f0eb",
+          "version": "0.4.0"
         }
       }
     ]
