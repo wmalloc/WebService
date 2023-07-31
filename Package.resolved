@@ -6,17 +6,8 @@
         "repositoryURL": "https://github.com/apple/swift-http-types.git",
         "state": {
           "branch": null,
-          "revision": "6861b096b0bd0cc339b9c5d34d55c665c7490703",
-          "version": "0.2.0"
-        }
-      },
-      {
-        "package": "http-types",
-        "repositoryURL": "https://github.com/apple/swift-http-types.git",
-        "state": {
-          "branch": null,
-          "revision": "6861b096b0bd0cc339b9c5d34d55c665c7490703",
-          "version": "0.2.0"
+          "revision": "68deedb6b98837564cf0231fa1df48de35881993",
+          "version": "0.2.1"
         }
       },
       {
@@ -24,8 +15,8 @@
         "repositoryURL": "https://github.com/wmalloc/URLRequestable.git",
         "state": {
           "branch": null,
-          "revision": "6974f6f76d74209b661a9e3293c08e963876f0eb",
-          "version": "0.4.0"
+          "revision": "206a31ba2cc55ae2f6b641af0f64295be77e92e4",
+          "version": "0.4.1"
         }
       }
     ]
