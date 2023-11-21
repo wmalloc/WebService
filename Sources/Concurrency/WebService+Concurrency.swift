@@ -10,27 +10,15 @@ import os.log
 import URLRequestable
 import WebService
 
-@available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
+@available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
 public extension WebService {
 	func data(from url: URL, delegate: URLSessionTaskDelegate? = nil) async throws -> URLDataResponse {
-		let dataResponse: URLDataResponse
-		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
-			dataResponse = try await session.data(from: url, delegate: delegate)
-		} else {
-			dataResponse = try await session.data(from: url)
-		}
-		return dataResponse
+    try await session.data(from: url, delegate: delegate)
 	}
 
 	func data(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> URLDataResponse {
-		let dataResponse: URLDataResponse
-		if #available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *) {
-			dataResponse = try await session.data(for: request, delegate: delegate)
-		} else {
-			dataResponse = try await session.data(for: request)
-		}
-		return dataResponse
-	}
+    try await session.data(for: request, delegate: delegate)
+  }
 
 	func data<ObjectType>(for request: URLRequest, transformer: Transformer<URLDataResponse, ObjectType>) async throws -> ObjectType {
 		let result = try await data(for: request)
@@ -38,11 +26,11 @@ public extension WebService {
 	}
 
 	func decodable<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
-		try await data(for: request, transformer: JSONDecoder.transformer(decoder: decoder))
+    try await data(for: request, transformer: { try decoder.decode(ObjectType.self, from: $0) })
 	}
 
 	func serializable(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
-		try await data(for: request, transformer: JSONSerialization.transformer(options: options))
+    try await data(for: request, transformer: { try JSONSerialization.jsonObject(with: $0, options: options) })
 	}
 
 	func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transformer: Transformer<URLDataResponse, ObjectType>) async throws -> ObjectType {
@@ -52,4 +40,4 @@ public extension WebService {
 }
 
 @available(macOS 12, iOS 15, tvOS 15, macCatalyst 15, watchOS 8, *)
-extension WebService: URLRequestAsyncTransferable {}
+extension WebService: URLAsyncTransferable {}

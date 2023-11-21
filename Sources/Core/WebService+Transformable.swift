@@ -11,7 +11,7 @@ import URLRequestable
 public extension WebService {
 	@discardableResult
 	func dataTask(with request: URLRequest, completion: DataHandler<Data>?) -> URLSessionDataTask? {
-		dataTask(for: request, transformer: { $0.data }, completion: completion)
+		dataTask(for: request, transformer: { $0 }, completion: completion)
 	}
 
 	/**
@@ -25,7 +25,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodableHandler<T>?) -> URLSessionDataTask? {
-		dataTask(for: request, transformer: JSONDecoder.transformer(decoder: decoder), completion: completion)
+    dataTask(for: request, transformer: { try decoder.decode(T.self, from: $0) }, completion: completion)
 	}
 
 	/**
@@ -39,7 +39,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler?) -> URLSessionDataTask? {
-		dataTask(for: request, transformer: JSONSerialization.transformer(options: options), completion: completion)
+    dataTask(for: request, transformer: { try JSONSerialization.jsonObject(with: $0, options: options) }, completion: completion)
 	}
 
 	/**
