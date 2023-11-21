@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "http-types",
+        "package": "swift-http-types",
         "repositoryURL": "https://github.com/apple/swift-http-types.git",
         "state": {
           "branch": null,
-          "revision": "68deedb6b98837564cf0231fa1df48de35881993",
-          "version": "0.2.1"
+          "revision": "99d066e29effa8845e4761dd3f2f831edfdf8925",
+          "version": "1.0.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/wmalloc/URLRequestable.git",
         "state": {
           "branch": null,
-          "revision": "206a31ba2cc55ae2f6b641af0f64295be77e92e4",
-          "version": "0.4.1"
+          "revision": "99ef843f9bf5a8f24b9e90069a3906fd3015ff1e",
+          "version": "0.5.0"
         }
       }
     ]

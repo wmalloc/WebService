@@ -9,7 +9,7 @@ import Foundation
 import HTTPTypes
 import URLRequestable
 
-open class WebService: URLRequestTransferable {
+open class WebService: URLTransferable {
 	public let session: URLSession
 
 	public static var sessionConfiguration: URLSessionConfiguration = {

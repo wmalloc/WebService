@@ -13,11 +13,11 @@ import WebService
 @available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
 	func dataPublisher(for url: URL) -> AnyPublisher<Data, Error> {
-		dataPublisher(for: URLRequest(url: url), transformer: { $0.data })
+		dataPublisher(for: URLRequest(url: url), transformer: { $0 })
 	}
 
 	func dataPublisher(for request: URLRequest) -> AnyPublisher<Data, Error> {
-		dataPublisher(for: request, transformer: { $0.data })
+		dataPublisher(for: request, transformer: { $0 })
 	}
 
 	func decodablePublisher<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<ObjectType, Error> {
@@ -27,7 +27,7 @@ public extension WebService {
 	}
 
 	func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
-		dataPublisher(for: request, transformer: JSONSerialization.transformer(options: options))
+    dataPublisher(for: request, transformer: { try JSONSerialization.jsonObject(with: $0, options: options) })
 	}
 
 	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<URLDataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
