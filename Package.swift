@@ -8,22 +8,24 @@ let package = Package(
     defaultLocalization: "en",
     platforms: [.iOS(.v13), .tvOS(.v13), .macOS(.v10_15), .watchOS(.v6), .macCatalyst(.v13)],
     products: [
-        // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(name: "WebService", targets: ["WebService"]),
         .library(name: "WebServiceCombine", targets: ["WebServiceCombine"]),
         .library(name: "WebServiceConcurrency", targets: ["WebServiceConcurrency"]),
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.0"),
+        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.1"),
+        .package(url: "https://github.com/realm/SwiftLint.git", from: "0.54.0")
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages which this package depends on.
-        .target(name: "WebService", dependencies: ["URLRequestable"], path: "Sources/Core"),
-        .target(name: "WebServiceCombine", dependencies: ["WebService", "URLRequestable"], path: "Sources/Combine"),
-        .target(name: "WebServiceConcurrency", dependencies: ["WebService", "URLRequestable"], path: "Sources/Concurrency"),
-        .target(name: "WebServiceURLMock", dependencies: ["WebService"], path: "Sources/URLMock"),
+        .target(name: "WebService", dependencies: ["URLRequestable"], path: "Sources/Core",
+                plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
+        .target(name: "WebServiceCombine", dependencies: ["WebService", "URLRequestable"], path: "Sources/Combine",
+                plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
+        .target(name: "WebServiceConcurrency", dependencies: ["WebService", "URLRequestable"], path: "Sources/Concurrency",
+                plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
+        .target(name: "WebServiceURLMock", dependencies: ["WebService"], path: "Sources/URLMock",
+               plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
         .testTarget(
             name: "WebServiceTests",
             dependencies: ["URLRequestable", "WebService", "WebServiceCombine", "WebServiceConcurrency", "WebServiceURLMock"],
