@@ -9,6 +9,6 @@ import Foundation
 import os.log
 
 extension OSLog {
-	private static let subsystem = "net.crimsonresearch.WebService"
+	private static let subsystem = "com.waqarmalik.WebService"
 	static let tests = OSLog(subsystem: subsystem, category: "WebServiceTests")
 }
