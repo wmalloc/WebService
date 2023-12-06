@@ -14,23 +14,20 @@ let package = Package(
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.1"),
-        .package(url: "https://github.com/realm/SwiftLint.git", from: "0.54.0")
-    ],
+        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.3"),
+     ],
     targets: [
-        .target(name: "WebService", dependencies: ["URLRequestable"], path: "Sources/Core",
-                plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
-        .target(name: "WebServiceCombine", dependencies: ["WebService", "URLRequestable"], path: "Sources/Combine",
-                plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
-        .target(name: "WebServiceConcurrency", dependencies: ["WebService", "URLRequestable"], path: "Sources/Concurrency",
-                plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
-        .target(name: "WebServiceURLMock", dependencies: ["WebService"], path: "Sources/URLMock",
-               plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
-        .testTarget(
-            name: "WebServiceTests",
-            dependencies: ["URLRequestable", "WebService", "WebServiceCombine", "WebServiceConcurrency", "WebServiceURLMock"],
-            path: "Tests/WebServiceTests",
-            resources: [.copy("TestData")]
-        ),
+        .target(name: "WebService", dependencies: ["URLRequestable"],
+                path: "Sources/Core"),
+        .target(name: "WebServiceCombine", dependencies: ["WebService", "URLRequestable"],
+                path: "Sources/Combine"),
+        .target(name: "WebServiceConcurrency", dependencies: ["WebService", "URLRequestable"],
+                path: "Sources/Concurrency"),
+        .target(name: "WebServiceURLMock", dependencies: ["WebService"],
+                path: "Sources/URLMock"),
+        .testTarget(name: "WebServiceTests", dependencies: ["URLRequestable", "WebService", "WebServiceCombine", "WebServiceConcurrency", "WebServiceURLMock"],
+                    path: "Tests/WebServiceTests",
+                    resources: [.copy("TestData")]
+                   ),
     ]
 )
