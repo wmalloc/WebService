@@ -14,8 +14,8 @@ let package = Package(
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.3"),
-     ],
+        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.4"),
+    ],
     targets: [
         .target(name: "WebService", dependencies: ["URLRequestable"],
                 path: "Sources/Core"),
