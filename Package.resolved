@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-types.git",
       "state" : {
-        "revision" : "1827dc94bdab2eb5f2fc804e9b0cb43574282566",
-        "version" : "1.0.2"
+        "revision" : "12358d55a3824bd5fed310b999ea8cf83a9a1a65",
+        "version" : "1.0.3"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/wmalloc/URLRequestable.git",
       "state" : {
-        "revision" : "857760e039343a74a0425010f6f2d1b7f6a3b433",
-        "version" : "0.5.3"
+        "revision" : "5b9ab926e7bba901d3264356157e4d66f1b69345",
+        "version" : "0.5.4"
       }
     }
   ],
