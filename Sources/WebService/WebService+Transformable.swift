@@ -6,12 +6,17 @@
 //
 
 import Foundation
+import HTTPTypes
 import URLRequestable
+
+public typealias DecodableHandler<T: Decodable> = (Result<T, Error>) -> Void
+public typealias SerializableHandler = (Result<Any, Error>) -> Void
+public typealias ErrorHandler = (Error?) -> Void
 
 public extension WebService {
 	@discardableResult
 	func dataTask(with request: URLRequest, completion: DataHandler<Data>?) -> URLSessionDataTask? {
-		dataTask(for: request, transformer: { $0 }, completion: completion)
+		dataTask(for: request, transformer: { data, _ in data }, completion: completion)
 	}
 
 	/**
@@ -25,7 +30,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodableHandler<T>?) -> URLSessionDataTask? {
-    dataTask(for: request, transformer: { try decoder.decode(T.self, from: $0) }, completion: completion)
+		dataTask(for: request, transformer: { data, _ in try decoder.decode(T.self, from: data) }, completion: completion)
 	}
 
 	/**
@@ -39,7 +44,7 @@ public extension WebService {
 	 */
 	@discardableResult
 	func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler?) -> URLSessionDataTask? {
-    dataTask(for: request, transformer: { try JSONSerialization.jsonObject(with: $0, options: options) }, completion: completion)
+		dataTask(for: request, transformer: { data, _ in try JSONSerialization.jsonObject(with: data, options: options) }, completion: completion)
 	}
 
 	/**
@@ -53,7 +58,7 @@ public extension WebService {
 	 - returns: URLSessionDataTask
 	 */
 	@discardableResult
-	func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<URLDataResponse, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
+	func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<Data, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
 		let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
 			if let error {
 				completion?(.failure(error))
@@ -65,8 +70,9 @@ public extension WebService {
 				return
 			}
 			do {
+				let httpResponse = try urlResponse.httpResponse
 				try urlResponse.url_validate()
-				let mapped = try transformer((data, urlResponse))
+				let mapped = try transformer(data, httpResponse)
 				completion?(.success(mapped))
 			} catch {
 				completion?(.failure(error))

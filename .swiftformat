@@ -1,5 +1,5 @@
---exclude Pods, Package.swift
---swiftversion 5.5.1
+--exclude Pods,Package.swift,.builds
+--swiftversion 5.9
 --binarygrouping none
 --decimalgrouping none
 --hexgrouping none
@@ -9,6 +9,6 @@
 --patternlet inline
 --self init-only
 --stripunusedargs closure-only
---tabwidth 4
+--tabwidth 2
 
 # rules

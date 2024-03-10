@@ -1,5 +1,5 @@
 //
-//  WebService+Convenience.swift
+//  WebService+Combine.swift
 //
 //  Created by Waqar Malik on 6/16/21.
 //  Copyright © 2020 Waqar Malik All rights reserved.
@@ -10,14 +10,13 @@ import Foundation
 import URLRequestable
 import WebService
 
-@available(macOS 10.15, iOS 13, tvOS 13, macCatalyst 13, watchOS 6, *)
 public extension WebService {
 	func dataPublisher(for url: URL) -> AnyPublisher<Data, Error> {
-		dataPublisher(for: URLRequest(url: url), transformer: { $0 })
+		dataPublisher(for: URLRequest(url: url), transformer: { data, _ in data })
 	}
 
 	func dataPublisher(for request: URLRequest) -> AnyPublisher<Data, Error> {
-		dataPublisher(for: request, transformer: { $0 })
+		dataPublisher(for: request, transformer: { data, _ in data })
 	}
 
 	func decodablePublisher<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<ObjectType, Error> {
@@ -27,10 +26,10 @@ public extension WebService {
 	}
 
 	func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, Error> {
-    dataPublisher(for: request, transformer: { try JSONSerialization.jsonObject(with: $0, options: options) })
+		dataPublisher(for: request, transformer: { data, _ in try JSONSerialization.jsonObject(with: data, options: options) })
 	}
 
-	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<URLDataResponse, ObjectType>) -> AnyPublisher<ObjectType, Error> {
+	func uploadPublisher<ObjectType>(for request: URLRequest, fromFile file: URL, transform: @escaping Transformer<Data, ObjectType>) -> AnyPublisher<ObjectType, Error> {
 		var sessionDataTask: URLSessionDataTask?
 		let receiveCancel = { sessionDataTask?.cancel() }
 		return Future { [weak self] promise in

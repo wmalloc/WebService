@@ -6,28 +6,18 @@ import PackageDescription
 let package = Package(
     name: "WebService",
     defaultLocalization: "en",
-    platforms: [.iOS(.v13), .tvOS(.v13), .macOS(.v10_15), .watchOS(.v6), .macCatalyst(.v13)],
+    platforms: [.iOS(.v15), .tvOS(.v15), .macOS(.v11), .watchOS(.v8), .macCatalyst(.v15)],
     products: [
         .library(name: "WebService", targets: ["WebService"]),
-        .library(name: "WebServiceCombine", targets: ["WebServiceCombine"]),
-        .library(name: "WebServiceConcurrency", targets: ["WebServiceConcurrency"]),
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.4"),
+        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.5.5"),
     ],
     targets: [
-        .target(name: "WebService", dependencies: ["URLRequestable"],
-                path: "Sources/Core"),
-        .target(name: "WebServiceCombine", dependencies: ["WebService", "URLRequestable"],
-                path: "Sources/Combine"),
-        .target(name: "WebServiceConcurrency", dependencies: ["WebService", "URLRequestable"],
-                path: "Sources/Concurrency"),
-        .target(name: "WebServiceURLMock", dependencies: ["WebService"],
-                path: "Sources/URLMock"),
-        .testTarget(name: "WebServiceTests", dependencies: ["URLRequestable", "WebService", "WebServiceCombine", "WebServiceConcurrency", "WebServiceURLMock"],
-                    path: "Tests/WebServiceTests",
-                    resources: [.copy("TestData")]
-                   ),
+        .target(name: "WebService", dependencies: ["URLRequestable"]),
+        .target(name: "WebServiceURLMock", dependencies: ["WebService"]),
+        .testTarget(name: "WebServiceTests", dependencies: ["URLRequestable", "WebService", "WebServiceURLMock"],
+                    resources: [.copy("TestData")]),
     ]
 )
