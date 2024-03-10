@@ -11,24 +11,22 @@ import HTTPTypes
 import OSLog
 import URLRequestable
 @testable import WebService
-@testable import WebServiceCombine
-@testable import WebServiceConcurrency
 @testable import WebServiceURLMock
 import XCTest
 
 final class WebServiceTests: XCTestCase {
-  static let baseURLString = "http://localhost:8080"
-  static let baseURL = URL(string: "http://localhost:8080")!
-  
-  static let allTests: [Any] = {
-    var tests: [Any] = [("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse), ("testNetworkFailure", testNetworkFailure)]
-    
-    if #available(iOS 15, *) {
-      tests.append(contentsOf: [("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable), ("testAsyncSerializable", testAsyncSerializable)])
-    }
-    return tests
-  }()
-  
+	static let baseURLString = "http://localhost:8080"
+	static let baseURL = URL(string: "http://localhost:8080")!
+
+	static let allTests: [Any] = {
+		var tests: [Any] = [("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse), ("testNetworkFailure", testNetworkFailure)]
+
+		if #available(iOS 15, *) {
+			tests.append(contentsOf: [("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable), ("testAsyncSerializable", testAsyncSerializable)])
+		}
+		return tests
+	}()
+
 	let testTimeout: TimeInterval = 1
 	var webService: WebService!
 
@@ -131,7 +129,7 @@ final class WebServiceTests: XCTestCase {
 		invalidTest.cancellable?.cancel()
 	}
 
-	func evalValidResponseTest<P: Publisher>(publisher: P?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
+	func evalValidResponseTest(publisher: (some Publisher)?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
 		XCTAssertNotNil(publisher)
 
 		let finished = expectation(description: "Finished")
@@ -148,7 +146,7 @@ final class WebServiceTests: XCTestCase {
 		return (expectations: [finished], cancellable: cancellable)
 	}
 
-	func evalInvalidResponseTest<P: Publisher>(publisher: P?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
+	func evalInvalidResponseTest(publisher: (some Publisher)?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
 		XCTAssertNotNil(publisher)
 
 		let finished = expectation(description: "Finsihed")
@@ -170,8 +168,8 @@ final class WebServiceTests: XCTestCase {
 }
 
 extension WebServiceTests {
-  @available(iOS 15, *)
-  func testAsync() async throws {
+	@available(iOS 15, *)
+	func testAsync() async throws {
 		let request = URLRequest(url: Self.baseURL)
 		let requestURL = request.url
 		XCTAssertNotNil(requestURL)
@@ -197,8 +195,8 @@ extension WebServiceTests {
 		XCTAssertEqual(decoded["key3"], nil)
 	}
 
-  @available(iOS 15, *)
-  func testAsyncDecodable() async throws {
+	@available(iOS 15, *)
+	func testAsyncDecodable() async throws {
 		let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
 		XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
@@ -220,8 +218,8 @@ extension WebServiceTests {
 		XCTAssertEqual(decoded["key3"], nil)
 	}
 
-  @available(iOS 15, *)
-  func testAsyncSerializable() async throws {
+	@available(iOS 15, *)
+	func testAsyncSerializable() async throws {
 		let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
 		XCTAssertNotNil(data)
 		let request = URLRequest(url: Self.baseURL)
