@@ -21,13 +21,12 @@ public class URLProtocolMock: URLProtocol {
       fatalError("missing client")
     }
 
-
     let validCodes = Set(200 ..< 300)
     do {
       guard let url = request.url, let handler = Self.requestHandlers.removeValue(forKey: url) else {
         throw URLError(.badURL)
       }
-      
+
       let (response, data) = try handler(request)
       if !validCodes.contains(response.statusCode) {
         throw URLError(URLError.Code(rawValue: response.statusCode))

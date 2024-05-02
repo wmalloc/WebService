@@ -4,7 +4,7 @@
 --decimalgrouping none
 --hexgrouping none
 --ifdef no-indent
---indent tab
+--indent 2
 --octalgrouping none
 --patternlet inline
 --self init-only

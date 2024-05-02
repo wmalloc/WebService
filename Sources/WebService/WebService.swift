@@ -9,17 +9,17 @@ import Foundation
 import HTTPTypes
 import URLRequestable
 
-open class WebService: URLTransferable {
-	public let session: URLSession
+open class WebService: HTTPTransferable {
+  public let session: URLSession
 
-	public static var sessionConfiguration: URLSessionConfiguration = {
-		var config = URLSessionConfiguration.default
-		config.headers = HTTPFields.defaultHeaders
-		config.requestCachePolicy = .useProtocolCachePolicy
-		return config
-	}()
+  public static var sessionConfiguration: URLSessionConfiguration = {
+    var config = URLSessionConfiguration.default
+    config.httpFields = HTTPFields.defaultHeaders
+    config.requestCachePolicy = .useProtocolCachePolicy
+    return config
+  }()
 
-	public required init(session: URLSession = .shared) {
-		self.session = session
-	}
+  public required init(session: URLSession = .shared) {
+    self.session = session
+  }
 }
