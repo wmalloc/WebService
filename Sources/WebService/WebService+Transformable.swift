@@ -6,8 +6,8 @@
 //
 
 import Foundation
+import HTTPRequestable
 import HTTPTypes
-import URLRequestable
 
 public typealias DecodableHandler<T: Decodable> = (Result<T, Error>) -> Void
 public typealias SerializableHandler = (Result<Any, Error>) -> Void

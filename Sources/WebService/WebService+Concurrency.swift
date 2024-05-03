@@ -6,11 +6,10 @@
 //
 
 import Foundation
+import HTTPRequestable
 import HTTPTypes
 import HTTPTypesFoundation
 import os.log
-import URLRequestable
-import WebService
 
 public extension WebService {
   func data(from url: URL, delegate: (any URLSessionTaskDelegate)? = nil) async throws -> (Data, HTTPURLResponse) {
