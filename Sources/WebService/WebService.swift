@@ -6,8 +6,8 @@
 //
 
 import Foundation
+import HTTPRequestable
 import HTTPTypes
-import URLRequestable
 
 open class WebService: HTTPTransferable {
   public let session: URLSession

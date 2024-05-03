@@ -7,8 +7,7 @@
 
 import Combine
 import Foundation
-import URLRequestable
-import WebService
+import HTTPRequestable
 
 public extension WebService {
   func dataPublisher(for url: URL) -> AnyPublisher<Data, Error> {

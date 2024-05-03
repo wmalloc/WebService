@@ -12,12 +12,12 @@ let package = Package(
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/wmalloc/URLRequestable.git", from: "0.6.0"),
+        .package(url: "https://github.com/wmalloc/HTTPRequestable.git", from: "0.7.0"),
     ],
     targets: [
-        .target(name: "WebService", dependencies: ["URLRequestable"]),
+        .target(name: "WebService", dependencies: ["HTTPRequestable"]),
         .target(name: "WebServiceURLMock", dependencies: ["WebService"]),
-        .testTarget(name: "WebServiceTests", dependencies: ["URLRequestable", "WebService", "WebServiceURLMock"],
+        .testTarget(name: "WebServiceTests", dependencies: ["HTTPRequestable", "WebService", "WebServiceURLMock"],
                     resources: [.copy("TestData")]),
     ]
 )
