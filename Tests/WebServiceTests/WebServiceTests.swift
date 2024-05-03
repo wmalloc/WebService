@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import HTTPTypes
 import OSLog
-import URLRequestable
+import HTTPRequestable
 @testable import WebService
 @testable import WebServiceURLMock
 import XCTest

@@ -9,7 +9,7 @@ import Foundation
 import HTTPTypes
 import HTTPTypesFoundation
 import os.log
-import URLRequestable
+import HTTPRequestable
 
 public extension WebService {
   func data(from url: URL, delegate: (any URLSessionTaskDelegate)? = nil) async throws -> (Data, HTTPURLResponse) {
