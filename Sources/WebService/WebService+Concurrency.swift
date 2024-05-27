@@ -11,6 +11,7 @@ import HTTPTypes
 import HTTPTypesFoundation
 import os.log
 
+
 public extension WebService {
   func data(from url: URL, delegate: (any URLSessionTaskDelegate)? = nil) async throws -> (Data, HTTPURLResponse) {
     let (data, response) = try await session.data(from: url, delegate: delegate)

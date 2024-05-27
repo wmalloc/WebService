@@ -1,5 +1,4 @@
 // swift-tools-version:5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -12,10 +11,10 @@ let package = Package(
         .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/wmalloc/HTTPRequestable.git", from: "0.7.0"),
+        .package(url: "https://github.com/wmalloc/HTTPRequestable.git", from: "0.7.2"),
     ],
     targets: [
-        .target(name: "WebService", dependencies: ["HTTPRequestable"]),
+        .target(name: "WebService", dependencies: ["HTTPRequestable"], swiftSettings: []),
         .target(name: "WebServiceURLMock", dependencies: ["WebService"]),
         .testTarget(name: "WebServiceTests", dependencies: ["HTTPRequestable", "WebService", "WebServiceURLMock"],
                     resources: [.copy("TestData")]),
