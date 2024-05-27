@@ -9,9 +9,9 @@ import Foundation
 import HTTPRequestable
 import HTTPTypes
 
-public typealias DecodableHandler<T: Decodable> = (Result<T, Error>) -> Void
-public typealias SerializableHandler = (Result<Any, Error>) -> Void
-public typealias ErrorHandler = (Error?) -> Void
+public typealias DecodableHandler<T: Decodable> = @Sendable (Result<T, any Error>) -> Void
+public typealias SerializableHandler = @Sendable (Result<Any, any Error>) -> Void
+public typealias ErrorHandler = @Sendable ((any Error)?) -> Void
 
 public extension WebService {
   @discardableResult
