@@ -1,7 +1,16 @@
 // swift-tools-version:5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+
+let swiftSettings: [SwiftSetting] = [
+  .enableUpcomingFeature("BareSlashRegexLiterals"),
+  .enableUpcomingFeature("ConciseMagicFile"),
+  .enableUpcomingFeature("ExistentialAny"),
+  .enableUpcomingFeature("ForwardTrailingClosures"),
+  .enableUpcomingFeature("ImplicitOpenExistentials"),
+  .enableUpcomingFeature("StrictConcurrency"),
+  .unsafeFlags(["-warn-concurrency", "-enable-actor-data-race-checks"]),
+]
 
 let package = Package(
     name: "WebService",
@@ -15,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/wmalloc/HTTPRequestable.git", from: "0.7.0"),
     ],
     targets: [
-        .target(name: "WebService", dependencies: ["HTTPRequestable"]),
+        .target(name: "WebService", dependencies: ["HTTPRequestable"], swiftSettings: swiftSettings),
         .target(name: "WebServiceURLMock", dependencies: ["WebService"]),
         .testTarget(name: "WebServiceTests", dependencies: ["HTTPRequestable", "WebService", "WebServiceURLMock"],
                     resources: [.copy("TestData")]),
