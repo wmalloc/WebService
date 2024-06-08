@@ -1,8 +1,7 @@
 //
 //  OSLog+Tests.swift
 //
-//  Created by Waqar Malik on 6/21/20.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 6/21/20
 //
 
 import Foundation

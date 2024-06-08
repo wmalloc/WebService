@@ -1,8 +1,7 @@
 //
 //  Bundle+LoadData.swift
 //
-//  Created by Waqar Malik on 3/4/22.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 3/4/22
 //
 
 import Foundation
@@ -12,7 +11,6 @@ public extension Bundle {
     guard let url = url(forResource: forResource, withExtension: withExtension, subdirectory: subdirectory) else {
       throw URLError(.fileDoesNotExist)
     }
-    let data = try Data(contentsOf: url, options: [.mappedIfSafe])
-    return data
+    return try Data(contentsOf: url, options: [.mappedIfSafe])
   }
 }

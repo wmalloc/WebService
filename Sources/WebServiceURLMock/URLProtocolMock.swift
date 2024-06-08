@@ -1,8 +1,7 @@
 //
 //  URLProtocolMock.swift
 //
-//  Created by Waqar Malik on 6/21/20.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 6/21/20
 //
 
 import Foundation
@@ -10,6 +9,7 @@ import XCTest
 
 public class URLProtocolMock: URLProtocol {
   public typealias RequestHandler = (URLRequest) throws -> (HTTPURLResponse, Data?)
+
   public static var requestHandlers: [URL: RequestHandler] = [:]
 
   override public class func canInit(with _: URLRequest) -> Bool { true }

@@ -1,8 +1,7 @@
 //
 //  WebService+Combine.swift
 //
-//  Created by Waqar Malik on 6/16/21.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 6/16/21
 //
 
 import Combine
