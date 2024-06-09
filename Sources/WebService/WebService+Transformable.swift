@@ -1,8 +1,7 @@
 //
 //  WebService+Transformable.swift
 //
-//  Created by Waqar Malik on 3/1/22.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 3/1/22
 //
 
 import Foundation
@@ -15,7 +14,7 @@ public typealias ErrorHandler = @Sendable ((any Error)?) -> Void
 
 public extension WebService {
   @discardableResult
-  func dataTask(with request: URLRequest, completion: DataHandler<Data>?) -> URLSessionDataTask? {
+  func dataTask(with request: URLRequest, completion: DataHandler<Data>? = nil) -> URLSessionDataTask? {
     dataTask(for: request, transformer: { data, _ in data }, completion: completion)
   }
 
@@ -29,7 +28,7 @@ public extension WebService {
    - returns: URLSessionDataTask
    */
   @discardableResult
-  func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodableHandler<T>?) -> URLSessionDataTask? {
+  func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodableHandler<T>? = nil) -> URLSessionDataTask? {
     dataTask(for: request, transformer: { data, _ in try decoder.decode(T.self, from: data) }, completion: completion)
   }
 
@@ -43,7 +42,7 @@ public extension WebService {
    - returns: URLSessionDataTask
    */
   @discardableResult
-  func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler?) -> URLSessionDataTask? {
+  func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler? = nil) -> URLSessionDataTask? {
     dataTask(for: request, transformer: { data, _ in try JSONSerialization.jsonObject(with: data, options: options) }, completion: completion)
   }
 
@@ -58,7 +57,7 @@ public extension WebService {
    - returns: URLSessionDataTask
    */
   @discardableResult
-  func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<Data, T>, completion: DataHandler<T>?) -> URLSessionDataTask? {
+  func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<Data, T>, completion: DataHandler<T>? = nil) -> URLSessionDataTask? {
     let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
       if let error {
         completion?(.failure(error))

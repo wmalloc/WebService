@@ -1,8 +1,7 @@
 //
 //  WebService.swift
 //
-//  Created by Waqar Malik on 4/28/20.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 4/28/20
 //
 
 import Foundation

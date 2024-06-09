@@ -1,14 +1,13 @@
---exclude Pods,Package.swift,.builds
+--exclude Pods,Package.swift,.builds,.switpm,Carthage
 --swiftversion 5.9
 --binarygrouping none
 --decimalgrouping none
 --hexgrouping none
 --ifdef no-indent
---indent 2
 --octalgrouping none
 --patternlet inline
 --self init-only
 --stripunusedargs closure-only
 --tabwidth 2
-
+--indent 2
 # rules
