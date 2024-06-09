@@ -1,8 +1,7 @@
 //
 //  WebService+Concurrency
 //
-//  Created by Waqar Malik on 6/25/21.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 6/25/21
 //
 
 import Foundation
@@ -10,7 +9,6 @@ import HTTPRequestable
 import HTTPTypes
 import HTTPTypesFoundation
 import os.log
-
 
 public extension WebService {
   func data(from url: URL, delegate: (any URLSessionTaskDelegate)? = nil) async throws -> (Data, HTTPURLResponse) {

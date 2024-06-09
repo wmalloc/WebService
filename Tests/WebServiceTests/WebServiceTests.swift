@@ -1,8 +1,7 @@
 //
 //  WebServiceTests.swift
 //
-//  Created by Waqar Malik on 4/28/20.
-//  Copyright © 2020 Waqar Malik All rights reserved.
+//  Created by Waqar Malik on 4/28/20
 //
 
 import Combine
@@ -10,34 +9,37 @@ import Foundation
 import HTTPRequestable
 import HTTPTypes
 import OSLog
+
 @testable import WebService
 @testable import WebServiceURLMock
 import XCTest
 
 final class WebServiceTests: XCTestCase {
-  static let baseURLString = "http://localhost:8080"
-  static let baseURL = URL(string: "http://localhost:8080")!
+  private static let baseURLString = "http://localhost:8080"
+  private static let baseURL = URL(string: "http://localhost:8080")!
 
   static let allTests: [Any] = {
-    var tests: [Any] = [("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse), ("testNetworkFailure", testNetworkFailure)]
+    var tests: [Any] = [("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse),
+                        ("testNetworkFailure", testNetworkFailure)]
 
     if #available(iOS 15, *) {
-      tests.append(contentsOf: [("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable), ("testAsyncSerializable", testAsyncSerializable)])
+      tests.append(contentsOf: [("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable),
+                                ("testAsyncSerializable", testAsyncSerializable)])
     }
     return tests
   }()
 
-  let testTimeout: TimeInterval = 1
-  var webService: WebService!
+  private let testTimeout: TimeInterval = 1
+  private var webService: WebService!
 
-  enum Response {
+  private enum Response {
     static let invalid = URLResponse(url: WebServiceTests.baseURL, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     static let valid = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
     static let invalid300 = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 300, httpVersion: nil, headerFields: nil)!
     static let invalid401 = HTTPURLResponse(url: WebServiceTests.baseURL, statusCode: 401, httpVersion: nil, headerFields: nil)!
   }
 
-  let networkError = NSError(domain: "NSURLErrorDomain", code: -1004, /* kCFURLErrorCannotConnectToHost*/ userInfo: nil)
+  private let networkError = NSError(domain: "NSURLErrorDomain", code: -1004, /* kCFURLErrorCannotConnectToHost*/ userInfo: nil)
 
   override func setUpWithError() throws {
     let config = URLSessionConfiguration.ephemeral
@@ -129,7 +131,7 @@ final class WebServiceTests: XCTestCase {
     invalidTest.cancellable?.cancel()
   }
 
-  func evalValidResponseTest(publisher: (some Publisher)?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
+  private func evalValidResponseTest(publisher: (some Publisher)?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
     XCTAssertNotNil(publisher)
 
     let finished = expectation(description: "Finished")
@@ -146,7 +148,7 @@ final class WebServiceTests: XCTestCase {
     return (expectations: [finished], cancellable: cancellable)
   }
 
-  func evalInvalidResponseTest(publisher: (some Publisher)?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
+  private func evalInvalidResponseTest(publisher: (some Publisher)?) -> (expectations: [XCTestExpectation], cancellable: AnyCancellable?) {
     XCTAssertNotNil(publisher)
 
     let finished = expectation(description: "Finsihed")
@@ -155,6 +157,7 @@ final class WebServiceTests: XCTestCase {
       switch completion {
       case .failure(let error):
         os_log(.error, log: OSLog.tests, "TEST FULFILLED %@", error.localizedDescription)
+
       case .finished:
         XCTFail("Result should be error")
       }
