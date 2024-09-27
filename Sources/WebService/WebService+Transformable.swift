@@ -70,7 +70,6 @@ public extension WebService {
       }
       do {
         let httpResponse = try urlResponse.httpURLResponse
-        try urlResponse.url_validate()
         let mapped = try transformer(data, httpResponse)
         completion?(.success(mapped))
       } catch {

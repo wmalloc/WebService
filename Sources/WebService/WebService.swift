@@ -11,7 +11,7 @@ import HTTPTypes
 open class WebService: HTTPTransferable, @unchecked Sendable {
   public var requestInterceptors: [any RequestInterceptor] = []
   public var responseInterceptors: [any ResponseInterceptor] = []
-  
+
   public let session: URLSession
 
   public static var sessionConfiguration: URLSessionConfiguration {
