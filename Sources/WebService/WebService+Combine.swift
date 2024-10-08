@@ -41,3 +41,28 @@ public extension WebService {
     .eraseToAnyPublisher()
   }
 }
+
+public extension HTTPTransferable {
+  func dataPublisher<ObjectType>(for request: URLRequest, transformer: @escaping Transformer<Data, ObjectType>) -> AnyPublisher<ObjectType, any Error> {
+    return session.dataTaskPublisher(for: request)
+      .tryMap { result -> URLSession.DataTaskPublisher.Output in
+        let httpURLResponse = try result.response.httpURLResponse
+        return (result.data, httpURLResponse)
+      }
+      .tryMap { result -> ObjectType in
+        let httpURLResponse = try result.response.httpURLResponse
+        try result.data.url_validateNotEmptyData()
+        return try transformer(result.data, httpURLResponse)
+      }
+      .eraseToAnyPublisher()
+  }
+  
+  func dataPublisher<Route: HTTPRequestable>(for route: Route) -> AnyPublisher<Route.ResultType, any Error> {
+    guard let urlRequest = try? route.urlRequest else {
+      return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
+    }
+    
+    return dataPublisher(for: urlRequest, transformer: route.responseTransformer)
+  }
+}
+
