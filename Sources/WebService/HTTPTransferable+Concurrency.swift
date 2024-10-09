@@ -10,7 +10,7 @@ import HTTPTypes
 import HTTPTypesFoundation
 import os.log
 
-public extension WebService {
+public extension HTTPTransferable {
   func data(from url: URL, delegate: (any URLSessionTaskDelegate)? = nil) async throws -> (Data, HTTPURLResponse) {
     let (data, response) = try await session.data(from: url, delegate: delegate)
     return try (data, response.httpURLResponse)
