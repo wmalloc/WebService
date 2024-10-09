@@ -1,5 +1,5 @@
 //
-//  WebService+Transformable.swift
+//  HTTPTransferable+Transformable.swift
 //
 //  Created by Waqar Malik on 3/1/22
 //
@@ -21,7 +21,7 @@ public extension HTTPTransferable {
         completion?(.failure(error))
         return
       }
-      
+
       guard let data else {
         completion?(.failure(URLError(.fileDoesNotExist)))
         return
@@ -37,7 +37,7 @@ public extension HTTPTransferable {
     dataTask.resume()
     return dataTask
   }
-  
+
   @discardableResult
   func dataTask<Route: HTTPRequestable>(for route: Route, completion: DataHandler<Route.ResultType>?) -> URLSessionDataTask? {
     guard let urlRequest = try? route.urlRequest else {

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import HTTPTypes
 import HTTPRequestable
+import HTTPTypes
 
 class WebService: HTTPTransferable, @unchecked Sendable {
   var requestInterceptors: [any RequestInterceptor] = []

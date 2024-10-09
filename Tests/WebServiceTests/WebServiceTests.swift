@@ -10,25 +10,14 @@ import HTTPRequestable
 import HTTPTypes
 import OSLog
 
+import MockURLProtocol
 @testable import WebService
 import XCTest
-import MockURLProtocol
 
-final class WebServiceTests: XCTestCase {
+final class WebServiceTests: XCTestCase, @unchecked Sendable {
   private static let baseURLString = "http://localhost:8080"
   private static let baseURL = URL(string: "http://localhost:8080")!
-
-  static let allTests: [Any] = {
-    var tests: [Any] = [("testInvalidResponse", testInvalidResponse), ("testValidDataResponse", testValidDataResponse),
-                        ("testNetworkFailure", testNetworkFailure)]
-
-    if #available(iOS 15, *) {
-      tests.append(contentsOf: [("testAsync", testAsync), ("testAsyncDecodable", testAsyncDecodable),
-                                ("testAsyncSerializable", testAsyncSerializable)])
-    }
-    return tests
-  }()
-
+  
   private let testTimeout: TimeInterval = 1
   private var webService: WebService!
 
