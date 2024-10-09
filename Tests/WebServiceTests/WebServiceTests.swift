@@ -17,7 +17,7 @@ import XCTest
 final class WebServiceTests: XCTestCase, @unchecked Sendable {
   private static let baseURLString = "http://localhost:8080"
   private static let baseURL = URL(string: "http://localhost:8080")!
-  
+
   private let testTimeout: TimeInterval = 1
   private var webService: WebService!
 

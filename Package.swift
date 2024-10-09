@@ -8,7 +8,6 @@ let package = Package(
   platforms: [.iOS(.v16), .tvOS(.v16), .macOS(.v12), .watchOS(.v9), .macCatalyst(.v16), .visionOS(.v1)],
   products: [
     .library(name: "WebService", targets: ["WebService"])
-    .library(name: "WebServiceURLMock", targets: ["WebServiceURLMock"])
   ],
   dependencies: [
     .package(url: "https://github.com/wmalloc/HTTPRequestable.git", from: "0.8.0")

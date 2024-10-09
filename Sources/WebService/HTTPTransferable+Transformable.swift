@@ -115,37 +115,3 @@ public extension HTTPTransferable {
     return uploadTask
   }
 }
-
-public extension HTTPTransferable {
-  @discardableResult
-  func dataTask<ObjectType>(for request: URLRequest, transformer: @escaping Transformer<Data, ObjectType>, completion: DataHandler<ObjectType>?) -> URLSessionDataTask? {
-    let dataTask = session.dataTask(with: request) { data, urlResponse, error in
-      if let error {
-        completion?(.failure(error))
-        return
-      }
-      
-      guard let data else {
-        completion?(.failure(URLError(.fileDoesNotExist)))
-        return
-      }
-      do {
-        let httpURLResponse = try urlResponse?.httpURLResponse
-        let mapped = try transformer(data, httpURLResponse)
-        completion?(.success(mapped))
-      } catch {
-        completion?(.failure(error))
-      }
-    }
-    dataTask.resume()
-    return dataTask
-  }
-  
-  @discardableResult
-  func dataTask<Route: HTTPRequestable>(for route: Route, completion: DataHandler<Route.ResultType>?) -> URLSessionDataTask? {
-     guard let urlRequest = try? route.urlRequest else {
-      return nil
-    }
-    return dataTask(for: urlRequest, transformer: route.responseTransformer, completion: completion)
-  }
-}
