@@ -11,32 +11,36 @@ import HTTPTypesFoundation
 import os.log
 
 public extension HTTPTransferable {
+  @inlinable
   func data(from url: URL, delegate: (any URLSessionTaskDelegate)? = nil) async throws -> (Data, HTTPURLResponse) {
-    let (data, response) = try await session.data(from: url, delegate: delegate)
-    return try (data, response.httpURLResponse)
+    try await data(for: URLRequest(url: url), delegate: delegate)
   }
 
-  func data(for request: URLRequest, delegate: (any URLSessionTaskDelegate)? = nil) async throws -> (Data, HTTPURLResponse) {
-    let (data, response) = try await session.data(for: request, delegate: delegate)
-    return try (data, response.httpURLResponse)
+  @inlinable
+  func data<ObjectType>(for request: URLRequest, transformer: @escaping Transformer<Data, ObjectType>) async throws -> ObjectType {
+    try await object(for: request, transformer: transformer, delegate: nil)
   }
 
-  func data<ObjectType>(for request: URLRequest, transformer: Transformer<Data, ObjectType>) async throws -> ObjectType {
-    let (data, response) = try await data(for: request)
-    return try transformer(data, response)
-  }
-
+  @inlinable
   func decodable<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> ObjectType {
-    try await data(for: request, transformer: { data, _ in try decoder.decode(ObjectType.self, from: data) })
+    try await object(for: request, transformer: { data, _ in try decoder.decode(ObjectType.self, from: data) }, delegate: nil)
   }
 
+  @inlinable
   func serializable(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) async throws -> Any {
-    try await data(for: request, transformer: { data, _ in try JSONSerialization.jsonObject(with: data, options: options) })
+    try await object(for: request, transformer: { data, _ in try JSONSerialization.jsonObject(with: data, options: options) }, delegate: nil)
   }
 
   func upload<ObjectType>(for request: URLRequest, fromFile file: URL, transformer: Transformer<Data, ObjectType>) async throws -> ObjectType {
+    var updatedRequest = request
+    for interceptor in requestInterceptors {
+      try await interceptor.intercept(&updatedRequest, for: self.session)
+    }
     let (data, response) = try await session.upload(for: request, fromFile: file)
     let httpResponse = try response.httpURLResponse
+    for interceptor in self.responseInterceptors {
+      try await interceptor.intercept(request: updatedRequest, data: data, response: httpResponse)
+    }
     return try transformer(data, httpResponse)
   }
 }
