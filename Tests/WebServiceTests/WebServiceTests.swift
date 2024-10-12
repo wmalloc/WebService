@@ -173,7 +173,7 @@ extension WebServiceTests {
       return (Response.valid, Data())
     }
 
-    let (data, _) = try await webService.data(for: request)
+    let (data, _) = try await webService.data(for: request, delegate: nil)
     XCTAssertEqual(data, Data())
   }
 
