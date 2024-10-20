@@ -27,8 +27,7 @@ public extension HTTPTransferable {
         return
       }
       do {
-        let httpURLResponse = try urlResponse?.httpURLResponse
-        let mapped = try transformer(data, httpURLResponse)
+        let mapped = try transformer(data)
         completion?(.success(mapped))
       } catch {
         completion?(.failure(error))
@@ -50,7 +49,7 @@ public extension HTTPTransferable {
 public extension HTTPTransferable {
   @discardableResult
   func dataTask(with request: URLRequest, completion: DataHandler<Data>? = nil) -> URLSessionDataTask? {
-    dataTask(for: request, transformer: { data, _ in data }, completion: completion)
+    dataTask(for: request, transformer: { data in data }, completion: completion)
   }
 
   /**
@@ -63,22 +62,8 @@ public extension HTTPTransferable {
    - returns: URLSessionDataTask
    */
   @discardableResult
-  func decodableTask<T: Decodable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodableHandler<T>? = nil) -> URLSessionDataTask? {
-    dataTask(for: request, transformer: { data, _ in try decoder.decode(T.self, from: data) }, completion: completion)
-  }
-
-  /**
-   Serilizes the response data  tinto raw JSON object
-
-   - parameter request:    Request where to get the data from
-   - parameter options:    JSON serialization options (Default: .allowFragments)
-   - parameter completion: Completion handler
-
-   - returns: URLSessionDataTask
-   */
-  @discardableResult
-  func serializableTask(with request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments, completion: SerializableHandler? = nil) -> URLSessionDataTask? {
-    dataTask(for: request, transformer: { data, _ in try JSONSerialization.jsonObject(with: data, options: options) }, completion: completion)
+  func decodableTask<T: Decodable & Sendable>(with request: URLRequest, decoder: JSONDecoder = JSONDecoder(), completion: DecodableHandler<T>? = nil) -> URLSessionDataTask? {
+    dataTask(for: request, transformer: { data in try decoder.decode(T.self, from: data) }, completion: completion)
   }
 
   /**
@@ -99,13 +84,12 @@ public extension HTTPTransferable {
         return
       }
 
-      guard let data, let urlResponse else {
+      guard let data else {
         completion?(.failure(URLError(.badServerResponse)))
         return
       }
       do {
-        let httpResponse = try urlResponse.httpURLResponse
-        let mapped = try transformer(data, httpResponse)
+        let mapped = try transformer(data)
         completion?(.success(mapped))
       } catch {
         completion?(.failure(error))

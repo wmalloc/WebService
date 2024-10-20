@@ -16,9 +16,8 @@ public extension HTTPTransferable {
         return (result.data, httpURLResponse)
       }
       .tryMap { result -> ObjectType in
-        let httpURLResponse = try result.response.httpURLResponse
         try result.data.url_validateNotEmptyData()
-        return try transformer(result.data, httpURLResponse)
+        return try transformer(result.data)
       }
       .eraseToAnyPublisher()
   }
@@ -34,20 +33,16 @@ public extension HTTPTransferable {
 
 public extension HTTPTransferable {
   func dataPublisher(for url: URL) -> AnyPublisher<Data, any Error> {
-    dataPublisher(for: URLRequest(url: url), transformer: { data, _ in data })
+    dataPublisher(for: URLRequest(url: url), transformer: { data in data })
   }
 
   func dataPublisher(for request: URLRequest) -> AnyPublisher<Data, any Error> {
-    dataPublisher(for: request, transformer: { data, _ in data })
+    dataPublisher(for: request, transformer: { data in data })
   }
 
   func decodablePublisher<ObjectType: Decodable>(for request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<ObjectType, any Error> {
     dataPublisher(for: request)
       .decode(type: ObjectType.self, decoder: decoder)
       .eraseToAnyPublisher()
-  }
-
-  func serializablePublisher(for request: URLRequest, options: JSONSerialization.ReadingOptions = .allowFragments) -> AnyPublisher<Any, any Error> {
-    dataPublisher(for: request, transformer: { data, _ in try JSONSerialization.jsonObject(with: data, options: options) })
   }
 }
