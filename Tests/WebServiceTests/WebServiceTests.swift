@@ -173,7 +173,7 @@ extension WebServiceTests {
       return (Response.valid, Data())
     }
 
-    let (data, _) = try await webService.data(for: request, delegate: nil)
+    let (data, _) = try await webService.session.data(for: request, delegate: nil)
     XCTAssertEqual(data, Data())
   }
 
@@ -189,8 +189,6 @@ extension WebServiceTests {
 
   @available(iOS 15, *)
   func testAsyncDecodable() async throws {
-    let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
-    XCTAssertNotNil(data)
     let request = URLRequest(url: Self.baseURL)
       .setMethod(.get)
     let requestURL = request.url
@@ -200,38 +198,16 @@ extension WebServiceTests {
         throw URLError(.badURL)
       }
 
-      return (Response.valid, data)
+      let responseData = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
+      XCTAssertNotNil(responseData)
+      return (Response.valid, responseData)
     }
 
-    let decoded: [String: String] = try await webService.decodable(for: request)
+    let (rawData, _) = try await webService.session.data(for: request, delegate: nil)
+    let decoded: [String: String] = try JSONDecoder().decode([String: String].self, from: rawData)
     XCTAssertEqual(decoded.count, 2)
     XCTAssertEqual(decoded["key1"], "value1")
     XCTAssertEqual(decoded["key2"], "value2")
     XCTAssertEqual(decoded["key3"], nil)
-  }
-
-  @available(iOS 15, *)
-  func testAsyncSerializable() async throws {
-    let data = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
-    XCTAssertNotNil(data)
-    let request = URLRequest(url: Self.baseURL)
-      .setMethod(.get)
-    let requestURL = request.url
-    XCTAssertNotNil(requestURL)
-    MockURLProtocol.requestHandlers[requestURL!] = { request in
-      guard let url = request.url, url == requestURL else {
-        throw URLError(.badURL)
-      }
-
-      return (Response.valid, data)
-    }
-
-    let responseItem = try await webService.serializable(for: request)
-    let decoded = responseItem as? [String: String]
-    XCTAssertNotNil(decoded)
-    XCTAssertEqual(decoded!.count, 2)
-    XCTAssertEqual(decoded!["key1"], "value1")
-    XCTAssertEqual(decoded!["key2"], "value2")
-    XCTAssertEqual(decoded!["key3"], nil)
   }
 }
