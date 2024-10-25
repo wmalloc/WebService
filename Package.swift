@@ -10,7 +10,7 @@ let package = Package(
     .library(name: "WebService", targets: ["WebService"])
   ],
   dependencies: [
-    .package(url: "https://github.com/wmalloc/HTTPRequestable.git", from: "0.8.0")
+    .package(url: "https://github.com/wmalloc/HTTPRequestable.git", from: "0.10.0")
   ],
   targets: [
     .target(name: "WebService", dependencies: ["HTTPRequestable"], swiftSettings: []),

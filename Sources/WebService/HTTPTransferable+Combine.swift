@@ -9,7 +9,7 @@ import Foundation
 import HTTPRequestable
 
 public extension HTTPTransferable {
-  func dataPublisher<ObjectType>(for request: URLRequest, transformer: @escaping Transformer<Data, ObjectType>) -> AnyPublisher<ObjectType, any Error> {
+  func dataPublisher<ObjectType>(for request: URLRequest, transformer: Transformer<Data, ObjectType>?) -> AnyPublisher<ObjectType, any Error> {
     session.dataTaskPublisher(for: request)
       .tryMap { result -> URLSession.DataTaskPublisher.Output in
         let httpURLResponse = try result.response.httpURLResponse
@@ -17,6 +17,9 @@ public extension HTTPTransferable {
       }
       .tryMap { result -> ObjectType in
         try result.data.url_validateNotEmptyData()
+        guard let transformer else {
+          throw URLError(.cannotDecodeContentData)
+        }
         return try transformer(result.data)
       }
       .eraseToAnyPublisher()
@@ -27,7 +30,7 @@ public extension HTTPTransferable {
       return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
     }
 
-    return dataPublisher(for: urlRequest, transformer: route.responseTransformer)
+    return dataPublisher(for: urlRequest, transformer: route.responseDataTransformer)
   }
 }
 
