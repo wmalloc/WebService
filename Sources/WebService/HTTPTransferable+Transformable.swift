@@ -15,7 +15,7 @@ public typealias DataHandler<T> = @Sendable (Result<T, any Error>) -> Void
 
 public extension HTTPTransferable {
   @discardableResult
-  func dataTask<ObjectType>(for request: URLRequest, transformer: @escaping Transformer<Data, ObjectType>, completion: DataHandler<ObjectType>?) -> URLSessionDataTask? {
+  func dataTask<ObjectType>(for request: URLRequest, transformer: Transformer<Data, ObjectType>?, completion: DataHandler<ObjectType>?) -> URLSessionDataTask? {
     let dataTask = session.dataTask(with: request) { data, urlResponse, error in
       if let error {
         completion?(.failure(error))
@@ -27,6 +27,9 @@ public extension HTTPTransferable {
         return
       }
       do {
+        guard let transformer else {
+          throw URLError(.cannotDecodeContentData)
+        }
         let mapped = try transformer(data)
         completion?(.success(mapped))
       } catch {
@@ -42,7 +45,7 @@ public extension HTTPTransferable {
     guard let urlRequest = try? route.urlRequest else {
       return nil
     }
-    return dataTask(for: urlRequest, transformer: route.responseTransformer, completion: completion)
+    return dataTask(for: urlRequest, transformer: route.responseDataTransformer, completion: completion)
   }
 }
 
