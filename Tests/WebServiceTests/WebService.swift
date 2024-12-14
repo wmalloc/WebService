@@ -10,8 +10,8 @@ import HTTPRequestable
 import HTTPTypes
 
 class WebService: HTTPTransferable, @unchecked Sendable {
-  var requestInterceptors: [any RequestInterceptor] = []
-  var responseInterceptors: [any ResponseInterceptor] = []
+  var requestInterceptors: [any HTTPRequestInterceptor] = []
+  var responseInterceptors: [any HTTPResponseInterceptor] = []
 
   let session: URLSession
 
