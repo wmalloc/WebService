@@ -17,7 +17,7 @@ import XCTest
 final class WebServiceTests: XCTestCase, @unchecked Sendable {
   private static let baseURLString = "http://localhost:8080"
   private static let baseURL = URL(string: "http://localhost:8080")!
-  
+
   private let testTimeout: TimeInterval = 1
   private var webService: WebService!
 
@@ -43,80 +43,81 @@ final class WebServiceTests: XCTestCase, @unchecked Sendable {
     webService = nil
   }
 
-  func testValidResponse() throws {
+  func testValidResponse() async throws {
     let request = URLRequest(url: Self.baseURL)
       .setMethod(.get)
     let requestURL = request.url
     XCTAssertNotNil(requestURL)
-    MockURLProtocol.requestHandlers[requestURL!] = { request in
+    try await MockURLProtocol.setRequestHandler({ request in
       guard let url = request.url, url == requestURL else {
         throw URLError(.badURL)
       }
 
-      return (Response.valid, Data())
-    }
+      return (Data(), Response.valid)
+
+    }, forIdentifier: request)
 
     let publisher = webService.dataPublisher(for: request)
     let validTest = evalValidResponseTest(publisher: publisher)
-    wait(for: validTest.expectations, timeout: testTimeout)
+    await fulfillment(of: validTest.expectations, timeout: testTimeout, enforceOrder: true)
     validTest.cancellable?.cancel()
   }
 
-  func testInvalidResponse() throws {
+  func testInvalidResponse() async throws {
     let request = URLRequest(url: Self.baseURL)
       .setMethod(.get)
     let requestURL = request.url
     XCTAssertNotNil(requestURL)
-    MockURLProtocol.requestHandlers[requestURL!] = { request in
+    try await MockURLProtocol.setRequestHandler({ request in
       guard let url = request.url, url == requestURL else {
         throw URLError(.badURL)
       }
 
-      return (Response.invalid401, Data())
-    }
+      return (Data(), Response.invalid401)
 
+    }, forIdentifier: request)
     let publisher = webService.dataPublisher(for: request)
     let invalidTest = evalInvalidResponseTest(publisher: publisher)
-    wait(for: invalidTest.expectations, timeout: testTimeout)
+    await fulfillment(of: invalidTest.expectations, timeout: testTimeout, enforceOrder: true)
     invalidTest.cancellable?.cancel()
   }
 
-  func testValidDataResponse() throws {
+  func testValidDataResponse() async throws {
     let request = URLRequest(url: Self.baseURL)
       .setMethod(.get)
     let requestURL = request.url
     XCTAssertNotNil(requestURL)
-    MockURLProtocol.requestHandlers[requestURL!] = { request in
+    try await MockURLProtocol.setRequestHandler({ request in
       guard let url = request.url, url == requestURL else {
         throw URLError(.badURL)
       }
 
       let data = Data("{}".utf8)
-      return (Response.valid, data)
-    }
-
+      return (data, Response.valid)
+    }, forIdentifier: request)
     let publisher = webService.dataPublisher(for: request)
     let invalidTest = evalValidResponseTest(publisher: publisher)
-    wait(for: invalidTest.expectations, timeout: testTimeout)
+    await fulfillment(of: invalidTest.expectations, timeout: testTimeout, enforceOrder: true)
     invalidTest.cancellable?.cancel()
   }
 
-  func testNetworkFailure() throws {
+  func testNetworkFailure() async throws {
     let request = URLRequest(url: Self.baseURL)
       .setMethod(.get)
+
     let requestURL = request.url
     XCTAssertNotNil(requestURL)
-    MockURLProtocol.requestHandlers[requestURL!] = { request in
+    try await MockURLProtocol.setRequestHandler({ request in
       guard let url = request.url, url == requestURL else {
         throw URLError(.badURL)
       }
 
       let data = Data("{}".utf8)
-      return (Response.invalid401, data)
-    }
+      return (data, Response.invalid401)
+    }, forIdentifier: request)
     let publisher = webService.dataPublisher(for: request)
-    let invalidTest = evalInvalidResponseTest(publisher: publisher)
-    wait(for: invalidTest.expectations, timeout: testTimeout)
+    let invalidTest = evalValidResponseTest(publisher: publisher)
+    await fulfillment(of: invalidTest.expectations, timeout: testTimeout, enforceOrder: true)
     invalidTest.cancellable?.cancel()
   }
 
@@ -165,13 +166,12 @@ extension WebServiceTests {
     let request = URLRequest(url: Self.baseURL)
     let requestURL = request.url
     XCTAssertNotNil(requestURL)
-    MockURLProtocol.requestHandlers[requestURL!] = { request in
+    try await MockURLProtocol.setRequestHandler({ request in
       guard let url = request.url, url == requestURL else {
         throw URLError(.badURL)
       }
-
-      return (Response.valid, Data())
-    }
+      return (Data(), Response.valid)
+    }, forIdentifier: request)
 
     let (data, _) = try await webService.session.data(for: request, delegate: nil)
     XCTAssertEqual(data, Data())
@@ -193,15 +193,14 @@ extension WebServiceTests {
       .setMethod(.get)
     let requestURL = request.url
     XCTAssertNotNil(requestURL)
-    MockURLProtocol.requestHandlers[requestURL!] = { request in
+    try await MockURLProtocol.setRequestHandler({ request in
       guard let url = request.url, url == requestURL else {
         throw URLError(.badURL)
       }
-
       let responseData = try Bundle.module.data(forResource: "Response", withExtension: "json", subdirectory: "TestData")
       XCTAssertNotNil(responseData)
-      return (Response.valid, responseData)
-    }
+      return (responseData, Response.valid)
+    }, forIdentifier: request)
 
     let (rawData, _) = try await webService.session.data(for: request, delegate: nil)
     let decoded: [String: String] = try JSONDecoder().decode([String: String].self, from: rawData)
