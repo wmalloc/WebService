@@ -9,11 +9,11 @@ import Foundation
 import HTTPRequestable
 import HTTPTypes
 
-class WebService: HTTPTransferable, @unchecked Sendable {
-  var requestInterceptors: [any HTTPRequestInterceptor] = []
-  var responseInterceptors: [any HTTPResponseInterceptor] = []
-
+final class WebService: HTTPTransferable, @unchecked Sendable {
   let session: URLSession
+
+  var requestModifiers: [any HTTPRequestModifier] = []
+  var interceptors: [any  HTTPInterceptor] = []
 
   static var sessionConfiguration: URLSessionConfiguration {
     let config = URLSessionConfiguration.default
