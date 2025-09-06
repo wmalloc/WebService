@@ -16,7 +16,7 @@ public typealias DataHandler<T> = @Sendable (Result<T, any Error>) -> Void
 public extension HTTPTransferable {
   @discardableResult
   func dataTask<ObjectType>(for request: URLRequest, transformer: Transformer<Data, ObjectType>?, completion: DataHandler<ObjectType>?) -> URLSessionDataTask? {
-    let dataTask = session.dataTask(with: request) { data, urlResponse, error in
+    let dataTask = session.dataTask(with: request) { data, _, error in
       if let error {
         completion?(.failure(error))
         return
@@ -81,7 +81,7 @@ public extension HTTPTransferable {
    */
   @discardableResult
   func upload<T>(with request: URLRequest, fromFile file: URL, transformer: @escaping Transformer<Data, T>, completion: DataHandler<T>? = nil) -> URLSessionDataTask? {
-    let uploadTask = session.uploadTask(with: request, fromFile: file) { data, urlResponse, error in
+    let uploadTask = session.uploadTask(with: request, fromFile: file) { data, _, error in
       if let error {
         completion?(.failure(error))
         return
